@@ -55,7 +55,7 @@ def printInfoForGame(ms):
         print "Keys"
         for field in gameinfo.keys():
             print field, " : ", gameinfo[field]
-
+                
 ##
 # @brief get all games, and scrape them slowly
 #
@@ -74,7 +74,10 @@ def scrapeAllGames(ms):
         if(count % 10 == 0):
             ms.exportJson()
 
-
+##
+# @brief scrape a single game
+#
+#
 def scrapeAndPrintGame(ms):
     response = raw_input("What game id?\n")
     gameinfo = ms.scrape_info(response)
@@ -119,6 +122,10 @@ def exportJson(ms):
     print "Exporting JSON:"
     ms.exportJson()
 
+##
+# @brief import json into database
+#
+#
 def importJson(ms):
     print "Importing Json:"
     ms.importJson()

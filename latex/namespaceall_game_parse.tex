@@ -1,0 +1,75 @@
+\hypertarget{namespaceall_game_parse}{\section{all\+Game\+Parse Namespace Reference}
+\label{namespaceall_game_parse}\index{all\+Game\+Parse@{all\+Game\+Parse}}
+}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespaceall_game_parse_a0edb49935fe4f03afaeda24b26701cac}{cj} = Cookie\+Jar()
+\item 
+tuple \hyperlink{namespaceall_game_parse_a1805ba57761718ea195891b56adac271}{gameid} = str(91310)
+\item 
+string \hyperlink{namespaceall_game_parse_af48967d69b2b722ff05ad284da8f4bfe}{url} = \char`\"{}http\+://steamcommunity.\+com/id/belial4296/games/\char`\"{}
+\item 
+tuple \hyperlink{namespaceall_game_parse_a1cefe9996713674c46f624baa334280d}{opener} = urllib2.\+build\+\_\+opener(urllib2.\+H\+T\+T\+P\+Cookie\+Processor(\hyperlink{namespaceall_game_parse_a0edb49935fe4f03afaeda24b26701cac}{cj}))
+\item 
+dictionary \hyperlink{namespaceall_game_parse_a25e198ad333ea40e9d4eca9e8ac0ce59}{values}
+\item 
+tuple \hyperlink{namespaceall_game_parse_a8b0c2752622015229ec7c131f733b221}{data} = urllib.\+urlencode(\hyperlink{namespaceall_game_parse_a25e198ad333ea40e9d4eca9e8ac0ce59}{values})
+\item 
+tuple \hyperlink{namespaceall_game_parse_a5bfed9efebbc641889b00e0505c4a4ae}{req} = urllib2.\+Request(\hyperlink{namespaceall_game_parse_af48967d69b2b722ff05ad284da8f4bfe}{url},\hyperlink{namespaceall_game_parse_a8b0c2752622015229ec7c131f733b221}{data})
+\item 
+tuple \hyperlink{namespaceall_game_parse_a7bbf07843967c52d1d807c64b6d009d0}{response} = opener.\+open(\hyperlink{namespaceall_game_parse_a5bfed9efebbc641889b00e0505c4a4ae}{req})
+\item 
+tuple \hyperlink{namespaceall_game_parse_a8dd688b6fdf0d5dc75fd1052e88199da}{html} = response.\+read()
+\item 
+tuple \hyperlink{namespaceall_game_parse_a6b3a0dce9a39a129a40c94cf1bd1ee9b}{soup} = Beautiful\+Soup(\hyperlink{namespaceall_game_parse_a8dd688b6fdf0d5dc75fd1052e88199da}{html})
+\item 
+tuple \hyperlink{namespaceall_game_parse_a43d3a3e6df161dd6b906b25ba68e3f08}{rows} = soup.\+find(id=\char`\"{}games\+\_\+list\+\_\+rows\char`\"{})
+\item 
+tuple \hyperlink{namespaceall_game_parse_a2bdbbc305ed8beb518d32abaf8866039}{row} = rows.\+find(id=\char`\"{}game\+\_\+56400\char`\"{})
+\end{DoxyCompactItemize}
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespaceall_game_parse_a0edb49935fe4f03afaeda24b26701cac}{\index{all\+Game\+Parse@{all\+Game\+Parse}!cj@{cj}}
+\index{cj@{cj}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{cj}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+cj = Cookie\+Jar()}}\label{namespaceall_game_parse_a0edb49935fe4f03afaeda24b26701cac}
+\hypertarget{namespaceall_game_parse_a8b0c2752622015229ec7c131f733b221}{\index{all\+Game\+Parse@{all\+Game\+Parse}!data@{data}}
+\index{data@{data}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+data = urllib.\+urlencode({\bf values})}}\label{namespaceall_game_parse_a8b0c2752622015229ec7c131f733b221}
+\hypertarget{namespaceall_game_parse_a1805ba57761718ea195891b56adac271}{\index{all\+Game\+Parse@{all\+Game\+Parse}!gameid@{gameid}}
+\index{gameid@{gameid}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{gameid}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+gameid = str(91310)}}\label{namespaceall_game_parse_a1805ba57761718ea195891b56adac271}
+\hypertarget{namespaceall_game_parse_a8dd688b6fdf0d5dc75fd1052e88199da}{\index{all\+Game\+Parse@{all\+Game\+Parse}!html@{html}}
+\index{html@{html}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{html}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+html = response.\+read()}}\label{namespaceall_game_parse_a8dd688b6fdf0d5dc75fd1052e88199da}
+\hypertarget{namespaceall_game_parse_a1cefe9996713674c46f624baa334280d}{\index{all\+Game\+Parse@{all\+Game\+Parse}!opener@{opener}}
+\index{opener@{opener}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{opener}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+opener = urllib2.\+build\+\_\+opener(urllib2.\+H\+T\+T\+P\+Cookie\+Processor({\bf cj}))}}\label{namespaceall_game_parse_a1cefe9996713674c46f624baa334280d}
+\hypertarget{namespaceall_game_parse_a5bfed9efebbc641889b00e0505c4a4ae}{\index{all\+Game\+Parse@{all\+Game\+Parse}!req@{req}}
+\index{req@{req}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{req}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+req = urllib2.\+Request({\bf url},{\bf data})}}\label{namespaceall_game_parse_a5bfed9efebbc641889b00e0505c4a4ae}
+\hypertarget{namespaceall_game_parse_a7bbf07843967c52d1d807c64b6d009d0}{\index{all\+Game\+Parse@{all\+Game\+Parse}!response@{response}}
+\index{response@{response}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{response}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+response = opener.\+open({\bf req})}}\label{namespaceall_game_parse_a7bbf07843967c52d1d807c64b6d009d0}
+\hypertarget{namespaceall_game_parse_a2bdbbc305ed8beb518d32abaf8866039}{\index{all\+Game\+Parse@{all\+Game\+Parse}!row@{row}}
+\index{row@{row}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{row}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+row = rows.\+find(id=\char`\"{}game\+\_\+56400\char`\"{})}}\label{namespaceall_game_parse_a2bdbbc305ed8beb518d32abaf8866039}
+\hypertarget{namespaceall_game_parse_a43d3a3e6df161dd6b906b25ba68e3f08}{\index{all\+Game\+Parse@{all\+Game\+Parse}!rows@{rows}}
+\index{rows@{rows}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{rows}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+rows = soup.\+find(id=\char`\"{}games\+\_\+list\+\_\+rows\char`\"{})}}\label{namespaceall_game_parse_a43d3a3e6df161dd6b906b25ba68e3f08}
+\hypertarget{namespaceall_game_parse_a6b3a0dce9a39a129a40c94cf1bd1ee9b}{\index{all\+Game\+Parse@{all\+Game\+Parse}!soup@{soup}}
+\index{soup@{soup}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{soup}]{\setlength{\rightskip}{0pt plus 5cm}tuple all\+Game\+Parse.\+soup = Beautiful\+Soup({\bf html})}}\label{namespaceall_game_parse_a6b3a0dce9a39a129a40c94cf1bd1ee9b}
+\hypertarget{namespaceall_game_parse_af48967d69b2b722ff05ad284da8f4bfe}{\index{all\+Game\+Parse@{all\+Game\+Parse}!url@{url}}
+\index{url@{url}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{url}]{\setlength{\rightskip}{0pt plus 5cm}string all\+Game\+Parse.\+url = \char`\"{}http\+://steamcommunity.\+com/id/belial4296/games/\char`\"{}}}\label{namespaceall_game_parse_af48967d69b2b722ff05ad284da8f4bfe}
+\hypertarget{namespaceall_game_parse_a25e198ad333ea40e9d4eca9e8ac0ce59}{\index{all\+Game\+Parse@{all\+Game\+Parse}!values@{values}}
+\index{values@{values}!all\+Game\+Parse@{all\+Game\+Parse}}
+\subsubsection[{values}]{\setlength{\rightskip}{0pt plus 5cm}dictionary all\+Game\+Parse.\+values}}\label{namespaceall_game_parse_a25e198ad333ea40e9d4eca9e8ac0ce59}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+1 = \{
+2     \textcolor{stringliteral}{'tab'} : \textcolor{stringliteral}{'all'},
+3     \}
+\end{DoxyCode}

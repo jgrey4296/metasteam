@@ -1,0 +1,35 @@
+\hypertarget{all_game_parse_8py}{\section{all\+Game\+Parse.\+py File Reference}
+\label{all_game_parse_8py}\index{all\+Game\+Parse.\+py@{all\+Game\+Parse.\+py}}
+}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespaceall_game_parse}{all\+Game\+Parse}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespaceall_game_parse_a0edb49935fe4f03afaeda24b26701cac}{all\+Game\+Parse.\+cj} = Cookie\+Jar()
+\item 
+tuple \hyperlink{namespaceall_game_parse_a1805ba57761718ea195891b56adac271}{all\+Game\+Parse.\+gameid} = str(91310)
+\item 
+string \hyperlink{namespaceall_game_parse_af48967d69b2b722ff05ad284da8f4bfe}{all\+Game\+Parse.\+url} = \char`\"{}http\+://steamcommunity.\+com/id/belial4296/games/\char`\"{}
+\item 
+tuple \hyperlink{namespaceall_game_parse_a1cefe9996713674c46f624baa334280d}{all\+Game\+Parse.\+opener} = urllib2.\+build\+\_\+opener(urllib2.\+H\+T\+T\+P\+Cookie\+Processor(cj))
+\item 
+dictionary \hyperlink{namespaceall_game_parse_a25e198ad333ea40e9d4eca9e8ac0ce59}{all\+Game\+Parse.\+values}
+\item 
+tuple \hyperlink{namespaceall_game_parse_a8b0c2752622015229ec7c131f733b221}{all\+Game\+Parse.\+data} = urllib.\+urlencode(values)
+\item 
+tuple \hyperlink{namespaceall_game_parse_a5bfed9efebbc641889b00e0505c4a4ae}{all\+Game\+Parse.\+req} = urllib2.\+Request(url,data)
+\item 
+tuple \hyperlink{namespaceall_game_parse_a7bbf07843967c52d1d807c64b6d009d0}{all\+Game\+Parse.\+response} = opener.\+open(req)
+\item 
+tuple \hyperlink{namespaceall_game_parse_a8dd688b6fdf0d5dc75fd1052e88199da}{all\+Game\+Parse.\+html} = response.\+read()
+\item 
+tuple \hyperlink{namespaceall_game_parse_a6b3a0dce9a39a129a40c94cf1bd1ee9b}{all\+Game\+Parse.\+soup} = Beautiful\+Soup(html)
+\item 
+tuple \hyperlink{namespaceall_game_parse_a43d3a3e6df161dd6b906b25ba68e3f08}{all\+Game\+Parse.\+rows} = soup.\+find(id=\char`\"{}games\+\_\+list\+\_\+rows\char`\"{})
+\item 
+tuple \hyperlink{namespaceall_game_parse_a2bdbbc305ed8beb518d32abaf8866039}{all\+Game\+Parse.\+row} = rows.\+find(id=\char`\"{}game\+\_\+56400\char`\"{})
+\end{DoxyCompactItemize}

@@ -12,6 +12,9 @@ from bs4 import BeautifulSoup
 from subprocess import call
 import random
 import json
+from SteamProfileScraper import SteamProfileScraper
+from AgeCheckAvoider import AgeCheckAvoider
+
 ##
 #@class JGMetaSteam
 #@todo sort the globbing
@@ -25,13 +28,21 @@ class JGMetaSteam:
     #
     def __init__(self):
         self.__value = 0
-        self.__games = {}
-        self.__folders = []
-        self.steamLocation = ""
+        self.__games = {} # gameid ->{game}
+        self.__allGames = [] # all acount games.  with name inside
+        self.__folders = [] #of steam installation directories
+        self.steamLocation = "" # of the steam executable
         # self.find_steam()
+        self.ageCheckAvoider = AgeCheckAvoider()
         self.find_steam_folders()
         self.find_installed_games()
-        
+        self.profileName = "belial4296"
+        try:
+            self.scrapeProfile()
+        except Exception as e:
+            print type(e)
+        finally:
+            raw_input(".........")
 
     ## Find Steam
     # @brief Searches the filesystem for where steam is
@@ -65,7 +76,8 @@ class JGMetaSteam:
                self.__folders.append(folder)
         
     ## Find Installed games
-    # @brief the steam folders for steamapps and their acfmanifest    # calls parseManifest on each manifest found,
+    # @brief the steam folders for steamapps and their acfmanifest    
+    # calls parseManifest on each manifest found,
     # 
     # @todo implement
     def find_installed_games(self):
@@ -93,6 +105,7 @@ class JGMetaSteam:
             if match:
                 data[match.group(1)] = match.group(2)
         gameid = data['appid']
+
         self.__games[gameid] = data
                
  
@@ -103,9 +116,11 @@ class JGMetaSteam:
     # @param gameid The numeric representation of a game
     # @todo implement
     def game_info(self, gameid):
-        if(self.__games[gameid]):
+        print "Looking for: ",gameid
+        if(gameid in self.__games):
             return self.__games[gameid]
         print "Game Not Found"
+        return {}
   
     ## Outputs names all games found
     # @brief get all the installed games names
@@ -124,41 +139,16 @@ class JGMetaSteam:
     # the games datastructure
     # 
     # @param gameid The numeric representation of a game
-    # @todo implement
+    # @todo replace with improved external script
     def scrape_info(self,gameid):
         #exit out if the game has already been parsed.
         if(hasattr(self.__games[gameid],'parsed')):
             return self.__games[gameid]
         print "getting url for: ", gameid
         #setup the url request
-        url = "http://store.steampowered.com/app/" + gameid;
-        values = {
-            'ageDay':'1',
-            'ageMonth':'February',
-            'ageYear': '1930'  }
-        data = urllib.urlencode(values)
-        try:
-            request = urllib2.Request(url,data)
-            #execute it
-            response = urllib2.urlopen(request)
-
-            #if its an agecheck page, submit a post request?
-            #soup it
-            soup = BeautifulSoup(response)
-            if(soup.find(class_="v6 agecheck")):
-               print "Age check found"
-               
-
-            #parse it and get it back
-            self.__games[gameid] = self.parseStore(soup,gameid)
-            print "finished scraping"
-            #return it
-        except Exception as e:
-            print "Scrape Error"
-            print type(e)
-            print e
-
-        return self.__games[gameid]
+        tags = self.ageCheckAvoider.request(gameid)
+        
+        self.__games[gameid]['tags'] = tags
 
     ##Parses html assuming its a steam store page
     #
@@ -204,6 +194,34 @@ class JGMetaSteam:
         print "Finished parsing"
         game['parsed'] = 1
         return game
+
+    ##
+    # @brief call and scrape user profile page
+    #
+    #
+    def scrapeProfile(self):
+        print "Scraping Profile"
+        scraper = SteamProfileScraper(self.profileName)
+        gameDict = scraper.request()
+
+        self.__allGames = gameDict
+        print type(self.__allGames)
+
+        try:
+
+            for game in gameDict:
+                appid = get_unicode(str(game['appid'])) 
+                if(appid in self.__games):
+                    existingGame = self.__games[appid]
+                    for key in game.keys():
+                        if(not key in existingGame):
+                            existingGame[key] = game[key]
+
+                        
+
+                    
+        except Exception as e:
+            print e
         
     #====================
     #Various functions:
@@ -262,3 +280,37 @@ class JGMetaSteam:
         #export json
         print "todo"
         #system call to open web page
+
+
+    ## The following from:
+    #https://stackoverflow.com/questions/7219361/python-and-beautifulsoup-encoding-issues
+def __if_number_get_string(number):
+    converted_str = number
+    if isinstance(number, int) or \
+       isinstance(number, float):
+        converted_str = str(number)
+    return converted_str
+        
+        
+def get_unicode(strOrUnicode, encoding='utf-8'):
+    strOrUnicode = __if_number_get_string(strOrUnicode)
+    if isinstance(strOrUnicode, unicode):
+        return strOrUnicode
+    return unicode(strOrUnicode, encoding, errors='ignore')
+        
+def get_string(strOrUnicode, encoding='utf-8'):
+    strOrUnicode = __if_number_get_string(strOrUnicode)
+    if isinstance(strOrUnicode, unicode):
+        return strOrUnicode.encode(encoding)
+    return strOrUnicode
+        
+
+#             for key in gameDict[0].keys():
+#                 print "key: ",key, "type: ",type(key),
+#                 print "value: ",gameDict[0][key],"type: ", type(gameDict[0][key])
+#                 if(key == 'appid'):
+# #                    print "Appid: ",gameDict[0][key]
+#  #                   print "Appid: ",(gameDict[0][key] + 1)
+#   #                  print "Appid: ", str(gameDict[0][key])
+#    #                 print "Type: ", type(get_unicode(str(gameDict[0][key])))
+#                     if(get_unicode(str(gameDict[0][key])) in self.__games):

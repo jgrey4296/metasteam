@@ -1,0 +1,88 @@
+\hypertarget{namespacetest_request}{\section{test\+Request Namespace Reference}
+\label{namespacetest_request}\index{test\+Request@{test\+Request}}
+}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespacetest_request_afd477347e61eaf087de75394b8249088}{cj} = Cookie\+Jar()
+\item 
+tuple \hyperlink{namespacetest_request_ad59cb201aaea659d05de3a976c43d2d0}{gameid} = str(91310)
+\item 
+string \hyperlink{namespacetest_request_a503c8624234f46b468f9d0b807d63cb0}{url} = \char`\"{}http\+://store.\+steampowered.\+com/app/\char`\"{}
+\item 
+tuple \hyperlink{namespacetest_request_a32d478514621667126784650159375ae}{opener} = urllib2.\+build\+\_\+opener(urllib2.\+H\+T\+T\+P\+Cookie\+Processor(\hyperlink{namespacetest_request_afd477347e61eaf087de75394b8249088}{cj}))
+\item 
+tuple \hyperlink{namespacetest_request_a82a62563089eee6f274889ef4cda4c83}{response} = urllib2.\+urlopen(\hyperlink{namespacetest_request_a503c8624234f46b468f9d0b807d63cb0}{url})
+\item 
+tuple \hyperlink{namespacetest_request_a8f35331152c0a50dcf80c4e88192e928}{html} = response.\+read()
+\item 
+tuple \hyperlink{namespacetest_request_abdcf7c50bc605e36463827591ea27597}{soup} = Beautiful\+Soup(\hyperlink{namespacetest_request_a8f35331152c0a50dcf80c4e88192e928}{html})
+\item 
+tuple \hyperlink{namespacetest_request_a577a66202d87bdc38bab9969bd0b0be8}{agecheckform} = soup.\+find\+\_\+all(id=\char`\"{}agecheck\+\_\+form\char`\"{})
+\item 
+tuple \hyperlink{namespacetest_request_a9dd80d2ee25233da56bf90ee2b6562f8}{forminput} = soup.\+find\+\_\+all('input',type=\char`\"{}hidden\char`\"{})
+\item 
+list \hyperlink{namespacetest_request_ac0dc477bbe063b2dc0a1e8fab9086a45}{fin\+Val} = \hyperlink{namespacetest_request_a9dd80d2ee25233da56bf90ee2b6562f8}{forminput}\mbox{[}1\mbox{]}
+\item 
+dictionary \hyperlink{namespacetest_request_ad045126755bc1baa0a4cacb58d77b4a1}{values}
+\item 
+tuple \hyperlink{namespacetest_request_aa2da30dcafd8fe42c8408aba77c7e70f}{data} = urllib.\+urlencode(\hyperlink{namespacetest_request_ad045126755bc1baa0a4cacb58d77b4a1}{values})
+\item 
+tuple \hyperlink{namespacetest_request_a5db18cf7ac0523c1940da68f3301fc49}{req} = urllib2.\+Request(\hyperlink{namespacetest_request_a503c8624234f46b468f9d0b807d63cb0}{url},\hyperlink{namespacetest_request_aa2da30dcafd8fe42c8408aba77c7e70f}{data})
+\item 
+tuple \hyperlink{namespacetest_request_a52e13bffa1978df832b6676e9e492fe0}{all\+Tags} = soup.\+find\+\_\+all(class\+\_\+=\char`\"{}app\+\_\+tag\char`\"{})
+\end{DoxyCompactItemize}
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespacetest_request_a577a66202d87bdc38bab9969bd0b0be8}{\index{test\+Request@{test\+Request}!agecheckform@{agecheckform}}
+\index{agecheckform@{agecheckform}!test\+Request@{test\+Request}}
+\subsubsection[{agecheckform}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+agecheckform = soup.\+find\+\_\+all(id=\char`\"{}agecheck\+\_\+form\char`\"{})}}\label{namespacetest_request_a577a66202d87bdc38bab9969bd0b0be8}
+\hypertarget{namespacetest_request_a52e13bffa1978df832b6676e9e492fe0}{\index{test\+Request@{test\+Request}!all\+Tags@{all\+Tags}}
+\index{all\+Tags@{all\+Tags}!test\+Request@{test\+Request}}
+\subsubsection[{all\+Tags}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+all\+Tags = soup.\+find\+\_\+all(class\+\_\+=\char`\"{}app\+\_\+tag\char`\"{})}}\label{namespacetest_request_a52e13bffa1978df832b6676e9e492fe0}
+\hypertarget{namespacetest_request_afd477347e61eaf087de75394b8249088}{\index{test\+Request@{test\+Request}!cj@{cj}}
+\index{cj@{cj}!test\+Request@{test\+Request}}
+\subsubsection[{cj}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+cj = Cookie\+Jar()}}\label{namespacetest_request_afd477347e61eaf087de75394b8249088}
+\hypertarget{namespacetest_request_aa2da30dcafd8fe42c8408aba77c7e70f}{\index{test\+Request@{test\+Request}!data@{data}}
+\index{data@{data}!test\+Request@{test\+Request}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+data = urllib.\+urlencode({\bf values})}}\label{namespacetest_request_aa2da30dcafd8fe42c8408aba77c7e70f}
+\hypertarget{namespacetest_request_ac0dc477bbe063b2dc0a1e8fab9086a45}{\index{test\+Request@{test\+Request}!fin\+Val@{fin\+Val}}
+\index{fin\+Val@{fin\+Val}!test\+Request@{test\+Request}}
+\subsubsection[{fin\+Val}]{\setlength{\rightskip}{0pt plus 5cm}list test\+Request.\+fin\+Val = {\bf forminput}\mbox{[}1\mbox{]}}}\label{namespacetest_request_ac0dc477bbe063b2dc0a1e8fab9086a45}
+\hypertarget{namespacetest_request_a9dd80d2ee25233da56bf90ee2b6562f8}{\index{test\+Request@{test\+Request}!forminput@{forminput}}
+\index{forminput@{forminput}!test\+Request@{test\+Request}}
+\subsubsection[{forminput}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+forminput = soup.\+find\+\_\+all('input',type=\char`\"{}hidden\char`\"{})}}\label{namespacetest_request_a9dd80d2ee25233da56bf90ee2b6562f8}
+\hypertarget{namespacetest_request_ad59cb201aaea659d05de3a976c43d2d0}{\index{test\+Request@{test\+Request}!gameid@{gameid}}
+\index{gameid@{gameid}!test\+Request@{test\+Request}}
+\subsubsection[{gameid}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+gameid = str(91310)}}\label{namespacetest_request_ad59cb201aaea659d05de3a976c43d2d0}
+\hypertarget{namespacetest_request_a8f35331152c0a50dcf80c4e88192e928}{\index{test\+Request@{test\+Request}!html@{html}}
+\index{html@{html}!test\+Request@{test\+Request}}
+\subsubsection[{html}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+html = response.\+read()}}\label{namespacetest_request_a8f35331152c0a50dcf80c4e88192e928}
+\hypertarget{namespacetest_request_a32d478514621667126784650159375ae}{\index{test\+Request@{test\+Request}!opener@{opener}}
+\index{opener@{opener}!test\+Request@{test\+Request}}
+\subsubsection[{opener}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+opener = urllib2.\+build\+\_\+opener(urllib2.\+H\+T\+T\+P\+Cookie\+Processor({\bf cj}))}}\label{namespacetest_request_a32d478514621667126784650159375ae}
+\hypertarget{namespacetest_request_a5db18cf7ac0523c1940da68f3301fc49}{\index{test\+Request@{test\+Request}!req@{req}}
+\index{req@{req}!test\+Request@{test\+Request}}
+\subsubsection[{req}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+req = urllib2.\+Request({\bf url},{\bf data})}}\label{namespacetest_request_a5db18cf7ac0523c1940da68f3301fc49}
+\hypertarget{namespacetest_request_a82a62563089eee6f274889ef4cda4c83}{\index{test\+Request@{test\+Request}!response@{response}}
+\index{response@{response}!test\+Request@{test\+Request}}
+\subsubsection[{response}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+response = urllib2.\+urlopen({\bf url})}}\label{namespacetest_request_a82a62563089eee6f274889ef4cda4c83}
+\hypertarget{namespacetest_request_abdcf7c50bc605e36463827591ea27597}{\index{test\+Request@{test\+Request}!soup@{soup}}
+\index{soup@{soup}!test\+Request@{test\+Request}}
+\subsubsection[{soup}]{\setlength{\rightskip}{0pt plus 5cm}tuple test\+Request.\+soup = Beautiful\+Soup({\bf html})}}\label{namespacetest_request_abdcf7c50bc605e36463827591ea27597}
+\hypertarget{namespacetest_request_a503c8624234f46b468f9d0b807d63cb0}{\index{test\+Request@{test\+Request}!url@{url}}
+\index{url@{url}!test\+Request@{test\+Request}}
+\subsubsection[{url}]{\setlength{\rightskip}{0pt plus 5cm}string test\+Request.\+url = \char`\"{}http\+://store.\+steampowered.\+com/app/\char`\"{}}}\label{namespacetest_request_a503c8624234f46b468f9d0b807d63cb0}
+\hypertarget{namespacetest_request_ad045126755bc1baa0a4cacb58d77b4a1}{\index{test\+Request@{test\+Request}!values@{values}}
+\index{values@{values}!test\+Request@{test\+Request}}
+\subsubsection[{values}]{\setlength{\rightskip}{0pt plus 5cm}dictionary test\+Request.\+values}}\label{namespacetest_request_ad045126755bc1baa0a4cacb58d77b4a1}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+1 = \{
+2         \textcolor{stringliteral}{'ageDay'} : \textcolor{stringliteral}{'3'},
+3         \textcolor{stringliteral}{'ageMonth'} : \textcolor{stringliteral}{'March'},
+4         \textcolor{stringliteral}{'ageYear'} : \textcolor{stringliteral}{'1980'},
+5         \textcolor{stringliteral}{'snr'} : finVal
+6     \}
+\end{DoxyCode}
