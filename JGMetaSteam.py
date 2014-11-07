@@ -2,6 +2,8 @@
 # @file JGMetaSteam.py
 # @brief The metaSteam class that does the heavy lifting
 
+from jgUtility import *
+import os
 import codecs
 import glob
 import win32api
@@ -27,20 +29,25 @@ class JGMetaSteam:
     #  
     #
     def __init__(self):
+        cwd = os.getcwd()
+        print "CWD: ", cwd, "\n\n\n\n"
+        self.exportedJsonLocation = cwd + "\\metaSteamGameList.json"
         self.__value = 0
         self.__games = {} # gameid ->{game}
         self.__allGames = [] # all acount games.  with name inside
         self.__folders = [] #of steam installation directories
         self.steamLocation = "" # of the steam executable
+        self.profileName = "belial4296"
         # self.find_steam()
         self.ageCheckAvoider = AgeCheckAvoider()
         self.find_steam_folders()
-        self.find_installed_games()
-        self.profileName = "belial4296"
         try:
-            self.scrapeProfile()
-        except Exception as e:
-            print type(e)
+            self.importJson()
+            print "imported json"
+        except:
+            print "scraping"
+            self.find_installed_games()
+            #self.scrapeProfile()
         finally:
             raw_input(".........")
 
@@ -95,17 +102,20 @@ class JGMetaSteam:
     #
     #
     def parseManifest(self,manifest):
+        
         f = file(manifest,'r')
         regex = re.compile('"(.+?)"\s+"(.+?)"')
         data = {}
         for line in f:
-            line = unicode(line,errors='ignore')
-            #print line
+            line = unicode(line,errors="ignore")
+            #print "Line type:",type(line)
             match = regex.search(line)
             if match:
                 data[match.group(1)] = match.group(2)
+        
         gameid = data['appid']
-
+        #print "TYPE: ",type(gameid)
+        data['jgInstalled'] = True
         self.__games[gameid] = data
                
  
@@ -124,13 +134,26 @@ class JGMetaSteam:
   
     ## Outputs names all games found
     # @brief get all the installed games names
-    # 
+    # @deprecated
     # 
     # @todo implement
     def allGames(self):
         gameList = []
+        for game in self.__games:
+            gameList.append((self.__games[game]['name'],game))
+        return gameList
+
+    ## Outputs names all games found
+    # @brief get all the installed games names
+    # 
+    # 
+    # @todo implement
+    def allKeywordGames(self,keyword):
+        gameList = []
         for game in self.__games.values():
-            gameList.append((game['name'],game['appid']))
+            if(keyword in game and 
+               (game[keyword] != False)):
+                gameList.append(game)
         return gameList
 
 
@@ -140,86 +163,53 @@ class JGMetaSteam:
     # 
     # @param gameid The numeric representation of a game
     # @todo replace with improved external script
-    def scrape_info(self,gameid):
+    def scrape_info(self,gameid,override):
         #exit out if the game has already been parsed.
-        if(hasattr(self.__games[gameid],'parsed')):
+        #if(hasattr(self.__games[gameid],'parsed')):
+        try:
+            if("jgParsed" in self.__games[gameid]
+               and override is 0):
+                print "\n\n\n\nAlready Scraped\n\n"
+                return self.__games[gameid]
+            print "getting url for: ", gameid
+            #setup the url request
+            scrapedInfo = self.ageCheckAvoider.scrape(gameid)
+            self.__games[gameid]['jgTags'] = scrapedInfo[0]
+            self.__games[gameid]['releaseDate'] = scrapedInfo[1]
+            self.__games[gameid]['jgParsed'] = True
             return self.__games[gameid]
-        print "getting url for: ", gameid
-        #setup the url request
-        tags = self.ageCheckAvoider.request(gameid)
-        
-        self.__games[gameid]['tags'] = tags
-
-    ##Parses html assuming its a steam store page
-    #
-    #
-    #
-    def parseStore(self,soup,gameid):
-        print "parsing"
-        game = self.game_info(gameid)
-        game['tags'] = []
-        game['description'] = []
-
-        #name
-        try:
-            title = soup.find(class_="apphub_AppName")
-            game['name'] = unicode(title.string)
         except:
-            print "Name Missing Error"
+            PrintException()
         
-        #tags:
-        try:
-            tags = soup.find_all(class_="app_tag")
-            
-            for tag in tags:
-                game['tags'].append(unicode(tag.string.strip()))
-        
-            #other tags:
-            tags = soup.find_all(class_="game_area_details_specs")
-                
-            for tag in tags:
-                link = tag.a;
-                game['tags'].append(unicode(link.string.strip()))
-        except:
-            print "Tag Error"
-
-        #description:
-        print "DESCRIPTION"
-        gameDescription = soup.find_all(id="game_area_description")
-
-        for element in gameDescription:
-            for strings in element.stripped_strings:
-                game['description'].append(strings)
-
-        print "Finished parsing"
-        game['parsed'] = 1
-        return game
-
     ##
     # @brief call and scrape user profile page
     #
     #
     def scrapeProfile(self):
-        print "Scraping Profile"
+#        print "Scraping Profile"
         scraper = SteamProfileScraper(self.profileName)
-        gameDict = scraper.request()
+        gameDict = scraper.scrape()
 
         self.__allGames = gameDict
-        print type(self.__allGames)
+#        print type(self.__allGames)
 
         try:
-
             for game in gameDict:
-                appid = get_unicode(str(game['appid'])) 
+                appid = get_unicode(game['appid'])
+                #print "Scraping Profile Appid type:", type(appid)
                 if(appid in self.__games):
                     existingGame = self.__games[appid]
+                    #foreach profile game key
                     for key in game.keys():
+                        #print "Game Type for Key:",key,type(game[key])
                         if(not key in existingGame):
+                            # add the value to the existing game
                             existingGame[key] = game[key]
-
-                        
-
-                    
+                            
+                else:
+                    #game isnt installed, add and flag
+                    game['jgInstalled'] = False
+                    self.__games[appid] = game
         except Exception as e:
             print e
         
@@ -254,23 +244,28 @@ class JGMetaSteam:
     # for import into d3
     #
     def exportJson(self):
+        print "\n\n EXPORTING JSON"
         #game info -> array of objects
         #allGames = [self.__games[game] for game in self.__games]
-        outputFile = open("D:/Dropbox/steamGames.json",'w')
-        outJson = json.dump(self.__games,outputFile,sort_keys=True, indent=4, separators=(',',': '), ensure_ascii=True,)
+        
+        outputFile = open(self.exportedJsonLocation,'w')
+        outJson = json.dump(self.__games,outputFile,sort_keys=True, indent=4, separators=(',',': '), ensure_ascii=True, skipkeys=True, )
         outputFile.close()
+        print "Exporting finished"
         
     ##
     # @brief import saved and parsed data
     #
     #
     def importJson(self):
-        try:
-            inputFile = codecs.open("D:/Dropbox/steamGames.json","r")
-            self.__games = json.load(inputFile)
+            inputFile = codecs.open(self.exportedJsonLocation,"r")
+            importedGames = json.load(inputFile)
+            for key in importedGames.keys():
+                game = importedGames[key]
+                appid = get_unicode(_if_number_get_string(game['appid']))
+                #print "Adding: ", game['name']
+                self.__games[appid] = game
             print "Games Loaded"
-        except:
-            print "No json to load"
 
     ##
     # @brief system call to visualisation d3 html page
@@ -284,25 +279,6 @@ class JGMetaSteam:
 
     ## The following from:
     #https://stackoverflow.com/questions/7219361/python-and-beautifulsoup-encoding-issues
-def __if_number_get_string(number):
-    converted_str = number
-    if isinstance(number, int) or \
-       isinstance(number, float):
-        converted_str = str(number)
-    return converted_str
-        
-        
-def get_unicode(strOrUnicode, encoding='utf-8'):
-    strOrUnicode = __if_number_get_string(strOrUnicode)
-    if isinstance(strOrUnicode, unicode):
-        return strOrUnicode
-    return unicode(strOrUnicode, encoding, errors='ignore')
-        
-def get_string(strOrUnicode, encoding='utf-8'):
-    strOrUnicode = __if_number_get_string(strOrUnicode)
-    if isinstance(strOrUnicode, unicode):
-        return strOrUnicode.encode(encoding)
-    return strOrUnicode
         
 
 #             for key in gameDict[0].keys():

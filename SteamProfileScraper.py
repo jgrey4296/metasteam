@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from jgUtility import *
 import os
 from cookielib import CookieJar
 import codecs
@@ -31,6 +32,16 @@ class SteamProfileScraper(RequestSuper):
         self.data = urllib.urlencode(self.values)
         print "Profile Scraper Created"
 
+    def scrape(self):
+        self.request()
+        allGames =  self.soupify(self.html)
+        for game in allGames:
+            game['jgProfiled'] = True
+        return allGames
+        
+
+        
+
     ## soupify
     def soupify(self,html):
         print "Soupifying"
@@ -46,7 +57,7 @@ class SteamProfileScraper(RequestSuper):
                     matched =  re.search(gamePattern,script.string)
                     if matched:
                         print "found"
-                        jsonline = matched.group(1)
+                        jsonline = get_unicode(matched.group(1))
                         print "Converting from Json:"
                         gameDict = json.loads(jsonline)
                         return gameDict
@@ -57,23 +68,3 @@ class SteamProfileScraper(RequestSuper):
 
     ## The following from:
     #https://stackoverflow.com/questions/7219361/python-and-beautifulsoup-encoding-issues
-def __if_number_get_string(number):
-    converted_str = number
-    if isinstance(number, int) or \
-       isinstance(number, float):
-        converted_str = str(number)
-    return converted_str
-        
-        
-def get_unicode(strOrUnicode, encoding='utf-8'):
-    strOrUnicode = __if_number_get_string(strOrUnicode)
-    if isinstance(strOrUnicode, unicode):
-        return strOrUnicode
-    return unicode(strOrUnicode, encoding, errors='ignore')
-        
-def get_string(strOrUnicode, encoding='utf-8'):
-    strOrUnicode = __if_number_get_string(strOrUnicode)
-    if isinstance(strOrUnicode, unicode):
-        return strOrUnicode.encode(encoding)
-    return strOrUnicode
-        
