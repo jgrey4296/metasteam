@@ -1,10 +1,12 @@
-/*global  circle append    log */
+/*global  circle append    log fill  d */
 function generateCircles(){
     //Main Globals
   var globalData = [];
+  var currentDataSet = [];
+
 
   //Tool tip variables:
-  var ttWidth = 300;
+  var ttWidth = 400;
   var ttHeight = 150;
 
   //General Globals
@@ -16,7 +18,7 @@ function generateCircles(){
     var headerSize = 50;
     
     var bubble = d3.layout.pack()
-//                 .sort(null)
+                 .sort(null)
                  .size([500,500])
                  .padding(1.5);
   //.value(function(d){ return d['games'].length; });
@@ -51,53 +53,153 @@ function generateCircles(){
   .style("fill","green")
   .on("click",function(d){
     //console.log("Reset");
+    d3.select("#button1").text("Reset");
     d3.selectAll(".events").remove();
-    drawData({children:globalData});
+    drawData(globalData);
   })
   .transition().duration(1000)
-  .attr("width",150)
+  .attr("width",80)
   .attr("height",50);
 
   button.append("text")
   .attr("transform",function(d){
-    return "translate(" + 50 + "," + 20 + ")";
+    return "translate(" + 25 + "," + 20 + ")";
   })
-
-  .text("Reset")
+  .attr("id","button1")
+  .text("Start")
   .style("fill","white");
 
   //Adding the slider:
-  var drag = d3.behavior.drag()
-  .on("drag", dragmove);
+  var scale = d3.scale.linear().domain([200,0])
+  .range([1,300]);
 
-  function dragmove(d){
+  var drag = d3.behavior.drag()
+  .on("drag", dragmove)
+  .on("dragstart",function(d){
+               console.log("Started Dragging");
+             })
+  .on("dragend",dragEnd);
+  
+
+  function dragmove(){
+    //console.log("Dragging");
     var value = Math.max(0, Math.min(200, d3.event.y));
     d3.select(this)
-    .attr("cy", value);
-    console.log(value);
+    .attr("transform",function(d){
+      return "translate(" + 0 + "," + value + ")";
+    });
+    console.log('Value',value);
+    var maxr = maxOfProperty(currentDataSet,"r");
+    console.log("Drag Max Radius",maxr);
 
-    //Use Value to slice data before redrawing
-    
+    var floorVal = Math.floor(scale(value));
 
+    d3.select(this).select("#sliderText1").text(floorVal)
+    .attr("floorVal",floorVal);
+
+
+    d3.selectAll(".events").each(function(d,i){
+      if(d['value'] > floorVal){
+        d3.select(this).select("circle").transition().attr("r",0);
+      }else{
+        d3.select(this).select("circle").transition().attr("r",d['r']);
+      }
+    });
+
+    }
+
+  function dragEnd(){
+    console.log("End Drag");
+
+    //d3.select(this).attr("cy", value);
+    var value = d3.select("#sliderGroup1").attr("y");
+
+    var maxRadius = maxOfProperty(currentDataSet,"r");
+
+  //Use Value to slice data before redrawing
+    if(currentDataSet.length != null){
+      scale.range([1,maxOfProperty(currentDataSet,'value')]);
+    }
+    //var floorValue = Math.floor(scale(value));
+  //console.log(value,floorValue);
+
+   // d3.selectAll(".events").transition()
+   //  .attr("opacity",function(a,i){
+   //    if(i > floorValue){
+   //      return 0;
+   //    }else{
+   //      return 1;
+   //      }
+   //  });
+
+   // console.log("Redrawing",0,floorValue);
+   //drawData(currentDataSet);
 
   }
 
-v  var slider = mainElement.append("g").classed("slider",true)
-    .attr("transform",function(d){
-    return "translate(" + 50 + "," + (height * 0.5) + ")";
-  });
+  var slider = mainElement.append("g").classed("slider",true)
+               .attr("id","highSlider")
+               .attr("transform",function(d){
+                 return "translate(" + 50 + "," + (height * 0.5) + ")";
+               });
 
 
   slider.append("rect")
   .attr("width",10)
   .attr("height",200);
 
-  slider.append("circle")
-  .attr("r",20)
-  .attr("cx",0)
-  .attr("cy",0)
-  .attr("fill","green")
+  var sg1 = slider.append("g").attr("id","sliderGroup1")
+  .attr("transform",function(d){
+              return "translate(" + 0 + "," + 0 + ")";
+            })
   .call(drag);
+
+
+  sg1.append("circle")
+  .attr("r",20)
+  .attr("cx",5)
+  .attr("cy",0)
+  .attr("fill","green");
+
+
+  sg1.append("text").text("")
+  .attr("transform",function(d){
+    return "translate(" + -5 + "," + 5 + ")";
+  })
+
+  .attr("id","sliderText1")
+  .style("fill","white");
+
+
+  //Resize Button:
+  var resizeButton = buttonArea.append("g").classed("button",true)
+  .attr("transform",function(d){
+    return "translate(" + 20 + "," + 350 + ")";
+  });
+
+  resizeButton.append("rect")
+  .attr("width",0)
+  .attr("height",0)
+  .style("fill","green")
+  .on("click",function(d){
+    console.log("Resize");
+    //d3.selectAll(".events").remove();
+    drawData(currentDataSet);
+  })
+  .transition().duration(1000)
+  .attr("width",80)
+  .attr("height",50);
+
+  resizeButton.append("text")
+  .attr("transform",function(d){
+    return "translate(" + 25 + "," + 20 + ")";
+  })
+  .attr("id","button2")
+  .text("Resize")
+  .style("fill","white");
+
+
+
 
 
 
@@ -150,7 +252,7 @@ v  var slider = mainElement.append("g").classed("slider",true)
         }
       }
     }
-    console.log("Categories:",categories);
+    //console.log("Categories:",categories);
     globalData = [];
     for (var i in categories){
       if(categories.hasOwnProperty(i)){
@@ -160,7 +262,7 @@ v  var slider = mainElement.append("g").classed("slider",true)
 
 
     //console.log("Global Data:",globalData);
-    //    drawData({children:globalData});
+    //    drawData(globalData);
 
 
     
@@ -270,15 +372,47 @@ v  var slider = mainElement.append("g").classed("slider",true)
   /*
    * Draw data of form {children:[data]}
    */
-  function drawData(inData){
-    console.log("Drawing");
-    var nodes = bubble.nodes(inData);
-    var filteredNodes = nodes.filter(function(d){
-                          if(d.hasOwnProperty('children')){
-                            return false;
-                          }else{
-                            return true;
-                          }});
+  function drawData(inData, maxRad=250){
+    //console.log("Drawing", inData, start, end);
+//    currentDataSet = inData.slice(start,end);
+
+    currentDataSet = inData;
+    var localDataSet = currentDataSet.slice(0);
+    console.log("Local Size:",localDataSet.length);
+
+    localDataSet.filter(function(d){
+                     if(d.hasOwnProperty('r')){
+                       if(d['r'] < 0.1){
+                       return false;
+                       }else{
+                         return true;
+                       }
+                     }
+                     return true;
+                   });
+    console.log("Filtered Size:",localDataSet.length);
+    
+    var nodes;
+      console.log("Packing");
+      nodes = bubble.nodes({children:localDataSet});
+      
+
+
+      var filteredNodes = nodes.filter(function(d,i){
+                            if(d.hasOwnProperty('children')){
+                              return false;
+                            }else{
+                              return true;
+                            }});
+
+
+      var maxr = maxOfProperty(filteredNodes,"r");
+      console.log("Max Radius:",maxr);
+      scale.range([1.0,maxOfProperty(currentDataSet,'value')]);
+      nodes = filteredNodes;
+
+
+
 
 
 //    console.log("Nodes:",nodes);
@@ -286,62 +420,81 @@ v  var slider = mainElement.append("g").classed("slider",true)
 
   //Data join
     var events = mainElement.select("#eventContainer")
-                 .selectAll(".events").data(filteredNodes,
-                                            function(d){
-                                              if(d.hasOwnProperty("appid")){
-                                                return d['appid'];
-                                              }else{
-                                                return d['name'];
-                                              }
-                                            })
-                 .enter().append("g")
-                 .classed("events",true);
+                 .selectAll(".events")
+                 .data(nodes,
+                       function(d){
+                         if(d.hasOwnProperty("appid")){
+                           return d['appid'];
+                         }else{
+                           return d['name'];
+                         }}
+                      );
 
 
-                 events.attr("transform",function(d){
-                   return "translate(" + d.x + "," + d.y + ")";
-                 })
-                 .on("mouseover",function(d){
-                   updateTooltip(d);
-                 })
-                 .on("mouseout",function(d){
-                   //hideTooltip(d);
-                 })
-                 .on("mousemove",function(d){
-                   //moveTooltip(d);
-                   })
-                 .on("click",function(d){
-                   //Get the Data from the object:
-                   //console.log("Clicked:",d);
-                     events.selectAll("circle")
-                     .attr("r",0)
-                     .transition().style("opacity",0);
-                     events.transition().delay(1000).remove();
-                   if(d.name == "everything"){
-                     //console.log("Everything:",d);
-                     var gamesList = d['games'];
-                     //console.log("Slice",gamesList);
-                     drawData({children:gamesList});
-                   }else{
-                   if(d.hasOwnProperty('games')
-                     && d['games'].length > 0){
-                     var gamesList = d['games'];
-                     drawData({children:gamesList});
-                   }else{
-                     drawData({children:globalData});
-                   }
-                     }
-                 });
+
+    //console.log("Events:",events);
+
+	events.enter().append("g").classed("events",true)
+	.append("circle")
+	.attr("r",0)
+	.style("fill", function(d)
+		   { return color(Math.random(20))})
+	.transition().duration(1000)
+	.attr("r",function(d){ return d['r']; });
+    
+
+    events.attr("transform",function(d){
+      return "translate(" + d.x + "," + d.y + ")";
+    })
+    .on("mouseover",function(d){
+	  updateTooltip(d);
+	})
+	.on("mouseout",function(d){
+	  //hideTooltip(d);
+	})
+	.on("mousemove",function(d){
+	  //moveTooltip(d);
+	})
+	.on("click",function(d){
+	  //Get the Data from the object:
+	  //console.log("Clicked:",d);
+	  events.selectAll("circle")
+	  .attr("r",0)
+	  .transition().style("opacity",0);
+	  events.transition().delay(1000).remove();
+	  if(d.name == "everything"){
+		//console.log("Everything:",d);
+		var gamesList = d['games'];
+		//console.log("Slice",gamesList);
+		drawData(gamesList);
+	  }else{
+		if(d.hasOwnProperty('games')
+		 && d['games'].length > 0){
+		  var gamesList = d['games'];
+		  drawData(gamesList)
+		}else{
+		  drawData(currentDataSet);
+		}
+	  }
+    });
 
   //Enter and update
-  events.append("circle")
-    .attr("r",0)
-  .style("fill", function(d)
-         { return color(Math.random(20))})
-  .transition().duration(1000)
-  .attr("r",function(d){ return d['r']; })
+    //Update:
+    events.each(function(d,i){
+      var single = d3.select(this);
+      if(d['r'] > maxRad){
+        single//.transition().duration(1000)
+        //.attr("r", 0)
+        .remove();
+      }else{
+        single.attr("r",d['r'])
+        .attr("cx",d['x'])
+        .attr("cy",d['y']);
+        }
+    });
 
-    events.exit();
+   //Exit
+    events.exit().transition().attr("r",0).remove();
 
 }
 
