@@ -28,7 +28,7 @@ class JGMetaSteam:
     ## Constructor
     #  
     #
-    def __init__(self):
+    def __init__(self,profileName):
         cwd = os.getcwd()
         print "CWD: ", cwd, "\n\n\n\n"
         self.exportedJsonLocation = cwd + "\\metaSteamGameList.json"
@@ -37,7 +37,7 @@ class JGMetaSteam:
         self.__allGames = [] # all acount games.  with name inside
         self.__folders = [] #of steam installation directories
         self.steamLocation = "" # of the steam executable
-        self.profileName = "belial4296"
+        self.profileName = profileName
         # self.find_steam()
         self.ageCheckAvoider = AgeCheckAvoider()
         self.find_steam_folders()
@@ -51,6 +51,12 @@ class JGMetaSteam:
         finally:
             raw_input(".........")
 
+    ## Set Profile
+    #
+    #
+    def setProfile(ms,profileName):
+        self.profileName = profileName
+            
     ## Find Steam
     # @brief Searches the filesystem for where steam is
     # 

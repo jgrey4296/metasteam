@@ -189,7 +189,7 @@ function generateCircles(){
       return true;
     });
 
-    console.log("Resized Set:",currentDataSet);
+//    console.log("Resized Set:",currentDataSet);
 
     drawData();
   })
@@ -371,7 +371,7 @@ function generateCircles(){
   function drawData(){
     //console.log("Drawing", inData, start, end);
 //    currentDataSet = inData.slice(start,end);
-    console.log("Packing",currentDataSet);
+    //console.log("Packing",currentDataSet);
     var useData = currentDataSet.slice(0);
     var nodes = bubble.nodes({children:useData});
       
@@ -386,7 +386,7 @@ function generateCircles(){
 
     scale.range([1,maxOfProperty(currentDataSet,'value')]);
 
-    console.log("Nodes:",nodes);
+//    console.log("Nodes:",nodes);
 //    console.log("Filtered:",filteredNodes);
 
   //Data join

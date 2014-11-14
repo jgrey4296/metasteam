@@ -200,14 +200,21 @@ commands = {
     "import":importJson,
     "scrapeAll":scrapeAllGames,
     "visualise":openWebPage,
+    "profile":setProfile,
 }
+
+def setProfile(ms):
+    response = raw_input("Use Steam Profile Name To Use:")
+    if(response):
+        ms.setProfile(response)
+    
 
 ##
 # @brief The user interaction loop
 #
 def main():
     # Initialisation:
-    metaSteam = JGMetaSteam()
+    metaSteam = JGMetaSteam("belial4296")
     
     # Main program loop:
     response = raw_input("%:")

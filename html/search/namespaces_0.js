@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['allgameparse',['allGameParse',['../namespaceall_game_parse.html',1,'']]]
+  ['agecheckavoider',['AgeCheckAvoider',['../namespace_age_check_avoider.html',1,'']]]
 ];
