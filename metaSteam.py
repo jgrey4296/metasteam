@@ -87,8 +87,9 @@ def scrapeAllGames(ms):
     print "Scraping All Games"
     count = 0;
     allTheGames = ms.allKeywordGames("jgProfiled")
-    if len(allTheGames) > 10:
-        allTheGames = random.sample(ms.allKeywordGames("jgProfiled"), 10)
+    #if len(allTheGames) > 10:
+        #allTheGames = random.sample(ms.allKeywordGames("jgProfiled"), 10)
+
         
     allTheGames.sort()
     for game in allTheGames:
@@ -109,7 +110,7 @@ def scrapeAllGames(ms):
         except Exception as e:
             print "Something went wrong"
             print e
-        time.sleep(5)
+        time.sleep(3)
         count += 1
         if(count % 10 == 0):
             ms.exportJson()

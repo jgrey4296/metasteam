@@ -13,6 +13,9 @@ import random
 import json
 from RequestSuper import RequestSuper
 
+steamReleaseDateRegex = re.compile(r"(\w{2,4})\s(\d{2,2}),\s(\d{4,4})")
+
+
 ## ageCheckParse
 # @class ageCheck workaround steam page parser
 # 
@@ -100,9 +103,22 @@ class AgeCheckAvoider(RequestSuper):
                 if category.string:
                 #print "Category:", category.string.strip()
                     extractedTags.append(get_unicode(category.string.strip()))
-                
-            releaseDate = get_unicode(soup.find("div",class_="release_date").span.string.strip())
-            self.releaseDate = releaseDate
+            try:
+                dates = soup.find_all(class_="date")
+                for date in dates:
+                    self.releaseDate = get_unicode(date.string.strip())
+                    dateMatches = steamReleaseDateRegex.match(self.releaseDate)
+                    if(dateMatches):
+                        print "Date Found:\n"
+                        tempDate = {}
+                        tempDate['month'] = dateMatches.group(1)
+                        tempDate['day'] = dateMatches.group(2)
+                        tempDate['year'] = dateMatches.group(3)
+                        self.releaseDate = tempDate
+                        print tempDate
+                        
+            except:
+                PrintException()
             self.tags = list(set([tag for tag in extractedTags]))
         except:
             PrintException()    

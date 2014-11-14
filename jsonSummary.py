@@ -23,19 +23,15 @@ subkeys = set()
 
 for steamid in appids:    
     game = loadedJson[steamid]
-    for key in game:
-        if type(game[key]) is dict:
-            keys.append((key, game[key].keys()))
-        else:
-            keys.append((key, 0))
-
-
-
-keys = set(k for k in keys)        
-keys = sorted(keys)
-
+    for key in game.keys():
+        keys.add(key)
+        if(type(game[key]) is dict):
+            subkeys.add(game[key],keys())
+        
 print "\n\nFields:"
-for key in keys:
+for key in sorted(keys):
     print key
 
-
+print "\n\n Subkeys:"
+for key in sorted(subkeys):
+    print key    

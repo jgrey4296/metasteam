@@ -130,7 +130,8 @@ function generateTimeline(){
        ///////// OR:
 
        //sort into year released groups
-       data = jgSort(data,
+       data = jgSort(data,"releaseDate");
+       
        
        
 

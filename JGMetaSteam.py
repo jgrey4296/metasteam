@@ -47,7 +47,7 @@ class JGMetaSteam:
         except:
             print "scraping"
             self.find_installed_games()
-            #self.scrapeProfile()
+            self.scrapeProfile()
         finally:
             raw_input(".........")
 
@@ -258,6 +258,7 @@ class JGMetaSteam:
     #
     #
     def importJson(self):
+        try:
             inputFile = codecs.open(self.exportedJsonLocation,"r")
             importedGames = json.load(inputFile)
             for key in importedGames.keys():
@@ -266,6 +267,8 @@ class JGMetaSteam:
                 #print "Adding: ", game['name']
                 self.__games[appid] = game
             print "Games Loaded"
+        except Exception as e:
+            PrintException();
 
     ##
     # @brief system call to visualisation d3 html page
@@ -290,3 +293,9 @@ class JGMetaSteam:
 #   #                  print "Appid: ", str(gameDict[0][key])
 #    #                 print "Type: ", type(get_unicode(str(gameDict[0][key])))
 #                     if(get_unicode(str(gameDict[0][key])) in self.__games):
+def _if_number_get_string(number):
+    converted_str = number
+    if isinstance(number, int) or \
+        isinstance(number, float):
+        converted_str = str(number)
+    return converted_str

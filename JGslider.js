@@ -78,6 +78,5 @@ function dragMove() {
 function dragEnd(d) {
     d3.select(this)
         .attr("opacity", 1);
-
 }
 
