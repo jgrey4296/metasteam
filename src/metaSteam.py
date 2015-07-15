@@ -8,7 +8,8 @@
 # @author John Grey <jgrey@ucsc.soe.edu>
 # @version 0.1
 # @date
-#
+
+# TODO: patch note downloading and visualisation
 
 # Notes: 
 # urlf = urllib2.urlopen("url")
@@ -186,6 +187,12 @@ def exportAndExit(ms):
     exportJson(ms)
     exit()
 
+def setProfile(ms):
+    response = raw_input("Use Steam Profile Name To Use:")
+    if(response):
+        ms.setProfile(response)
+    
+
 #Comands:
 
 commands = {
@@ -203,11 +210,7 @@ commands = {
     "profile":setProfile,
 }
 
-def setProfile(ms):
-    response = raw_input("Use Steam Profile Name To Use:")
-    if(response):
-        ms.setProfile(response)
-    
+
 
 ##
 # @brief The user interaction loop

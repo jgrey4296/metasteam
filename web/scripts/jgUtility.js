@@ -1,4 +1,5 @@
 //Utility functions for javascript:
+define([],function(){
 
 function epochToTime(epoch){
 
@@ -46,4 +47,10 @@ function objToArrOfFields(d){
   }
   return outputArray;
 }
+  return {
+    "eToTime" : epochToTime,
+    "maxOfProperty" : maxOfProperty,
+    "objToArrOfFields" : objToArrOfFields,
+  };
 
+}

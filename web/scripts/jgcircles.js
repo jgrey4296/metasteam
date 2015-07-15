@@ -1,5 +1,5 @@
 /*global  circle append    log fill  d length */
-function generateCircles(){
+define(['d3'],function(d3){
     //Main Globals
   var globalData = [];
   var currentDataSet = [];
@@ -32,6 +32,7 @@ function generateCircles(){
 	                .attr('width',width)
 	                .attr("transform","translate("+margin+","+ margin + ")");
 
+
   //Create a place to put the visualised data
   var eventContainer = mainElement.append("g").classed("eventContainer",true)
                        .attr("id","eventContainer")
@@ -43,7 +44,24 @@ function generateCircles(){
                     .attr("id","textOverlay")
                     .attr("transform",function(d){
                       return "translate(" + 250 + "," + 100 + ")";
-                    })
+                    });
+
+  var zoomOverlay = mainElement.append("g").classed("zoomOverlay", true)
+  .attr("id","zoomOverlay")
+  .attr("transform",function(d){
+                      return "translate(" + 250 + "," + 100 + ")";
+                    });
+
+  zoomOverlay.append("circle")
+  .attr("id","zoomCircle")
+  .attr("r",0);
+
+  zoomOverlay.append("text")
+  .attr("id","zoomText")
+  .attr("opacity",0)
+  .text("")
+  .style("fill","white");
+
 
 
   //Make the tooltip:
@@ -76,7 +94,7 @@ function generateCircles(){
     return "translate(" + 25 + "," + 20 + ")";
   })
   .attr("id","button1")
-  .text("Start")
+  .text("Reset")
   .style("fill","white");
 
   //Adding the slider:
@@ -265,6 +283,10 @@ function generateCircles(){
         globalData.push(categories[i]);
       }
     }
+
+    currentDataSet = globalData;
+    drawData();
+
   });
 
   /*
@@ -284,7 +306,11 @@ function generateCircles(){
   function createTooltip(){
     
 	//tooltip
-	var tooltip = mainElement.append("g").classed("tooltip", true);
+	var tooltip = mainElement.append("g").classed("tooltip", true)
+    .attr("transform",function(d){
+                    return "translate(" + 20 + "," + (height * 0.8) + ")";
+                  })
+
 	              //.attr("display","none"); //only display when hovering, see later.
     
 	tooltip.append("rect")
@@ -308,8 +334,7 @@ function generateCircles(){
     .style("fill","white")
     .style("opacity",0);
 
-  }
-
+ }
 
   /* METHODS FOR TOOLTIPS:
    * Tooltip interaction
@@ -418,37 +443,34 @@ function generateCircles(){
     //Text Overlay elements
     //One for each circle
     //On a different group
-    texts.enter().append("g").classed("textOverlays",true)
-    .append("text")
-    .attr("transform",function(d){
-      return "translate(" + d.x + "," + d.y + ")";
-    })
-    .text(function(d){
-      if(d['r'] < 10){
-        return "";
-      }else{
-        return d['name'];
-        }
-    })
-    .style("fill","black")
-    .attr("opacity",0)
-    .each(function(d,i){
-      var that = this;
-      var delay = 2000 * Math.random();
-      setInterval(function(){
-        d3.select(that).transition().delay(function(d){
-          return Math.random() * 2000;
-        })
-        .duration(1000).attr("opacity",1)
-        .transition()
-        .duration(1000).attr("opacity",0)
-      }, 3000);
-    })
-      .style("-moz-user-select","-moz-none");
 
-
-
-
+    // texts.enter().append("g").classed("textOverlays",true)
+    // .append("text")
+    // .attr("transform",function(d){
+    //   return "translate(" + d.x + "," + d.y + ")";
+    // })
+    // .text(function(d){
+    //   if(d['r'] < 10){
+    //     return "";
+    //   }else{
+    //     return d['name'];
+    //     }
+    // })
+    // .style("fill","black")
+    // .attr("opacity",0)
+    // .each(function(d,i){
+    //   var that = this;
+    //   var delay = 2000 * Math.random();
+    //   setInterval(function(){
+    //     d3.select(that).transition().delay(function(d){
+    //       return Math.random() * 2000;
+    //     })
+    //     .duration(1000).attr("opacity",1)
+    //     .transition()
+    //     .duration(1000).attr("opacity",0)
+    //   }, 3000);
+    // })
+    //   .style("-moz-user-select","-moz-none");
 
 	events.enter().append("g").classed("events",true)
 	.append("circle")
@@ -463,9 +485,28 @@ function generateCircles(){
     })
     .on("mouseover",function(d){
 	  updateTooltip(d);
+      // zoomOverlay.select("#zoomCircle")
+      // .attr("transform",function(){
+      //   return "translate(" + d['x'] + "," + d['y'] + ")";
+      // })
+      // .on("mouseout",function(){
+      //   d3.selectAll("#zoomCircle").transition().delay(100).attr("r",0);
+      //   d3.selectAll("#zoomText").transition().delay(100).attr("opacity",0);
+      // })
+      // .transition().delay(1000).attr("r",100)
+
+      // zoomOverlay.select("#zoomText")
+      // .attr("transform",function(){
+      //   return "translate(" + (d['x'] - 75) + "," + (d['y'] - 20) + ")";
+      // })
+      // .text(d['name'])
+      // .transition().delay(1000)
+      // .attr("opacity",1);
+
 	})
 	.on("mouseout",function(d){
 	  //hideTooltip(d);
+
 	})
 	.on("mousemove",function(d){
 	  //moveTooltip(d);
@@ -481,6 +522,21 @@ function generateCircles(){
         && d['games'].length > 0){
         console.log("Games");
         currentDataSet = d['games'];
+      }else if(d.hasOwnProperty('jgTags')){
+        console.log("has Tags");
+        var tags = d['jgTags'];
+        console.log(tags);
+        var filteredTags = globalData.slice(0);
+        filteredTags = filteredTags.filter(
+          function(a){
+            if(tags.indexOf(a['name']) > -1){
+              return true;
+            }else{
+              return false;
+              }
+          });
+        currentDataSet = filteredTags;
+
       }else{
         console.log("No Games");
         console.log("Global Data:",globalData);
