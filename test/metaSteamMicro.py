@@ -4,24 +4,38 @@ import win32api
 import glob
 import codecs
 import json
+import MetaSteamException
+import SteamStoreScraper
 
-
+#Main MetaSteam class
 class MetaSteam:
 
+    #ctor
     def __init__(self,userName):
+        #Data:
         self.userName = userName
-        self.installedGames = []
-        self.profileGames = []
+        #Found Game Information
+        self.installedGames = {} #key = appid 
+        self.profileGames = {} #key = appid
+        #Location of meta steam program:
         self.programLocation = os.path.dirname(os.path.abspath(__file__))
+        #Steam Libraries:
         self.libraryLocations =[]
+        #Steam Executable Location:
         self.steamLocation = ""
         print "TODO: initialise"
 
+        #steam store scraper:
+        self.scraper = SteamStoreScraper()
+        
         #initialisation:
         self.findLibraries()
         self.findSteam()
         self.importFromJson()
-        
+
+        #By this point, all previously found games
+        #should be loaded. Now just find new games,
+        #and get info for them
 
     #foreach drive that has a directory with 'steam'
     #in the name, add it to the list as 'dive\steam\steamapps'
@@ -38,47 +52,84 @@ class MetaSteam:
                 print "Found: " + folder
                 if os.path.exists(folder):
                     self.libraryLocations.append(folder)
+                else:
+                    raise MetaSteamException("Steam Location doesnt exist: " + folder)
 
+    #====================
     def findSteam(self):
         print "Hard coding Steam Location"
-        self.steamLocation = "C:\\Program Files (x86)\\Steam\\"
+        steamLocation = "C:\\Program Files (x86)\\Steam\\"
+        if os.path.exists(steamLocation):
+            self.steamLocation = steamLocation
+            self.libraryLocations.append(steamLocation + "steamapps")
+        else:
+            raise MetaSteamException("Default Steam Location doesnt exist")
 
+    #--------------------
     def exportToJson(self):
         print "TODO: export data to json"
 
+    #--------------------
     def importFromJson(self):
         print "TODO: import data from json"
         try:
             inputFile = codecs.open(self.programLocation + "/data/gameData.json")
             importedJson = json.load(inputFile)
-            for key in importedJson.keys():
+            for key in importedJson.keys():2
                 game = importedJson[key]
                 print "Imported Json Key: " + key
         except Exception as e:
             print e
 
-            
+    #--------------------
     def loadGames(self):
-        print "TODO: load installed game list"
+        print "TODO: load installed game manifests"
         for folder in self.libraryLocations:
             manifests = glob.glob(folder + "*.acf")
             for manifest in manifests:
                 self.parseManifest(manifest)
 
+    #--------------------
     def parseManifest(self,manifest):
         print "TODO: parse manifest"
+        f = file(manifest,'r')
+        regex = re.compile('"(.+?)"\s+"(.+?)"')
+        data = {}
+        for line in f:
+            line = unicode(line,errors="ignore")
+            #print "Line type:",type(line)
+            match = regex.search(line)
+            if match:
+                data[match.group(1)] = match.group(2)
         
-
-                
+        gameid = data['appid']
+        #print "TYPE: ",type(gameid)
+        data['__Installed'] = True
+        self.installedGames[gameid] = data
+        
+    #--------------------
     def profileGames(self):
         print "TODO: load games from profile"
         
+
+    #--------------------
     def getInfoForGame(self,game):
-        print "TODO: get info for a game from the steam store"
+        try:
+            extractedInfo = self.scraper.scrape(game['appid'])
+            game['__tags'] = extractedInfo[0]
+            game['releaseDate'] = scrapedInfo[1]
+            game['__scraped'] = True
+            return game
+        except Exception as e:
+            print e
+            
 
     def getInfoForAllGames(self):
         print "TODO: get all games info from steam"
-
+        for game in self.installedGames:
+            self.installedGames[game.appid] = self.getInfoForGame(game)
+            
+        
     def loadVisualisation(self,visName):
         print "TODO: open web visualisation"
 
