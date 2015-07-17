@@ -22,17 +22,18 @@ import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
 
-globalNumberOfGamesToSearch = 10000
+
 
 
 #Main MetaSteam class
 class MetaSteam:
 
     #ctor
-    def __init__(self,userName):
+    def __init__(self,userName,globalNum):
 
         #Data:
         self.userName = userName
+        self.globalNumberOfGamesToSearch = globalNum
         #Found Game Information
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
@@ -160,12 +161,12 @@ class MetaSteam:
     #get steam page tags and release date
     def getInfoForGame(self,game):
         try:
-            if globalNumberOfGamesToSearch < 1: return game
+            if self.globalNumberOfGamesToSearch < 1: return game
             extractedInfo = self.scraper.scrape(game['appid'])
             game['__tags'] = extractedInfo[0]
             game['releaseDate'] = extractedInfo[1]
             game['__scraped'] = True
-            globalNumberOfGamesToSearch -= 1
+            self.globalNumberOfGamesToSearch -= 1
             return game
         except Exception as e:
             print e
@@ -194,7 +195,8 @@ class MetaSteam:
     
 if __name__ == "__main__":
     print "Default MetaSteam"
+    globalNumToSearch = 10000
     if len(sys.argv) > 1:
         print "Setting no of games to search to " + str(sys.argv[1])
-        globalNumberOfGamesToSearch = sys.argv[1]
-    metaSteam = MetaSteam("belial4296")
+        globalNumToSearch = sys.argv[1]
+    metaSteam = MetaSteam("belial4296",globalNumToSearch)
