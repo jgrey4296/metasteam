@@ -5,6 +5,7 @@ import platform
 import subprocess
 import threading
 import time
+import webbrowser
 if platform.system() == 'Windows':
     import win32api
     skipWin = False
@@ -185,6 +186,7 @@ class MetaSteam:
         
     def loadVisualisation(self,visName):
         print "TODO: open web visualisation"
+        webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
     def startGame(self,game):
         print "TODO: start a game"
