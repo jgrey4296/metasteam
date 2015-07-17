@@ -22,6 +22,8 @@ import json
 import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
+from MetaSteamHTTPServer import MetaSteamHTTPServer
+
 
 waitTime = 10
 
@@ -35,6 +37,10 @@ class MetaSteam:
         #Data:
         self.userName = userName
         self.globalNumberOfGamesToSearch = int(globalNum)
+
+        #The html server to use:
+        #self.simpleServer = MetaSteamHTTPServer()
+        
         #Found Game Information
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
@@ -186,6 +192,7 @@ class MetaSteam:
         
     def loadVisualisation(self,visName):
         print "TODO: open web visualisation"
+        
         webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
     def startGame(self,game):
