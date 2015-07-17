@@ -3,7 +3,7 @@ import os
 
 class MetaSteam:
 
-    def __init__(userName):
+    def __init__(self,userName):
         self.userName = userName
         self.installedGames = []
         self.profileGames = []
