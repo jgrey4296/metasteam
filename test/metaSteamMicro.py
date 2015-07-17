@@ -176,7 +176,7 @@ class MetaSteam:
         for game in self.installedGames:
             if '__scraped' in self.installedGames[game].keys(): continue
             self.installedGames[game] = self.getInfoForGame(self.installedGames[game])
-            print "Game: " + game['name'] + " parsed"
+            print "Game: " + self.installedGames[game]['name'] + " parsed"
             self.exportToJson()
             time.sleep(60)
         self.exportToJson()
