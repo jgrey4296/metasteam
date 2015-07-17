@@ -17,6 +17,7 @@ else:
 import glob
 import codecs
 import json
+import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
 
@@ -104,7 +105,7 @@ class MetaSteam:
 
     #--------------------
     def parseManifest(self,manifest):
-        print "TODO: parse manifest"
+        #print "TODO: parse manifest"
         f = file(manifest,'r')
         regex = re.compile('"(.+?)"\s+"(.+?)"')
         data = {}
@@ -116,6 +117,7 @@ class MetaSteam:
                 data[match.group(1)] = match.group(2)
         
         gameid = data['appid']
+        #print "Found: " + data['name']
         #print "TYPE: ",type(gameid)
         data['__Installed'] = True
         self.installedGames[gameid] = data
