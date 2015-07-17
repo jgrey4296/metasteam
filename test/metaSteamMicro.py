@@ -176,7 +176,7 @@ class MetaSteam:
         for game in self.installedGames.keys():
             if '__scraped' in self.installedGames[game].keys(): continue
             self.installedGames[game] = self.getInfoForGame(self.installedGames[game])
-            if 'name' in self.installedGames[game]:
+            if 'name' in self.installedGames[game].keys():
                 print "Game: " + self.installedGames[game]['name'] + " parsed"
             self.exportToJson()
             time.sleep(60)
@@ -196,5 +196,5 @@ if __name__ == "__main__":
     print "Default MetaSteam"
     if len(sys.argv) > 1:
         print "Setting no of games to search to " + str(sys.argv[1])
-        globalNumberOfGamestoSearch = sys.argv[1]
+        globalNumberOfGamesToSearch = sys.argv[1]
     metaSteam = MetaSteam("belial4296")
