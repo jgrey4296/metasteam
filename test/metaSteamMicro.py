@@ -174,8 +174,8 @@ class MetaSteam:
     #@TODO: be able to reset __scraped
     def getInfoForAllGames(self):
         for game in self.installedGames:
-            if game['__scraped']: continue
-            self.installedGames[game.appid] = self.getInfoForGame(game)
+            if self.installedGame[game]['__scraped']: continue
+            self.installedGames[game] = self.getInfoForGame(self.installedGames[game])
             print "Game: " + game['name'] + " parsed"
             self.exportToJson()
             time.sleep(60)
