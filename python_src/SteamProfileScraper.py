@@ -15,7 +15,7 @@ import json
 from RequestSuper import RequestSuper
 
 ##
-# @class allGamesParsing
+# @class SteamProfileScraper
 # @brief steam profile page scraper
 #
 class SteamProfileScraper(RequestSuper):
@@ -42,7 +42,8 @@ class SteamProfileScraper(RequestSuper):
 
         
 
-    ## soupify
+    ## extract from the html a list of all games
+    #@method soupify
     def soupify(self,html):
         print "Soupifying"
         soup = BeautifulSoup(html)

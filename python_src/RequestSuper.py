@@ -11,8 +11,8 @@ from subprocess import call
 import random
 import json
 
-## ageCheckParse
-# @class ageCheck workaround steam page parser
+## Superclass used for web interaction
+# @class RequestSuper
 # 
 #
 class RequestSuper:
@@ -25,7 +25,7 @@ class RequestSuper:
         self.values = {}
         self.url = "http://google.com"
 
-## request setup
+    ## request setup
     def request(self):
         print "Requesting Profile"
         try:
