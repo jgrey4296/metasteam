@@ -4,8 +4,8 @@ import win32api
 import glob
 import codecs
 import json
-import MetaSteamException
-import SteamStoreScraper
+from MetaSteamException import MetaSteamException
+from SteamStoreScraper import SteamScoreScraper
 
 #Main MetaSteam class
 class MetaSteam:
