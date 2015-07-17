@@ -16,7 +16,7 @@ class MetaSteam:
 
     def findLibraries(self):
         print "TODO: find libraries"
-        drives = win43api.GetLogicalDriveStrings()
+        drives = win32api.GetLogicalDriveStrings()
         print "Drives:" + str(drives)
         drives = drives.split('\000')[:-1]
         for drive in drives:
