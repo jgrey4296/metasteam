@@ -67,8 +67,9 @@ class SteamStoreScraper:
         tempTags = []
         for tag in allTags:
             tempTags.append(get_unicode(tag.string.strip()))
+            print "	Found Tag: " + tag.string.strip()
 
-        extractedTags = list(set([tag for tag in extractedTags]))
+        extractedTags = list(set([tag for tag in tempTags]))
             
         #Categories
         categoryBlock = soup.find(id='category_block')

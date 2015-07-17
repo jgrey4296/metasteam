@@ -22,7 +22,7 @@ import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
 
-
+waitTime = 10
 
 
 #Main MetaSteam class
@@ -107,17 +107,14 @@ class MetaSteam:
     #--------------------
     def importFromJson(self):
         try:
+            print "Loading Json"
             inputFile = codecs.open(self.programLocation + "/data/gameData.json")
             importedJson = json.load(inputFile)
             #
-            for key in importedJson['installedGames'].keys():
-                game = importedJson['installedGames'][key]
-                print "Installed Game Key: " + game['name']
+            for game in importedJson['installed'].values():
                 self.installedGames[game['appid']] = game
             #
-            for key in importedJson['profileGames'].keys():
-                game = importedJson['profileGames'][key]
-                print "Profile Game: " + game['name']
+            for game in importedJson['profile'].values():
                 self.profileGames[game['appid']] = game
         except Exception as e:
             print e
@@ -175,13 +172,15 @@ class MetaSteam:
     def getInfoForAllGames(self):
         for game in self.installedGames.values():
             if self.globalNumberOfGamesToSearch < 1: continue
-            if '__scraped' in game: continue
+            if '__scraped' in game:
+                continue
             self.installedGames[game['appid']] = self.getInfoForGame(game)
             if 'name' in game.keys():
                 print "Game: " + game['name'] + " parsed"
+                game['__scraped'] = True
             self.exportToJson()
             self.globalNumberOfGamesToSearch -= 1
-            time.sleep(60)
+            time.sleep(waitTime)
         self.exportToJson()
         
     def loadVisualisation(self,visName):
