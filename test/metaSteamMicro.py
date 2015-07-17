@@ -33,7 +33,7 @@ class MetaSteam:
 
         #Data:
         self.userName = userName
-        self.globalNumberOfGamesToSearch = globalNum
+        self.globalNumberOfGamesToSearch = int(globalNum)
         #Found Game Information
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
@@ -161,12 +161,11 @@ class MetaSteam:
     #get steam page tags and release date
     def getInfoForGame(self,game):
         try:
-            if self.globalNumberOfGamesToSearch < 1: return game
+
             extractedInfo = self.scraper.scrape(game['appid'])
             game['__tags'] = extractedInfo[0]
             game['releaseDate'] = extractedInfo[1]
             game['__scraped'] = True
-            self.globalNumberOfGamesToSearch -= 1
             return game
         except Exception as e:
             print e
@@ -175,11 +174,13 @@ class MetaSteam:
     #@TODO: be able to reset __scraped
     def getInfoForAllGames(self):
         for game in self.installedGames.values():
+            if self.globalNumberOfGamesToSearch < 1: continue
             if '__scraped' in game: continue
             self.installedGames[game['appid']] = self.getInfoForGame(game)
             if 'name' in game.keys():
                 print "Game: " + game['name'] + " parsed"
             self.exportToJson()
+            self.globalNumberOfGamesToSearch -= 1
             time.sleep(60)
         self.exportToJson()
         
