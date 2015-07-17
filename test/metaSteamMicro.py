@@ -5,7 +5,7 @@ import glob
 import codecs
 import json
 from MetaSteamException import MetaSteamException
-from SteamStoreScraper import SteamScoreScraper
+from SteamStoreScraper import SteamStoreScraper
 
 #Main MetaSteam class
 class MetaSteam:
