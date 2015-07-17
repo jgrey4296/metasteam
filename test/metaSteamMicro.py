@@ -1,6 +1,19 @@
 
 import os
-import win32api
+import platform
+
+if platform.system() == 'Windows':
+    import win32api
+else:
+    #dummy class if not on windows
+    class win32api:
+        def __init__(self):
+            print "USING DUMMY API"
+
+        @staticmethod
+        def GetLogicalDriveStrings(self):
+            return "/"
+    
 import glob
 import codecs
 import json
@@ -48,7 +61,7 @@ class MetaSteam:
             loc = drive + "\*"
             result = glob.glob(loc)
             if any("Steam" in s for s in result):
-                folder = drive + "\\Steam\steamapps\\"
+                folder = drive + "Steam\\steamapps\\"
                 print "Found: " + folder
                 if os.path.exists(folder):
                     self.libraryLocations.append(folder)
