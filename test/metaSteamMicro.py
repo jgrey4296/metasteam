@@ -1,5 +1,7 @@
 
 import os
+import win32api
+import glob
 
 class MetaSteam:
 
@@ -17,7 +19,14 @@ class MetaSteam:
         drives = win43api.GetLogicalDriveStrings()
         print "Drives:" + str(drives)
         drives = drives.split('\000')[:-1]
-        
+        for drive in drives:
+            print "Checking Drive: " + drive
+            loc = drive + "\*"
+            result = glob.glob(loc)
+            if any("Steam" in s for s in result):
+                folder = drive + "\\Steam\steamapps\\"
+                print "Found: " + folder
+                self.libraryLocations.append(folder)
 
     def findSteam(self):
         print "TODO: find steam executable"
