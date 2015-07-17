@@ -1,17 +1,18 @@
 
+import sys
 import os
 import platform
-
+import subprocess
+import threading
+import time
 if platform.system() == 'Windows':
     import win32api
+    skipWin = False
 else:
-    #dummy class if not on windows
+    skipWin = True
     class win32api:
-        def __init__(self):
-            print "USING DUMMY API"
-
         @staticmethod
-        def GetLogicalDriveStrings(self):
+        def GetLogicalDriveStrings():
             return "/"
     
 import glob
@@ -21,11 +22,15 @@ import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
 
+globalNumberOfGamesToSearch = 10000
+
+
 #Main MetaSteam class
 class MetaSteam:
 
     #ctor
     def __init__(self,userName):
+
         #Data:
         self.userName = userName
         #Found Game Information
@@ -46,14 +51,19 @@ class MetaSteam:
         self.findLibraries()
         self.findSteam()
         self.importFromJson()
-
+        self.loadGames()
+        
         #By this point, all previously found games
         #should be loaded. Now just find new games,
         #and get info for them
+        self.getInfoForAllGames()
 
+        
     #foreach drive that has a directory with 'steam'
     #in the name, add it to the list as 'dive\steam\steamapps'
     def findLibraries(self):
+        if skipWin: return
+        
         drives = win32api.GetLogicalDriveStrings()
         print "Drives:" + str(drives)
         drives = drives.split('\000')[:-1]
@@ -71,6 +81,8 @@ class MetaSteam:
 
     #====================
     def findSteam(self):
+        if skipWin: return
+        
         print "Hard coding Steam Location"
         steamLocation = "C:\\Program Files (x86)\\Steam\\"
         if os.path.exists(steamLocation):
@@ -81,23 +93,36 @@ class MetaSteam:
 
     #--------------------
     def exportToJson(self):
-        print "TODO: export data to json"
+        #if not os.path.exists(self.programLocation +"\\data\\gameData.json"): return
+        
+        outputFile = open(self.programLocation + "\\data\\gameData.json",'w')
+        combinedData = {}
+        combinedData['installed'] = self.installedGames
+        combinedData['profile'] = self.profileGames
+        outputJson = json.dump(combinedData,outputFile,sort_keys=True, indent=4, separators=(','':'),ensure_ascii=True, skipkeys=True)
+        outputFile.close()
 
+                          
     #--------------------
     def importFromJson(self):
-        print "TODO: import data from json"
         try:
             inputFile = codecs.open(self.programLocation + "/data/gameData.json")
             importedJson = json.load(inputFile)
-            for key in importedJson.keys():
-                game = importedJson[key]
-                print "Imported Json Key: " + key
+            #
+            for key in importedJson['installedGames'].keys():
+                game = importedJson['installedGames'][key]
+                print "Installed Game Key: " + game['name']
+                self.installedGames[game['appid']] = game
+            #
+            for key in importedJson['profileGames'].keys():
+                game = importedJson['profileGames'][key]
+                print "Profile Game: " + game['name']
+                self.profileGames[game['appid']] = game
         except Exception as e:
             print e
 
     #--------------------
     def loadGames(self):
-        print "TODO: load installed game manifests"
         for folder in self.libraryLocations:
             manifests = glob.glob(folder + "*.acf")
             for manifest in manifests:
@@ -105,7 +130,6 @@ class MetaSteam:
 
     #--------------------
     def parseManifest(self,manifest):
-        #print "TODO: parse manifest"
         f = file(manifest,'r')
         regex = re.compile('"(.+?)"\s+"(.+?)"')
         data = {}
@@ -120,7 +144,11 @@ class MetaSteam:
         #print "Found: " + data['name']
         #print "TYPE: ",type(gameid)
         data['__Installed'] = True
-        self.installedGames[gameid] = data
+        if not gameid in self.installedGames.keys():
+            self.installedGames[gameid] = data
+        else:
+            for field in data.keys():
+                self.installedGames[gameid][field] = data[field]
         
     #--------------------
     def profileGames(self):
@@ -128,22 +156,30 @@ class MetaSteam:
         
 
     #--------------------
+    
+    #get steam page tags and release date
     def getInfoForGame(self,game):
         try:
+            if globalNumberOfGamesToSearch < 1: return game
             extractedInfo = self.scraper.scrape(game['appid'])
             game['__tags'] = extractedInfo[0]
-            game['releaseDate'] = scrapedInfo[1]
+            game['releaseDate'] = extractedInfo[1]
             game['__scraped'] = True
+            globalNumberOfGamesToSearch -= 1
             return game
         except Exception as e:
             print e
             
-
+    #automate
+    #@TODO: be able to reset __scraped
     def getInfoForAllGames(self):
-        print "TODO: get all games info from steam"
         for game in self.installedGames:
+            if game['__scraped']: continue
             self.installedGames[game.appid] = self.getInfoForGame(game)
-            
+            print "Game: " + game['name'] + " parsed"
+            self.exportToJson()
+            time.sleep(60)
+        self.exportToJson()
         
     def loadVisualisation(self,visName):
         print "TODO: open web visualisation"
@@ -156,4 +192,8 @@ class MetaSteam:
 
     
 if __name__ == "__main__":
+    print "Default MetaSteam"
+    if len(sys.argv) > 1:
+        print "Setting no of games to search to " + str(sys.argv[1])
+        globalNumberOfGamestoSearch = sys.argv[1]
     metaSteam = MetaSteam("belial4296")
