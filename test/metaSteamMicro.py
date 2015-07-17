@@ -51,10 +51,11 @@ class MetaSteam:
         try:
             inputFile = codecs.open(self.programLocation + "/data/gameData.json")
             importedJson = json.load(inputFile)
-            for key in importedGames.keys():
-                game = importedGames[key]
+            for key in importedJson.keys():
+                game = importedJson[key]
                 print "Imported Json Key: " + key
-
+        except Exception as e:
+            print e
 
             
     def loadGames(self):
