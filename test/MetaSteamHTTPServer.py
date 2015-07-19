@@ -2,19 +2,61 @@ import sys
 import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 import threading
+import cgi
 
-HandlerClass = SimpleHTTPRequestHandler
 ServerClass  = BaseHTTPServer.HTTPServer
 Protocol     = "HTTP/1.0"
 
-#TODO: make this 
-def runLocalServer():
-    self.port = 8000
-    self.server_address = ('127.0.0.1', self.port)
+#allowedFiles = []
 
-    HandlerClass.protocol_version = Protocol
-    httpd = ServerClass(self.server_address, HandlerClass)
+continueRunning = True
+#turn off with 'global continueRunning, continueRunning = False'
+
+class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+    metaSteamInstance = None
+
+    @staticmethod
+    def registerInstance(metaSteam):
+        print "Registering MetaSteam Instance"
+        metaSteamInstance = metaSteam
+
+    def do_GET(self):
+        print "do_GET"
+        #self.send_response(200)
+        #self.send_header('Content-type','text/html')
+
+        #self.wfile.write("something")
+
+        #self.send_error(404,'File not found')
+
+        
+    def do_POST(self):
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={'REQUEST_METHOD':'POST',
+                     'CONTENT_TYPE':self.headers['Content-Type'],
+            })
+
+        for key in form:
+            print key + ": " + form[key].value
+
+
+            
+def runLocalServer(metaSteamInstance):
+    #Setup:
+    port = 8000
+    server_address = ('127.0.0.1', port)
+    MetaSteamHandler.protocol_version = Protocol
+    MetaSteamHandler.registerInstance(metaSteamInstance)
     
-    sa = httpd.socket.getsockname()
+    #Create and Run the actual server:
+    server = ServerClass(server_address, MetaSteamHandler)
+    
+    sa = server.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
-    httpd.serve_forever()
+
+    while continueRunning:
+        server.handle_request()
+    server.socket.close()
+    print "Shutting Down Server"

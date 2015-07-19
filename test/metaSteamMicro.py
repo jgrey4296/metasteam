@@ -23,7 +23,7 @@ import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
 from MetaSteamHTTPServer import MetaSteamHTTPServer
-
+import MetaSteamHTTPServer
 
 waitTime = 10
 
@@ -192,10 +192,11 @@ class MetaSteam:
         
     def loadVisualisation(self,visName):
         print "TODO: open web visualisation"
-        #
+        #Start the web server in a separate thread
         #webbrowser.open("localhost:8000\web\MetaSteam.html")
         webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
+    #move these into the web server
     def startGame(self,game):
         print "TODO: start a game"
 
