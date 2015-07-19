@@ -1,8 +1,9 @@
 ## The Main MetaSteam Program
 # @module MetaSteam
 #
-#
-#
+# For Reference see:
+# http://timgolden.me.uk/python/win32_how_do_i.html
+# http://www.logix4u.net/component/content/article/27-tutorials/44-how-to-create-windows-executable-exe-from-python-script
 
 import sys
 import os

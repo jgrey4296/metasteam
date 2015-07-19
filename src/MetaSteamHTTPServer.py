@@ -1,8 +1,10 @@
 ## The MetaSteam python->js->python communication server
 # @module MetaSteamServer
 #
-#
-#
+# For Reference see:
+# http://fragments.turtlemeat.com/pythonwebserver.php
+# https://docs.python.org/2/library/basehttpserver.html#BaseHTTPServer.HTTPServer
+# 
 
 import sys
 import BaseHTTPServer
