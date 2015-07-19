@@ -192,7 +192,8 @@ class MetaSteam:
         
     def loadVisualisation(self,visName):
         print "TODO: open web visualisation"
-        
+        #
+        #webbrowser.open("localhost:8000\web\MetaSteam.html")
         webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
     def startGame(self,game):
