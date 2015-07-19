@@ -8,6 +8,8 @@ testReg = re.compile('test')
 
 allowedFiles = os.listdir(os.getcwd())
 
+shouldRun = True
+
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
@@ -20,6 +22,9 @@ class MyHandler(BaseHTTPRequestHandler):
             if len(self.path) > 2 and self.path[1] == '_':
                 print "GOT AN ACTION"
                 self.wfile.write("hello");
+                if self.path[2:] == "exit":
+                    global shouldRun
+                    shouldRun = False
             else:
                 #if a file path:
                 match = [s for s in allowedFiles if self.path[1:] in s]
@@ -54,8 +59,6 @@ class MyHandler(BaseHTTPRequestHandler):
             for key in form:
                 print key + ": " + form[key].value
             
-            #query = cgi.parse_multipart(self.rfile,pdict)
-            #print query
             self.send_response(200)
         except Exception as e:
             print "Something went wrong"
@@ -65,13 +68,12 @@ class MyHandler(BaseHTTPRequestHandler):
         
 
 def main():
-    try:
-        server = HTTPServer(('',8888),MyHandler)
-        print "Starting test server"
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print "shutting down"
-        server.socket.close()
+    server = HTTPServer(('',8888),MyHandler)
+    print "Starting test server"
+    while shouldRun:
+        server.handle_request()
+    server.socket.close()
+    print "Closing Server"
 
 if __name__ == '__main__':
     main()
