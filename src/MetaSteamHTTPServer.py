@@ -1,3 +1,9 @@
+## The MetaSteam python->js->python communication server
+# @module MetaSteamServer
+#
+#
+#
+
 import sys
 import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler

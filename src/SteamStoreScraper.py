@@ -1,3 +1,8 @@
+## The Automated scaper to extract tags from steam store pages
+# @module MetaSteamScraper
+#
+#
+#
 from cookielib import CookieJar
 import re
 import urllib2

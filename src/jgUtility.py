@@ -1,3 +1,8 @@
+## A Collection of utility functions, primarily dealing with unicode and string conversion
+# @module jgUtility
+#
+#
+
 import linecache
 import sys
 
