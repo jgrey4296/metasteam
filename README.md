@@ -33,3 +33,7 @@ a webbrowser to display the web portion of the project (src/web). This
 is a set of d3 visualisations that display the scraped tag data. User
 interaction enables the sending of POST messages to the python server,
 which start the selected game, or a random game, through steam. 
+
+
+#Building
+TODO: add makefile to use py2exe to make this a standalone program
