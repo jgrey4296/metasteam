@@ -44,9 +44,6 @@ class MetaSteam:
         self.userName = userName
         self.globalNumberOfGamesToSearch = int(globalNum)
 
-        #The html server to use:
-        #self.simpleServer = MetaSteamHTTPServer()
-        
         #Found Game Information
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
@@ -199,6 +196,11 @@ class MetaSteam:
     def loadVisualisation(self,visName):
         print "TODO: open web visualisation"
         #Start the web server in a separate thread
+        serverThread = threading.Thread(target=MetaSteamHTTPServer.runLocalSever,args=(self,))
+
+        serverThread.start()
+
+        
         #webbrowser.open("localhost:8000\web\MetaSteam.html")
         webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 

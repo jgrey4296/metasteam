@@ -7,6 +7,7 @@
 # 
 
 import sys
+import os
 import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 import threading
@@ -28,6 +29,8 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         print "Registering MetaSteam Instance"
         metaSteamInstance = metaSteam
 
+    #Main GET handler
+    #used for basic web serving of files
     def do_GET(self):
         print "do_GET"
         #self.send_response(200)
@@ -37,7 +40,8 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
         #self.send_error(404,'File not found')
 
-        
+    #Main POST handler
+    #Used for starting games, and exiting
     def do_POST(self):
         form = cgi.FieldStorage(
             fp=self.rfile,
