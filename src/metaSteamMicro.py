@@ -118,7 +118,7 @@ class MetaSteam:
     def importFromJson(self):
         try:
             print "Loading Json"
-            inputFile = codecs.open(self.programLocation + "/data/gameData.json")
+            inputFile = codecs.open(os.path.join(self.programLocation, "data/gameData.json"))
             importedJson = json.load(inputFile)
             #
             for game in importedJson['installed'].values():
@@ -201,8 +201,8 @@ class MetaSteam:
         serverThread.start()
 
         
-        #webbrowser.open("localhost:8000\web\MetaSteam.html")
-        webbrowser.open(self.programLocation +"\web\MetaSteam.html")
+        webbrowser.open("localhost:8000\web\MetaSteam.html")
+        #webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
     #move these into the web server
     def startGame(self,game):

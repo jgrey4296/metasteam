@@ -16,7 +16,7 @@ import cgi
 ServerClass  = BaseHTTPServer.HTTPServer
 Protocol     = "HTTP/1.0"
 
-#allowedFiles = []
+allowedFiles = []
 
 continueRunning = True
 #turn off with 'global continueRunning, continueRunning = False'
@@ -33,12 +33,29 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     #used for basic web serving of files
     def do_GET(self):
         print "do_GET"
-        #self.send_response(200)
-        #self.send_header('Content-type','text/html')
 
-        #self.wfile.write("something")
+        #search the allowed files for a match with the input path
+        #open that file and return it
+        for fileName, filePath in allowedFiles:
+            if fileName == self.path[1:]:
+                print "Found file: " + fileName + " for " + self.path
+                self.send_response(200)
+                if fileName[-3:] == ".js":
+                    self.send_header('Content-type','application/javascript')
 
-        #self.send_error(404,'File not found')
+                elif fileName[-5:] == ".json":
+                    self.send_header('Content-type','application/json')
+                else:
+                    self.send_header('Content-type','text/html')
+
+                self.end_headers()
+                theFile = open(filePath)
+                self.wfile.write(theFile.read())
+                theFile.close()
+                return
+        #otherwise send error:
+        print "Could Not Find: " + self.path
+        self.send_error(404,'File not found')
 
     #Main POST handler
     #Used for starting games, and exiting
@@ -53,6 +70,20 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         for key in form:
             print key + ": " + form[key].value
 
+        #switch on command:
+
+        #close server
+
+
+        #start game
+
+
+        #start random game
+
+
+        #...save modifed json?
+
+            
 
             
 def runLocalServer(metaSteamInstance):
@@ -60,7 +91,16 @@ def runLocalServer(metaSteamInstance):
     port = 8000
     server_address = ('127.0.0.1', port)
     MetaSteamHandler.protocol_version = Protocol
-    MetaSteamHandler.registerInstance(metaSteamInstance)
+    if metaSteamInstance != None:
+        MetaSteamHandler.registerInstance(metaSteamInstance)
+
+    setupAllowedFiles()
+
+    print "--------------------"
+    print "Allowed Files:"
+    for aFile,path in allowedFiles:
+        print aFile + " : " + path
+    print "--------------------"
     
     #Create and Run the actual server:
     server = ServerClass(server_address, MetaSteamHandler)
@@ -72,3 +112,11 @@ def runLocalServer(metaSteamInstance):
         server.handle_request()
     server.socket.close()
     print "Shutting Down Server"
+
+def setupAllowedFiles():
+    for root, subdirs, files in os.walk(os.getcwd()):
+        for aFile in files:
+            allowedFiles.append((aFile,os.path.join(root,aFile)))
+
+if __name__ == "__main__":
+    runLocalServer(None)    
