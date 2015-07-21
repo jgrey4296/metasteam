@@ -83,7 +83,7 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         #switch on command:
         command = form['command']
 
-        if 'command' === 'startGame' and form['appid']:
+        if 'command' == 'startGame' and form['appid']:
             postCommands[command](form['appid'].value)
         else:
             postCommands[command]()
