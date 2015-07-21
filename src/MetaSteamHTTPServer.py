@@ -50,7 +50,7 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     @staticmethod
     def registerInstance(metaSteam):
         print "Registering MetaSteam Instance"
-        metaSteamInstance = metaSteam
+        MetaSteamHandler.metaSteamInstance = metaSteam
 
     #Main GET handler
     #used for basic web serving of files
