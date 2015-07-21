@@ -16,10 +16,14 @@ import webbrowser
 
 #print "TRY ORDER:"
 #print webbrowser._tryorder
-webbrowser.get("open -a C:\\Program F~\\Mozilla Firefox\\firefox.exe %s")
+
 
 if platform.system() == 'Windows':
     import win32api
+#    if os.path.exists("C:\\Program F~\\Mozilla Firefox\\firefox.exe"):
+#        webbrowser.get("open -a C:\\Program F~\\Mozilla Firefox\\firefox.exe %s")
+#    else:
+#        print "Could Not find firefox"
     skipWin = False
 else:
     skipWin = True

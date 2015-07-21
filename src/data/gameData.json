@@ -1215,35 +1215,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Short",
-                "Great Soundtrack",
-                "Indie",
-                "Puzzle",
-                "Singleplayer",
-                "Fantasy",
-                "Platformer",
-                "Adventure",
-                "Story Rich",
-                "3D Platformer",
-                "Third Person",
-                "Single-player",
-                "Steam Achievements",
-                "Full controller support",
-                "Steam Cloud"
-            ],
             "appid":"227080",
             "buildid":"62552",
             "installdir":"PapoYo",
             "language":"english",
-            "name":"Papo & Yo",
-            "releaseDate":{
-                "day":"18",
-                "month":"Apr",
-                "original":"Apr 18, 2013",
-                "year":"2013"
-            }
+            "name":"Papo & Yo"
         },
         "227200":{
             "227202":"5226475487386413766",
@@ -2975,45 +2951,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Funny",
-                "Co-op",
-                "Superhero",
-                "LEGO",
-                "Comic Book",
-                "Puzzle",
-                "Singleplayer",
-                "Platformer",
-                "Split Screen",
-                "Sandbox",
-                "Online Co-Op",
-                "Local Multiplayer",
-                "Adventure",
-                "Action",
-                "Third Person",
-                "Family Friendly",
-                "Comedy",
-                "Local Co-Op",
-                "Casual",
-                "Open World",
-                "Single-player",
-                "Local Co-op",
-                "Steam Achievements",
-                "Full controller support",
-                "Steam Cloud"
-            ],
             "appid":"249130",
             "buildid":"329428",
             "installdir":"LEGO Marvel Super Heroes",
             "language":"english",
-            "name":"LEGO MARVEL Super Heroes",
-            "releaseDate":{
-                "day":"22",
-                "month":"Oct",
-                "original":"Oct 22, 2013",
-                "year":"2013"
-            }
+            "name":"LEGO MARVEL Super Heroes"
         },
         "24980":{
             "24981":"6967801135238556696",
