@@ -214,7 +214,7 @@ class MetaSteam:
 
         serverThread.start()
         
-        webbrowser.open("localhost:8000\web\MetaSteam.html")
+        webbrowser.get('firefox').open("localhost:8000\web\MetaSteam.html")
         #webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
     #called from the web interface, through the server
