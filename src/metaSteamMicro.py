@@ -81,10 +81,10 @@ class MetaSteam:
         drives = drives.split('\000')[:-1]
         for drive in drives:
             print "Checking Drive: " + drive
-            loc = drive + "\*"
+            loc = os.path.join(drive,"*")
             result = glob.glob(loc)
             if any("Steam" in s for s in result):
-                folder = drive + "Steam\\steamapps\\"
+                folder = os.path.join(drive,"Steam","steamapps")
                 print "Found: " + folder
                 if os.path.exists(folder):
                     self.libraryLocations.append(folder)
@@ -96,18 +96,18 @@ class MetaSteam:
         if skipWin: return
         
         print "Hard coding Steam Location"
-        steamLocation = "C:\\Program Files (x86)\\Steam\\"
+        steamLocation = os.path.join("C:\\","Program Files (x86)","Steam")
         if os.path.exists(steamLocation):
             self.steamLocation = steamLocation
-            self.libraryLocations.append(steamLocation + "steamapps")
+            self.libraryLocations.append(os.path.join(steamLocation,"steamapps"))
         else:
             raise MetaSteamException("Default Steam Location doesnt exist")
 
     #--------------------
     def exportToJson(self):
-        #if not os.path.exists(self.programLocation +"\\data\\gameData.json"): return
+        #if not os.path.exists(os.path.join(self.programLocation,"data","gameData.json")): return
         
-        outputFile = open(self.programLocation + "\\data\\gameData.json",'w')
+        outputFile = open(os.path.join(self.programLocation,"data","gameData.json"),'w')
         combinedData = {}
         combinedData['installed'] = self.installedGames
         combinedData['profile'] = self.profileGames
@@ -119,7 +119,7 @@ class MetaSteam:
     def importFromJson(self):
         try:
             print "Loading Json"
-            inputFile = codecs.open(os.path.join(self.programLocation, "data/gameData.json"))
+            inputFile = codecs.open(os.path.join(self.programLocation, "data","gameData.json"))
             importedJson = json.load(inputFile)
             #
             for game in importedJson['installed'].values():
@@ -133,7 +133,7 @@ class MetaSteam:
     #--------------------
     def loadGames(self):
         for folder in self.libraryLocations:
-            manifests = glob.glob(folder + "*.acf")
+            manifests = glob.glob(os.path.join(folder,"*.acf"))
             for manifest in manifests:
                 self.parseManifest(manifest)
 
