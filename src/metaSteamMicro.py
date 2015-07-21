@@ -236,7 +236,7 @@ class MetaSteam:
         if appid == None:
             appid = 440
             print "No Appid, defaulting to TF2"
-        subprocess.call([self.steamLocation,"-applaunch",appid])
+        subprocess.call([os.path.join(self.steamLocation,"Steam.exe"),"-applaunch",str(appid)])
         
 
         
@@ -248,3 +248,4 @@ if __name__ == "__main__":
         globalNumToSearch = sys.argv[1]
     metaSteam = MetaSteam("belial4296",globalNumToSearch)
     metaSteam.loadVisualisation()
+    metaSteam.startGame(440)

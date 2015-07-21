@@ -71,9 +71,11 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     self.send_header('Content-type','application/json')
                     MetaSteamHandler.metaSteamInstance.jsonLock.acquire()
                     locked = True
+                elif fileName[-4:] == ".css":
+                    self.send_header('Content-type','text/css')
                 else:
                     self.send_header('Content-type','text/html')
-
+                    
                 self.end_headers()
                 theFile = open(filePath)
                 self.wfile.write(theFile.read())
