@@ -71,11 +71,11 @@ class MetaSteam:
         #should be loaded. Now just find new games,
         #and get info for them
 
-        threading.thread(target=self.getInfoForAllGames)
-
+        getInfoThread = threading.Thread(target=self.getInfoForAllGames,args=(self,))
+        getInfoThread.start()
         
     #foreach drive that has a directory with 'steam'
-    #in the name, add it to the list as 'dive\steam\steamapps'
+    #in the name, add it to the list as 'drive\steam\steamapps'
     def findLibraries(self):
         if skipWin: return
         
@@ -209,7 +209,7 @@ class MetaSteam:
         
     def loadVisualisation(self):
         #Start the web server in a separate thread
-        serverThread = threading.Thread(target=MetaSteamHTTPServer.runLocalSever,args=(self,))
+        serverThread = threading.Thread(target=MetaSteamHTTPServer.runLocalServer,args=(self,))
 
         serverThread.start()
         
@@ -222,7 +222,7 @@ class MetaSteam:
         if appid == None:
             appid = 440
             print "No Appid, defaulting to TF2"
-        subprocess.call([self.steamLocation,'-applaunch',appid])
+        subprocess.call([self.steamLocation,"-applaunch",appid])
         
 
         
