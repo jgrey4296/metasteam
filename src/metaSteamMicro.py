@@ -40,6 +40,8 @@ class MetaSteam:
     def __init__(self,userName,globalNum):
 
         #Locks: (TODO)
+        self.jsonLock = threading.Lock()
+        self.internalDataLock = threading.Lock()
         
         #Data:
         self.userName = userName
@@ -68,7 +70,8 @@ class MetaSteam:
         #By this point, all previously found games
         #should be loaded. Now just find new games,
         #and get info for them
-        self.getInfoForAllGames()
+
+        threading.thread(target=self.getInfoForAllGames)
 
         
     #foreach drive that has a directory with 'steam'
@@ -106,18 +109,20 @@ class MetaSteam:
     #--------------------
     def exportToJson(self):
         #if not os.path.exists(os.path.join(self.programLocation,"data","gameData.json")): return
-        
+        self.jsonLock.acquire()
         outputFile = open(os.path.join(self.programLocation,"data","gameData.json"),'w')
         combinedData = {}
         combinedData['installed'] = self.installedGames
         combinedData['profile'] = self.profileGames
         outputJson = json.dump(combinedData,outputFile,sort_keys=True, indent=4, separators=(','':'),ensure_ascii=True, skipkeys=True)
         outputFile.close()
+        self.jsonLock.release()
 
                           
     #--------------------
     def importFromJson(self):
         try:
+            self.jsonLock.acquire()
             print "Loading Json"
             inputFile = codecs.open(os.path.join(self.programLocation, "data","gameData.json"))
             importedJson = json.load(inputFile)
@@ -129,6 +134,8 @@ class MetaSteam:
                 self.profileGames[game['appid']] = game
         except Exception as e:
             print e
+        finally:
+            self.jsonLock.release()
 
     #--------------------
     def loadGames(self):
@@ -185,7 +192,9 @@ class MetaSteam:
             if self.globalNumberOfGamesToSearch < 1: continue
             if '__scraped' in game:
                 continue
+            self.internalDataLock.acquire()
             self.installedGames[game['appid']] = self.getInfoForGame(game)
+            self.internalDataLock.release()
             if 'name' in game.keys():
                 print "Game: " + game['name'] + " parsed"
                 game['__scraped'] = True

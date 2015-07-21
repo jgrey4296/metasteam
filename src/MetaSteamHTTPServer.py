@@ -59,6 +59,7 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
         #search the allowed files for a match with the input path
         #open that file and return it
+        locked = False
         for fileName, filePath in allowedFiles:
             if fileName in self.path[1:]:
                 print "Found file: " + fileName + " for " + self.path
@@ -68,6 +69,8 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
                 elif fileName[-5:] == ".json":
                     self.send_header('Content-type','application/json')
+                    MetaSteamHandler.metaSteamInstance.jsonLock.acquire()
+                    locked = True
                 else:
                     self.send_header('Content-type','text/html')
 
@@ -75,6 +78,11 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 theFile = open(filePath)
                 self.wfile.write(theFile.read())
                 theFile.close()
+
+                if locked:
+                    MetaSteamHandler.metaSteamInstance.jsonLock.release()
+                    
+                
                 return
         #otherwise send error:
         print "Could Not Find: " + self.path
@@ -96,7 +104,7 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         if 'command' not in form: return
             
         #switch on command:
-        command = form['command']
+        command = form['command'].value
 
         if 'command' == 'startGame' and form['appid']:
             postCommands[command](form['appid'].value)
