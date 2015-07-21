@@ -21,6 +21,14 @@ allowedFiles = []
 continueRunning = True
 #turn off with 'global continueRunning, continueRunning = False'
 
+
+#Command map for POST:
+postCommands = {
+    'closeServer':close_server,
+    'startGame': start_game,
+    'saveJson':save_json
+    }
+
 class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     metaSteamInstance = None
 
@@ -37,7 +45,7 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         #search the allowed files for a match with the input path
         #open that file and return it
         for fileName, filePath in allowedFiles:
-            if fileName == self.path[1:]:
+            if fileName in self.path[1:]:
                 print "Found file: " + fileName + " for " + self.path
                 self.send_response(200)
                 if fileName[-3:] == ".js":
@@ -70,19 +78,36 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         for key in form:
             print key + ": " + form[key].value
 
+        if 'command' not in form: return
+            
         #switch on command:
+        command = form['command']
 
-        #close server
+        if 'command' === 'startGame' and form['appid']:
+            postCommands[command](form['appid'].value)
+        else:
+            postCommands[command]()
 
+        self.send_response(200)
+        self.send_header('Content-type','text-html')
+        self.end_headers()
+        self.wfile.write("Command Complete")
+        
+#close server
+def close_server(self):
+    print "Triggering Server Shutdown"
+    global continueRunning
+    continueRunning = False
 
-        #start game
-
-
-        #start random game
-
+#start game
+def start_game(self,appid):
+    print "Triggering Game Start"
+    MetaSteamHandler.metaSteamInstance.startGame(appid)
 
         #...save modifed json?
-
+def save_json(self):
+    print "Triggering Json Save"
+    MetaSteamHandler.metaSteamInstance.exportToJson()
             
 
             

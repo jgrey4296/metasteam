@@ -31,14 +31,14 @@ class SteamStoreScraper:
     html = ""    
     def scrape(self,appid):
         gameUrl = self.storeUrl + str(appid)
-        storeHtml = self.webRequest(gameUrl,{})
-
-        if(self.avoidAgeCheck(storeHtml)):
-            ageCheckUrl = self.ageUrl + appid + "/"
-            storeHtml = self.webRequest(ageCheckUrl,self.ageCheckValues)
-
+        extractedInfo = [[],[]]
         
-        extractedInfo = self.storeExtraction(storeHtml)    
+        while len(extractedInfo[0]) == 0 or len(extractedInfo[1]) == 1:
+            storeHtml = self.webRequest(gameUrl,{})
+            if(self.avoidAgeCheck(storeHtml)):
+                ageCheckUrl = self.ageUrl + appid + "/"
+                storeHtml = self.webRequest(ageCheckUrl,self.ageCheckValues)
+            extractedInfo = self.storeExtraction(storeHtml)    
         
         #["tags","releaseDate"]
         return extractedInfo

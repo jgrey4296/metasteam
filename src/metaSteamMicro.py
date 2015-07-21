@@ -28,7 +28,6 @@ import json
 import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
-from MetaSteamHTTPServer import MetaSteamHTTPServer
 import MetaSteamHTTPServer
 
 waitTime = 10
@@ -40,6 +39,8 @@ class MetaSteam:
     #ctor
     def __init__(self,userName,globalNum):
 
+        #Locks: (TODO)
+        
         #Data:
         self.userName = userName
         self.globalNumberOfGamesToSearch = int(globalNum)
@@ -52,8 +53,8 @@ class MetaSteam:
         #Steam Libraries:
         self.libraryLocations =[]
         #Steam Executable Location:
+
         self.steamLocation = ""
-        print "TODO: initialise"
 
         #steam store scraper:
         self.scraper = SteamStoreScraper()
@@ -193,25 +194,25 @@ class MetaSteam:
             time.sleep(waitTime)
         self.exportToJson()
         
-    def loadVisualisation(self,visName):
-        print "TODO: open web visualisation"
+    def loadVisualisation(self):
         #Start the web server in a separate thread
         serverThread = threading.Thread(target=MetaSteamHTTPServer.runLocalSever,args=(self,))
 
         serverThread.start()
-
         
         webbrowser.open("localhost:8000\web\MetaSteam.html")
         #webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
-    #move these into the web server
-    def startGame(self,game):
-        print "TODO: start a game"
+    #called from the web interface, through the server
+    def startGame(self,appid):
+        print "Starting game: " + str(appid)
+        if appid == None:
+            appid = 440
+            print "No Appid, defaulting to TF2"
+        subprocess.call([self.steamLocation,'-applaunch',appid])
+        
 
-    def startRandomGame(self):
-        print "TODO: start random game"
-
-    
+        
 if __name__ == "__main__":
     print "Default MetaSteam"
     globalNumToSearch = 10000
@@ -219,3 +220,4 @@ if __name__ == "__main__":
         print "Setting no of games to search to " + str(sys.argv[1])
         globalNumToSearch = sys.argv[1]
     metaSteam = MetaSteam("belial4296",globalNumToSearch)
+    metaSteam.loadVisualisation()
