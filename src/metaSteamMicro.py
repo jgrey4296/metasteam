@@ -71,7 +71,7 @@ class MetaSteam:
         #should be loaded. Now just find new games,
         #and get info for them
 
-        getInfoThread = threading.Thread(target=self.getInfoForAllGames,args=(self,))
+        getInfoThread = threading.Thread(target=MetaSteam.getInfoForAllGames,args=(self,))
         getInfoThread.start()
         
     #foreach drive that has a directory with 'steam'
@@ -209,6 +209,7 @@ class MetaSteam:
         
     def loadVisualisation(self):
         #Start the web server in a separate thread
+        print "Sending to RunLocalServer: " + str(self)
         serverThread = threading.Thread(target=MetaSteamHTTPServer.runLocalServer,args=(self,))
 
         serverThread.start()

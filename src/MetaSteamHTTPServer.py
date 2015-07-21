@@ -119,13 +119,14 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
             
 def runLocalServer(metaSteamInstance):
+    print "Run Local Server recieved: " + str(metaSteamInstance)
     #Setup:
     port = 8000
     server_address = ('127.0.0.1', port)
     MetaSteamHandler.protocol_version = Protocol
     if metaSteamInstance != None:
         MetaSteamHandler.registerInstance(metaSteamInstance)
-
+    
     setupAllowedFiles()
 
     print "--------------------"
