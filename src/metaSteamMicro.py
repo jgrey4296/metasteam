@@ -12,6 +12,12 @@ import subprocess
 import threading
 import time
 import webbrowser
+#Register Firefox:
+
+#print "TRY ORDER:"
+#print webbrowser._tryorder
+webbrowser.get("open -a C:\\Program F~\\Mozilla Firefox\\firefox.exe %s")
+
 if platform.system() == 'Windows':
     import win32api
     skipWin = False
@@ -213,8 +219,11 @@ class MetaSteam:
         serverThread = threading.Thread(target=MetaSteamHTTPServer.runLocalServer,args=(self,))
 
         serverThread.start()
-        
-        webbrowser.get('firefox').open("localhost:8000\web\MetaSteam.html")
+        print "\nOPENING WEBBROWSER:\n\n"
+
+
+        #webbrowser.open("http:\\google.com")
+        webbrowser.open("http:\\localhost:8000\web\MetaSteam.html")
         #webbrowser.open(self.programLocation +"\web\MetaSteam.html")
 
     #called from the web interface, through the server
