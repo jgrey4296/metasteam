@@ -110,12 +110,14 @@ class MetaSteam:
     def exportToJson(self):
         #if not os.path.exists(os.path.join(self.programLocation,"data","gameData.json")): return
         self.jsonLock.acquire()
+        self.internalDataLock.acquire()
         outputFile = open(os.path.join(self.programLocation,"data","gameData.json"),'w')
         combinedData = {}
         combinedData['installed'] = self.installedGames
         combinedData['profile'] = self.profileGames
         outputJson = json.dump(combinedData,outputFile,sort_keys=True, indent=4, separators=(','':'),ensure_ascii=True, skipkeys=True)
         outputFile.close()
+        self.internalDataLock.release()
         self.jsonLock.release()
 
                           
@@ -123,6 +125,7 @@ class MetaSteam:
     def importFromJson(self):
         try:
             self.jsonLock.acquire()
+            self.internalDataLock.acquire()
             print "Loading Json"
             inputFile = codecs.open(os.path.join(self.programLocation, "data","gameData.json"))
             importedJson = json.load(inputFile)
@@ -136,7 +139,8 @@ class MetaSteam:
             print e
         finally:
             self.jsonLock.release()
-
+            self.internalDataLock.release()
+            
     #--------------------
     def loadGames(self):
         for folder in self.libraryLocations:
