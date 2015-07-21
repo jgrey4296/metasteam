@@ -21,7 +21,22 @@ allowedFiles = []
 continueRunning = True
 #turn off with 'global continueRunning, continueRunning = False'
 
+#close server
+def close_server(self):
+    print "Triggering Server Shutdown"
+    global continueRunning
+    continueRunning = False
 
+#start game
+def start_game(self,appid):
+    print "Triggering Game Start"
+    MetaSteamHandler.metaSteamInstance.startGame(appid)
+
+        #...save modifed json?
+def save_json(self):
+    print "Triggering Json Save"
+    MetaSteamHandler.metaSteamInstance.exportToJson()
+            
 #Command map for POST:
 postCommands = {
     'closeServer':close_server,
@@ -93,22 +108,6 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write("Command Complete")
         
-#close server
-def close_server(self):
-    print "Triggering Server Shutdown"
-    global continueRunning
-    continueRunning = False
-
-#start game
-def start_game(self,appid):
-    print "Triggering Game Start"
-    MetaSteamHandler.metaSteamInstance.startGame(appid)
-
-        #...save modifed json?
-def save_json(self):
-    print "Triggering Json Save"
-    MetaSteamHandler.metaSteamInstance.exportToJson()
-            
 
             
 def runLocalServer(metaSteamInstance):
