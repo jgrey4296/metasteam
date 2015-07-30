@@ -38,6 +38,7 @@ import json
 import re
 from MetaSteamException import MetaSteamException
 from SteamStoreScraper import SteamStoreScraper
+from SteamProfileScraper import SteamProfileScraper
 import MetaSteamHTTPServer
 
 waitTime = 10
@@ -70,6 +71,7 @@ class MetaSteam:
 
         #steam store scraper:
         self.scraper = SteamStoreScraper()
+        self.profileScraper = SteamProfileScraper()
         
         #initialisation:
         self.findLibraries()
@@ -179,10 +181,15 @@ class MetaSteam:
         else:
             for field in data.keys():
                 self.installedGames[gameid][field] = data[field]
-        
+
+    #----------
+    def combineData(self):
+        print("TODO:combine data from store scraping and profile scraping")
+                
     #--------------------
-    def profileGames(self):
-        print "TODO: load games from profile"
+    def getProfileGames(self):
+        extractedInfo = self.profileScraper.scrape(self.userName)
+        self.profileGames = extractedInfo
         
 
     #--------------------

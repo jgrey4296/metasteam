@@ -13,7 +13,7 @@ from jgUtility import *
 gamePattern = re.compile(r"^\s*var rgGames\s=(.*);")
 
 
-class SteamStoreScraper:
+class SteamProfileScraper:
 
     def __init__(self,profileName):
         self.storeUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
