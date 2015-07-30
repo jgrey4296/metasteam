@@ -30,12 +30,14 @@ def close_server(self):
 #start game
 def start_game(self,appid):
     print "Triggering Game Start"
-    MetaSteamHandler.metaSteamInstance.startGame(appid)
+    if MetaSteamHandler.cmsi():
+        MetaSteamHandler.metaSteamInstance.startGame(appid)
 
         #...save modifed json?
 def save_json(self):
     print "Triggering Json Save"
-    MetaSteamHandler.metaSteamInstance.exportToJson()
+    if MetaSteamHandler.cmsi():
+        MetaSteamHandler.metaSteamInstance.exportToJson()
             
 #Command map for POST:
 postCommands = {
@@ -52,6 +54,14 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         print "Registering MetaSteam Instance"
         MetaSteamHandler.metaSteamInstance = metaSteam
 
+    #check for meta steam instance
+    @staticmethod
+    def cmsi():
+        if not MetaSteamHandler.metaSteamInstance is None:
+            return True
+        else:
+            return False
+        
     #Main GET handler
     #used for basic web serving of files
     def do_GET(self):
@@ -69,7 +79,8 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
                 elif fileName[-5:] == ".json":
                     self.send_header('Content-type','application/json')
-                    MetaSteamHandler.metaSteamInstance.jsonLock.acquire()
+                    if MetaSteamHandler.cmsi():
+                        MetaSteamHandler.metaSteamInstance.jsonLock.acquire()
                     locked = True
                 elif fileName[-4:] == ".css":
                     self.send_header('Content-type','text/css')
@@ -81,7 +92,7 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 self.wfile.write(theFile.read())
                 theFile.close()
 
-                if locked:
+                if locked and MetaSteamHandler.cmsi():
                     MetaSteamHandler.metaSteamInstance.jsonLock.release()
                     
                 

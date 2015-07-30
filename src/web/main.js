@@ -1,17 +1,18 @@
 /**
-   The Main module of metasteam
+   The Main module of metasteam.js
    relies on being run from a server,
    at root ../ to allow access to ../data
    @module metasteam
    @main
 */
 
-require(['libs/d3.min'],function(d3){
+require(['libs/d3.min','ms_circlePack','underscore'],function(d3,Mscp,_){
     //Main:
     //Load the json data
     console.log("hello world");
 
-    
+    var data = undefined;
+    var mscp = undefined;
     //Size Globals:
     var margin = 30;
     var svgHeight = window.innerHeight - margin;
@@ -35,14 +36,18 @@ require(['libs/d3.min'],function(d3){
             return 'translate(' + (svgWidth - 60) + ',0)';
         })
         .attr('id','rightBar');
+    
 
 
     
     //Load the json Data:
-    d3.json("../data/gameData.json",function(data){
-        console.log("DATA: ", data);
+    d3.json("gameData.json",function(d){
+        data = d;
+        console.log("Base DATA:",d);
+        mscp = new Mscp(svgHeight,svgWidth,d.installed);
+        var transformedData = mscp.transformData(_.keys(d.installed));
         
-
+        mscp.draw(transformedData);
         
     });
 
