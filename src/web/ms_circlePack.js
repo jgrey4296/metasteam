@@ -19,7 +19,29 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
             .padding(4);
         this.baseData = startingData;
 
+        d3.select("#mainsvg").on("mousemove",function(d){
+            tooltip.move(d3.event.clientX,d3.event.clientY);
+        });
 
+        var mscpInstance = this;
+        var reset = d3.select("#mainsvg").append("g")
+            .attr("id","resetButton")
+            .on("mousedown",function(d){
+                console.log("reseting");
+                var newData = mscpInstance.transformData(_.keys(mscpInstance.baseData));
+                mscpInstance.draw(newData);
+            });
+
+        reset.append("rect")
+            .attr("width",50)
+            .attr("height",50);
+
+        reset.append("text")
+            .style("fill","white")
+            .text("reset")
+            .attr("transform","translate(20,25)");
+        
+        this.previousData = [];
     };
 
     //TODO: need to have scraped profile data for this
@@ -79,9 +101,9 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
         var mscpInstance = this;
         console.log("Draw data:",data);
         var main = d3.select("#mainsvg");
-        main.on("mousemove",function(d){
-            tooltip.move(d3.event.clientX,d3.event.clientY);
-        });
+
+        
+        d3.selectAll(".node").remove();
         
         var nodes = main.selectAll(".node")
             .data(this.bubble.nodes(data)
@@ -108,8 +130,6 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
                     mscpInstance.draw(newSelection);
                 }else{
                     var newSelection = mscpInstance.transformToGameData(d.appids);
-
-                    nodes.remove();
                     mscpInstance.draw(newSelection);
                 }
             });

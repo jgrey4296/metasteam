@@ -9,6 +9,7 @@ import urllib2
 import urllib
 from bs4 import BeautifulSoup
 from jgUtility import *
+import json
 
 gamePattern = re.compile(r"^\s*var rgGames\s=(.*);")
 
@@ -16,7 +17,7 @@ gamePattern = re.compile(r"^\s*var rgGames\s=(.*);")
 class SteamProfileScraper:
 
     def __init__(self,profileName):
-        self.storeUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
+        self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
 
         cj = CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
@@ -24,13 +25,12 @@ class SteamProfileScraper:
 
     html = ""    
 
-    def scrape(self,appid):
-        gameUrl = self.storeUrl + str(appid)
-        extractedInfo = [[],[]]
+    def scrape(self):
+        url = self.profileUrl
+        extractedInfo = []
         
-        while len(extractedInfo[0]) == 0 or len(extractedInfo[1]) == 1:
-            profileHtml = self.webRequest(gameUrl,{'tab' : 'all'})
-            extractedInfo = self.profileExtraction(profileHtml)
+        profileHtml = self.webRequest(url,{'tab' : 'all'})
+        extractedInfo = self.profileExtraction(profileHtml)
 
         return extractedInfo
         
