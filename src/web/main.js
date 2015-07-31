@@ -6,7 +6,7 @@
    @main
 */
 
-require(['libs/d3.min','ms_circlepack2','underscore'],function(d3,Mscp,_){
+require(['libs/d3.min','ms_circlepack2','underscore','ms_tooltip'],function(d3,Mscp,_,Tooltip){
     //Main:
     //Load the json data
     console.log("hello world");
@@ -44,13 +44,13 @@ require(['libs/d3.min','ms_circlepack2','underscore'],function(d3,Mscp,_){
 	.append("g")
 	.attr("id","circlePack");
 
-
+    var tooltip = new Tooltip();
     
     //Load the json Data:
     d3.json("gameData.json",function(d){
         data = d;
         console.log("Base DATA:",d);
-        mscp = new Mscp(svgHeight,svgWidth,d.installed);
+        mscp = new Mscp(svgWidth-100,svgHeight,d.installed,tooltip);
         mscp.draw();
         
     });

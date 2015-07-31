@@ -2,13 +2,12 @@
    Second attempt at circle pack visualisation for metasteam
 */
 
-define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
+define(['d3.min','underscore'],function(d3,_){
 
-    var CP = function(sizeX,sizeY,listOfGames){
-	console.log("Sizes:",sizeX,sizeY);
-        //the tooltip for the visualisation:
-        //this.tooltip = Tooltip();
-        //this.tooltip.draw();
+
+    var CP = function(sizeX,sizeY,listOfGames,tooltip){
+	console.log("Sizes:",sizeX,sizeY);//the tooltip for the visualisation:
+        this.tooltip = tooltip;
         
         //The data the circle pack will be using:
         this.baseData = listOfGames;
@@ -18,6 +17,9 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
 
         //Packer:
         this.bubble = d3.layout.pack()
+            .sort(function(f,s){
+                return f.name < s.name;
+            })
             .size([sizeX,sizeY])
             .padding(1.5);
 
@@ -70,7 +72,6 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
 
         var main = d3.select("#circlePack");
 
-
 	if(data !== undefined){
             this.currentDataSet = data;
         }else{
@@ -98,9 +99,27 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
         var containers = node.enter().append("g").classed("node",true)
             .on("mouseover",function(d){
                 //cpInstance.tooltip.show(d.name);
+                d3.select(this).select("circle").transition()
+                    .attr("r",d.r + 50);
+
+                if(d.r < 20){
+                    d3.select(this).select("text").text(d.name);
+                }
+                
+                d3.select(this).select("text").transition()
+                    .style("opacity",1);
             })
             .on("mouseout",function(d){
                 //cpInstance.tooltip.hide();
+                d3.select(this).select("circle").transition()
+                    .attr("r",d.r);
+                d3.select(this).select("text").transition()
+                    .style("opacity",0);
+
+                if(d.r < 20){
+                    d3.select(this).select("text").text("");
+                }
+                
             })
             .on("mousemove",function(d){
 		
@@ -117,7 +136,7 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
                 }
             })
             .attr("transform",function(d){
-                return "translate(" + d.x +","+ d.y + ")";
+                return "translate(" + (d.x + 40)  +","+ d.y + ")";
             });
 
         containers.append("circle")
@@ -148,7 +167,10 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
         
 
         node.selectAll("circle").transition().attr('r',function(d){ return d.r;});
-    
+
+
+        this.tooltip.draw();
+        
     };
 
     return CP;
