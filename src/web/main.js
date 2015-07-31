@@ -6,7 +6,7 @@
    @main
 */
 
-require(['libs/d3.min','ms_circlePack','underscore'],function(d3,Mscp,_){
+require(['libs/d3.min','ms_circlepack2','underscore'],function(d3,Mscp,_){
     //Main:
     //Load the json data
     console.log("hello world");
@@ -45,9 +45,7 @@ require(['libs/d3.min','ms_circlePack','underscore'],function(d3,Mscp,_){
         data = d;
         console.log("Base DATA:",d);
         mscp = new Mscp(svgHeight,svgWidth,d.installed);
-        var transformedData = mscp.transformData(_.keys(d.installed));
-        
-        mscp.draw(transformedData);
+        mscp.draw();
         
     });
 

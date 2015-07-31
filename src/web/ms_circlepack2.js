@@ -2,9 +2,13 @@
    Second attempt at circle pack visualisation for metasteam
 */
 
-define(['d3.min','underscore'],function(d3,_){
+define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
 
     var CP = function(sizeX,sizeY,listOfGames){
+        //the tooltip for the visualisation:
+        //this.tooltip = Tooltip();
+        //this.tooltip.draw();
+        
         //The data the circle pack will be using:
         this.baseData = listOfGames;
         this.categories = {};
@@ -21,13 +25,17 @@ define(['d3.min','underscore'],function(d3,_){
         this.categories['everything'] = {
             name: 'everything',
             games: [],
-            value: 0
+            value: 0.1
         };
 
         //for every game
         for(var i in this.baseData){
             var game = this.baseData[i];
-            game['value'] = game['hours_forever'];
+            if(game['hours_forever']) {
+                game['value'] = game['hours_forever'];
+            }else{
+                game['value'] = 1;
+            }
             this.categories['everything']['games'].push(game);
             var tags = game['__tags'];
             //for every tag for every game
@@ -37,7 +45,7 @@ define(['d3.min','underscore'],function(d3,_){
                     this.categories[tag] = {
                         name: tag,
                         games: [],
-                        value : 0
+                        value : 0.1
                     };
                 }
                 this.categories[tag]['games'].push(game);
@@ -57,8 +65,14 @@ define(['d3.min','underscore'],function(d3,_){
 
         var main = d3.select("#mainsvg");
 
+        if(data !== undefined){
+            this.currentDataSet = data;
+        }else{
+            this.currentDataSet = _.values(this.categories);
+        }
+        
         //The node data structure from packing
-        var packed_nodes = bubble.nodes({children:this.currentDataSet}).filter(function(d,i){
+        var packed_nodes = this.bubble.nodes({children:this.currentDataSet}).filter(function(d,i){
             if(d['children']) return false;
             return true;
         });
@@ -73,31 +87,62 @@ define(['d3.min','underscore'],function(d3,_){
                       return "unknown";
                   });
 
+        var cpInstance = this;
         //the existing g's
         var containers = node.enter().append("g").classed("node",true)
             .on("mouseover",function(d){
-
+                //cpInstance.tooltip.show(d.name);
             })
             .on("mouseout",function(d){
-
+                //cpInstance.tooltip.hide();
             })
             .on("mousemove",function(d){
-
             })
             .on("click",function(d){
-
-            });
-        
-        containers.append("circle")
-            .attr("r",function(d){ return d.r; })
+                console.log(d.name);
+                main.selectAll(".node").remove();
+                if(d.games){
+                    console.log("Redrawing",d.games);
+                    cpInstance.draw(d.games);
+                }else{
+                    console.log("other");
+                    cpInstance.draw(_.values(cpInstance.categories));
+                }
+            })
             .attr("transform",function(d){
                 return "translate(" + d.x +","+ d.y + ")";
+            });
+
+        containers.append("circle")
+            .attr("r",0);//function(d){ return d.r; });
+
+
+        containers.append("text")
+            .text(function(d) {
+                if(d.r < 20) return "";
+                return d.name;
             })
-        //TODO: add colours
+            .style("fill","white")
+            .attr("transform","translate(-20,0)")
+            .each(function(d,i){
+                if(d.r < 20) return;
+                var that = this;
+                var delay = 2000 * Math.random();
+                setInterval(function(){
+                    d3.select(that).transition().delay(function(d){
+                        return Math.random() * 2000;
+                    })
+                        .duration(1000).attr("opacity",1)
+                        .transition()
+                        .duration(1000).attr("opacity",0)
+                }, 3000);
+            })
+                .style("-moz-user-select","-moz-none");
         
-        
-        containers.exit().transition().attr('r',0).remove();
+
+        node.selectAll("circle").transition().attr('r',function(d){ return d.r;});
+    
     };
 
-
+    return CP;
 });

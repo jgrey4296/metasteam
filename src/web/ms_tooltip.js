@@ -10,7 +10,7 @@ define(['libs/d3.min'],function(d3){
     var ToolTip = function(){
         this.setup();
     };
-
+    
     ToolTip.prototype.setup = function(){
         if(d3.select("#tooltip").empty()){
             this.tooltip = d3.select("#mainsvg")
@@ -41,6 +41,9 @@ define(['libs/d3.min'],function(d3){
         this.tooltip.transition()
             .duration(500)
             .style("opacity",0);
+
+        this.tooltip.select("text")
+            .text("");
     };
     
     ToolTip.prototype.show = function(string){
