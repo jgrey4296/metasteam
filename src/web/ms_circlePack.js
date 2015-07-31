@@ -14,16 +14,22 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
         this.height = height - 10;
         this.width = width - 10;
         this.bubble = d3.layout.pack()
-            .sort(null)
+            // .sort(function(f,s){
+            //     return f.name < s.name;
+            // })
             .size([this.height,this.width])
             .padding(4);
         this.baseData = startingData;
+        this.taggedData = this.extractTags(this.baseData);
+        this.previousData = [];
 
+        //General listener for the tooltip
         d3.select("#mainsvg").on("mousemove",function(d){
-            tooltip.move(d3.event.clientX,d3.event.clientY);
+            //tooltip.move(d3.event.clientX,d3.event.clientY);
         });
 
         var mscpInstance = this;
+        //the reset button
         var reset = d3.select("#mainsvg").append("g")
             .attr("id","resetButton")
             .on("mousedown",function(d){
@@ -41,9 +47,29 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
             .text("reset")
             .attr("transform","translate(20,25)");
         
-        this.previousData = [];
+
     };
 
+
+    //Extract tags from the base Data and store them:
+    MSCirclePack.prototype.extractTags = function(data){
+        var tags = {};
+
+        for(var i in _.keys(data)){
+            var game = data[i];
+            if(game === undefined) continue;
+            for(var j in game['__tags']){
+                var tag = game['__tags'][j];
+                if(tags[tag] === undefined) tags[tag] = [];
+                if(tags[tag].indexof(game.appid) < 0){
+                    tags[tag].push(game.appid);
+                }
+            }
+        }
+        return tags;
+    };
+
+    
     //TODO: need to have scraped profile data for this
     MSCirclePack.prototype.transformToGameData = function(appids){
         var rootNode = { children:[]};
@@ -58,7 +84,7 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
     };
     
     //Take an array of appids
-    var transformData = function(appids){
+    MSCirclePack.prototype.transformData = function(appids){
         console.log("transforming:",appids);
         //[tag] -> [appid, appid, appid...]
         var masterTagObject = {};
@@ -79,7 +105,6 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
             }
         }
 
-
         //Return in circle pack form:
         //object[children] -> {children:[],values:[appid,appid...],size:values.length}
         var rootNode = {children:[]};
@@ -94,7 +119,7 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
 
         return rootNode;
     };
-    MSCirclePack.prototype.transformData = transformData;
+
 
     
     MSCirclePack.prototype.draw = function(data){
@@ -103,12 +128,14 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
         var main = d3.select("#mainsvg");
 
         
-        d3.selectAll(".node").remove();
-        
+        //d3.selectAll(".node").remove();
+                
         var nodes = main.selectAll(".node")
-            .data(this.bubble.nodes(data)
-                  .filter(function(d){ return !d.children; }));
-        
+            .data(this.bubble.nodes(data),
+                  //.filter(function(d){ return !d.children; }),
+                  function(d) { return d.name; }); //id function
+
+        //enter selection
         nodes.enter().append("g")
             .attr("class","node")
             .attr("transform",function(d){
@@ -121,8 +148,6 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
                 tooltip.hide();
             })
             .on("mousedown",function(d){
-                console.log("Click on:",d.name);
-                console.log("Appids:",d.appids);
                 //create new selection and redraw
                 if(d.appids.length > 20){
                     var newSelection = mscpInstance.transformData(d.appids);
@@ -133,22 +158,27 @@ define(['libs/d3.min','ms_tooltip'],function(d3,ToolTip){
                     mscpInstance.draw(newSelection);
                 }
             });
-        
+
+        //update selection:        
         nodes.append("circle")
             .attr("r",function(d){ return d.r; })
             .style("fill",function(d) { return colours(d.name); });
 
         nodes.append("text")
-            .text(function(d){ return d.name;})
+            .text(function(d){
+                if(d.r > 15) return d.name;
+                return "";
+            })
             .attr("transform",function(d){
                 return "translate(" + (-(d.r /2)) + ",0)";
             });
             //.style("opacity",0);
+
         
         if(tooltip === null){
             tooltip = new ToolTip();
         }
-        tooltip.draw();
+        //tooltip.draw();
     };
     
 

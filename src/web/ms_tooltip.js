@@ -30,10 +30,11 @@ define(['libs/d3.min'],function(d3){
             .attr("rx",10)
             .attr("ry",10);
         var text = this.tooltip.append("text")
-            .text("blah")
+            .text("")
             .style("fill","white")
             .attr("transform","translate(25,25)");
 
+        this.hide();
     };
 
     ToolTip.prototype.hide = function(){

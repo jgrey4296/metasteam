@@ -1,0 +1,57 @@
+
+h1 { color: black;
+     font-size: 150%;
+     text-align: center;  }
+
+h2 { font-size: 80%; }
+
+h3 { font-size: 80% }
+
+
+body { background-color: black;
+
+}
+
+
+a.mLink { padding-right:25px;
+	  padding-left: 25px;}
+
+a:link { color: blue }
+a:active { color: blue }
+
+a.imgLink{ color: black;
+	   width: 100%;
+	   text-align: center; }
+
+p.test {color:blue; position:static; top: 100;}
+
+p { color: black;
+    text-align: center; }
+
+div {
+    text-align:center;
+
+}
+
+div.text {
+             position: relative;
+             background-color: white;
+	     -moz-border-radius:10px; 
+	     -webkit-border-radius:5px;
+	     border-radius:5px;
+	     border:1px Solid #FFFFFF;
+	     padding:10px;
+	     margin-top:25px;
+	     left: 25%;
+	     width: 50%;
+	     color: black;
+	     opacity: 0.9;
+
+};
+
+
+/*
+       background-image: url('./images/LOGO12.jpg');
+       background-repeat: no-repeat;
+       background-position: center;
+*/

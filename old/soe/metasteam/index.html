@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="jg.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="d3.js"></script>
+    <script type="text/javascript" src="jgUtility.js"></script>
+  </head>
+  <body>
+    <h1>Metasteam</h1>
+
+    <div id="purposeText" class="textblock">
+      <h2>Purpose</h2>
+
+      As personal digital collections grow, it becomes necessary to display and browse the data in various new ways. My own steam library serves as an example. I have over 600 games, organised manually into genres. I spend more time going through the list of games to remember what I have than I do actually playing games quite often.
+      <br>
+      There are currently very few existing supplements to Steam's browsing capabilities, with <a href="https://github.com/rallion/depressurizer">Depressurizer</a> being the most notable. One problem that faces developers in supplementing Steam is that the steam web api is fairly useless. 
+
+      <div>
+        <img src="steamcategories.jpeg" class="largeimg" alt="A Screenshot of my manually organised steam categories" />
+      </div>
+      <div>
+      <img src="steamgames.jpeg" class="largeimg" alt="A Screenshot of just a few of my steam games" />
+      </div>
+      
+    </div>
+    
+    <div id="design" class="textblock">
+      <h2>Design Sketches</h2>
+      <img src="circlepack.png" alt="Sketch of the envisioned interface" class="jgimage" />
+      This provides a basic idea of providing a more overall view of games in a steam library. The current realisation of this design can be found <a href="circles.html">here</a>
+      
+      <br>
+      
+      <img src="releasedates.png" alt="Sketch of the supplemental interface" class="jgimage"/>
+      This shows the design for a timeline of games, to enable tracking of appearances of tags across time by release date. Such that, by clicking on a first person shooter, you can scroll through the games that you own that came before or after.
+      
+      <br>
+
+Other concepts still to design include playlists of games, exploration through screenshots, comparison of achievement tags, filtering by games friends own, and ordering multiplayer games by the number of worldwide players in said games. 
+    </div>
+
+    <div class="textblock">
+      <h2>Implementation</h2>
+      The implementation is unfortunately quite hacky, due to the already mentioned difficulty of the steam web api.
+      <br>
+      Thus, Metasteam is implemented as a python command line program currently, that outputs json data to be visualised by a variety of web pages.
+
+
+    </div>
+
+    <div class="textblock">
+      <h2>Github</h2>
+
+      The github page is <a href="http://www.github.com/jgrey4296/metasteam">here</a>.
+
+
+
+    </div>
+
+    
+    
+  </body>
+</html>
