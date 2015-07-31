@@ -50,6 +50,18 @@ require(['libs/d3.min','ms_circlepack2','underscore','ms_tooltip'],function(d3,M
     d3.json("gameData.json",function(d){
         data = d;
         console.log("Base DATA:",d);
+
+	//copy 'hours_forever' into data before using in mscp:
+	var installed = d.installed;
+	for(var i in d.profile){
+	    var game = d.profile[i];
+	    if(game['appid'] === undefined) continue;
+	    if(game['hours_forever'] === undefined) continue;
+	    var installedGame = installed[game['appid']];
+	    if(installedGame === undefined) continue;
+	    installedGame['hours_forever'] = Number(game['hours_forever']);
+	}
+	
         mscp = new Mscp(svgWidth-100,svgHeight,d.installed,tooltip);
         mscp.draw();
         

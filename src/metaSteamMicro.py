@@ -77,6 +77,12 @@ class MetaSteam:
         self.findLibraries()
         self.findSteam()
         self.importFromJson()
+
+        if not self.profileGames:
+            self.getProfileGames()
+        else:
+            print "Skipping Profile Scrape"
+            
         self.loadGames()
         
         #By this point, all previously found games
@@ -188,7 +194,8 @@ class MetaSteam:
                 
     #--------------------
     def getProfileGames(self):
-        extractedInfo = self.profileScraper.scrape(self.userName)
+        print "Getting Profile Games"
+        extractedInfo = self.profileScraper.scrape()
         self.profileGames = extractedInfo
         
 

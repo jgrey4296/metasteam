@@ -32,6 +32,7 @@ class SteamProfileScraper:
         profileHtml = self.webRequest(url,{'tab' : 'all'})
         extractedInfo = self.profileExtraction(profileHtml)
 
+        print "Extracted Profile Info:",extractedInfo
         return extractedInfo
         
     def webRequest(self,url,inValues):
