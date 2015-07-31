@@ -18,6 +18,9 @@ require(['libs/d3.min','ms_circlepack2','underscore'],function(d3,Mscp,_){
     var svgHeight = window.innerHeight - margin;
     var svgWidth = window.innerWidth - margin;
 
+    console.log("Height:",svgHeight,"Width:",svgWidth);
+
+    
     //Setup the svg
     d3.select('body').append('svg')
         .attr('id','mainsvg')
@@ -25,18 +28,21 @@ require(['libs/d3.min','ms_circlepack2','underscore'],function(d3,Mscp,_){
         .attr('width',svgWidth);
     //SideBar:
     d3.select('#mainsvg').append('rect')
-        .attr('width',60)
+        .attr('width',100)
         .attr('height',svgHeight)
         .attr('id','leftBar');
 
     d3.select("#mainsvg").append('rect')
-        .attr('width',60)
+        .attr('width',100)
         .attr('height',svgHeight)
         .attr('transform',function(){
-            return 'translate(' + (svgWidth - 60) + ',0)';
+            return 'translate(' + (svgWidth - 100) + ',0)';
         })
         .attr('id','rightBar');
-    
+
+    d3.select("#mainsvg")
+	.append("g")
+	.attr("id","circlePack");
 
 
     

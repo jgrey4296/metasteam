@@ -5,6 +5,7 @@
 define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
 
     var CP = function(sizeX,sizeY,listOfGames){
+	console.log("Sizes:",sizeX,sizeY);
         //the tooltip for the visualisation:
         //this.tooltip = Tooltip();
         //this.tooltip.draw();
@@ -31,6 +32,10 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
         //for every game
         for(var i in this.baseData){
             var game = this.baseData[i];
+	    if(game === null) {
+		console.log("Game Null:",game,i);
+		continue;
+	    }
             if(game['hours_forever']) {
                 game['value'] = game['hours_forever'];
             }else{
@@ -63,9 +68,10 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
     //--------------------
     CP.prototype.draw = function(data){
 
-        var main = d3.select("#mainsvg");
+        var main = d3.select("#circlePack");
 
-        if(data !== undefined){
+
+	if(data !== undefined){
             this.currentDataSet = data;
         }else{
             this.currentDataSet = _.values(this.categories);
@@ -97,6 +103,7 @@ define(['d3.min','underscore','ms_tooltip'],function(d3,_,Tooltip){
                 //cpInstance.tooltip.hide();
             })
             .on("mousemove",function(d){
+		
             })
             .on("click",function(d){
                 console.log(d.name);

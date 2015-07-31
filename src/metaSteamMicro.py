@@ -71,7 +71,7 @@ class MetaSteam:
 
         #steam store scraper:
         self.scraper = SteamStoreScraper()
-        self.profileScraper = SteamProfileScraper()
+        self.profileScraper = SteamProfileScraper(self.userName)
         
         #initialisation:
         self.findLibraries()
@@ -255,4 +255,4 @@ if __name__ == "__main__":
         globalNumToSearch = sys.argv[1]
     metaSteam = MetaSteam("belial4296",globalNumToSearch)
     metaSteam.loadVisualisation()
-    metaSteam.startGame(440)
+    #metaSteam.startGame(440)
