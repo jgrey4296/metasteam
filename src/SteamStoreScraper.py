@@ -65,6 +65,8 @@ class SteamStoreScraper:
         soup = BeautifulSoup(html)
         extractedTags = []
         releaseDate = {}
+        description = ""
+        review = ""
         
         #General Tags
         allTags = soup.find_all('a',class_="app_tag")
@@ -94,4 +96,15 @@ class SteamStoreScraper:
                 releaseDate['day'] = dateMatches.group(2)
                 releaseDate['year'] = dateMatches.group(3)
 
-        return [extractedTags,releaseDate]
+        #game description:
+        snippets = soup.find_all(class_="game_description_snippet")
+        if len(snippets) > 0:
+            text = get_unicode(snippet[0].string.strip())
+            description += text
+
+        #review status:
+        reviews = soup.find_all(class_="game_review_summary")
+        if len(reviews) > 0:
+            review = get_unicode(reviews[0].string.strip())
+            
+        return [extractedTags,releaseDate,description,review]
