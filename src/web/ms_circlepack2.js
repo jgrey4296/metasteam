@@ -4,9 +4,12 @@
 
 define(['d3.min','underscore'],function(d3,_){
 
-
+    /**The MetaSteam Circlepack class. Takes a list of games,
+       and visualises them
+       @class CirclePack
+    */
     var CP = function(sizeX,sizeY,listOfGames,tooltip){
-	console.log("Sizes:",sizeX,sizeY);//the tooltip for the visualisation:
+	    console.log("Sizes:",sizeX,sizeY);//the tooltip for the visualisation:
         this.tooltip = tooltip;
         
         //The data the circle pack will be using:
@@ -34,10 +37,10 @@ define(['d3.min','underscore'],function(d3,_){
         //for every game
         for(var i in this.baseData){
             var game = this.baseData[i];
-	    if(game === null) {
-		console.log("Game Null:",game,i);
-		continue;
-	    }
+	        if(game === null) {
+		        console.log("Game Null:",game,i);
+		        continue;
+	        }
             if(game['hours_forever']) {
                 game['value'] = game['hours_forever'];
             }else{
@@ -68,11 +71,15 @@ define(['d3.min','underscore'],function(d3,_){
     };
 
     //--------------------
+    /**The Main Draw method for circlepacking
+       @method draw
+    */
     CP.prototype.draw = function(data){
 
         var main = d3.select("#circlePack");
 
-	if(data !== undefined){
+        //Use passed in data, or default to the categories stored in the ctor
+	    if(data !== undefined){
             this.currentDataSet = data;
         }else{
             this.currentDataSet = _.values(this.categories);
@@ -84,7 +91,7 @@ define(['d3.min','underscore'],function(d3,_){
             return true;
         });
 
-        //The drawn nodes
+        //Bind the data to nodes
         var node = main.selectAll(".node")
             .data(packed_nodes,
                   function(d){
@@ -94,11 +101,16 @@ define(['d3.min','underscore'],function(d3,_){
                       return "unknown";
                   });
 
+        //Enable access to the circlepack from inside d3 callbacks:
         var cpInstance = this;
-        //the existing g's
+        
+        //Create a container for each element, binding mouse functions for them
         var containers = node.enter().append("g").classed("node",true)
+            .attr("transform",function(d){
+                return "translate(" + (d.x + 40)  +","+ d.y + ")";
+            });
             .on("mouseover",function(d){
-                //cpInstance.tooltip.show(d.name);
+                //Mouseover enlarges the node, and shows the nodes text
                 d3.select(this).select("circle").transition()
                     .attr("r",d.r + 50);
 
@@ -110,47 +122,52 @@ define(['d3.min','underscore'],function(d3,_){
                     .style("opacity",1);
             })
             .on("mouseout",function(d){
-                //cpInstance.tooltip.hide();
+                //mouseout reduces the node size to normal, and hides the text
                 d3.select(this).select("circle").transition()
                     .attr("r",d.r);
                 d3.select(this).select("text").transition()
                     .style("opacity",0);
 
                 if(d.r < 20){
-                    d3.select(this).select("text").text("");
+                    d3.select(this).select("text").transtion()
+                        .style("opacity",0);
                 }
                 
             })
             .on("mousemove",function(d){
-		
+		        //currently unneeded
             })
             .on("click",function(d){
+                //click on a node to
                 console.log(d.name);
                 main.selectAll(".node").remove();
+                //If there are games stored in the node (ie: its a category)
                 if(d.games){
+                    //draw the pack of games for that category
                     console.log("Redrawing",d.games);
                     cpInstance.draw(d.games);
                 }else{
+                    //or go back to drawing all categories
                     console.log("other");
                     cpInstance.draw(_.values(cpInstance.categories));
                 }
-            })
-            .attr("transform",function(d){
-                return "translate(" + (d.x + 40)  +","+ d.y + ")";
             });
 
+        //Create each node's representation, start it at 0 radius, enlarge it later
         containers.append("circle")
             .attr("r",0);//function(d){ return d.r; });
 
-
+        //The text for each node
         containers.append("text")
             .text(function(d) {
+                //If the node is too small, don't display its text
                 if(d.r < 20) return "";
                 return d.name;
             })
             .style("fill","white")
             .attr("transform","translate(-20,0)")
             .each(function(d,i){
+                //For each node in the selection, have it fade its text in and out
                 if(d.r < 20) return;
                 var that = this;
                 var delay = 2000 * Math.random();
@@ -163,12 +180,13 @@ define(['d3.min','underscore'],function(d3,_){
                         .duration(1000).attr("opacity",0)
                 }, 3000);
             })
-                .style("-moz-user-select","-moz-none");
+                .style("-moz-user-select","-moz-none"); //stop the user selecting the text in firefox
         
 
+        //here transitions all nodes up to their proper size
         node.selectAll("circle").transition().attr('r',function(d){ return d.r;});
 
-
+        //Draw the tooltip that was passed in as part of the ctor
         this.tooltip.draw();
         
     };
