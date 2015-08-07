@@ -216,6 +216,7 @@ class MetaSteam:
     #automate
     #@TODO: be able to reset __scraped
     def getInfoForAllGames(self):
+        scrapedGames = []
         for game in self.installedGames.values():
             if self.globalNumberOfGamesToSearch < 1: continue
             if '__scraped' in game:
@@ -228,7 +229,9 @@ class MetaSteam:
                 game['__scraped'] = True
             self.exportToJson()
             self.globalNumberOfGamesToSearch -= 1
+            scrapedGames.append(game.name)
             time.sleep(waitTime)
+        print "Have scanned all games for this run: " + " ".join(scrapedGames)
         self.exportToJson()
         
     def loadVisualisation(self):
