@@ -99,7 +99,7 @@ class SteamStoreScraper:
         #game description:
         snippets = soup.find_all(class_="game_description_snippet")
         if len(snippets) > 0:
-            text = get_unicode(snippet[0].string.strip())
+            text = get_unicode(snippets[0].string.strip())
             description += text
 
         #review status:

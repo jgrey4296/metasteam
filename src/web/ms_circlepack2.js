@@ -108,7 +108,7 @@ define(['d3.min','underscore'],function(d3,_){
         var containers = node.enter().append("g").classed("node",true)
             .attr("transform",function(d){
                 return "translate(" + (d.x + 40)  +","+ d.y + ")";
-            });
+            })
             .on("mouseover",function(d){
                 //Mouseover enlarges the node, and shows the nodes text
                 d3.select(this).select("circle").transition()

@@ -203,29 +203,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Funny",
-                "Short",
-                "Atmospheric",
-                "Singleplayer",
-                "Indie",
-                "Puzzle",
-                "Exploration",
-                "Adventure",
-                "Family Friendly",
-                "Comedy",
-                "Casual",
-                "Third Person",
-                "Single-player",
-                "Partial Controller Support"
-            ],
             "appid":"115110",
             "buildid":"81341",
             "installdir":"Stacking",
             "language":"english",
-            "name":"Stacking",
-            "releaseDate":{}
+            "name":"Stacking"
         },
         "12800":{
             "12801":"2664807168465120074",
@@ -514,41 +496,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Atmospheric",
-                "Touch-Friendly",
-                "Relaxing",
-                "Great Soundtrack",
-                "Indie",
-                "Pixel Graphics",
-                "Puzzle",
-                "Singleplayer",
-                "Music",
-                "2D",
-                "Fantasy",
-                "Exploration",
-                "Adventure",
-                "Story Rich",
-                "Point & Click",
-                "Female Protagonist",
-                "Casual",
-                "Retro",
-                "Single-player",
-                "Steam Achievements",
-                "Steam Cloud"
-            ],
             "appid":"204060",
             "buildid":"100214",
             "installdir":"Superbrothers Sword & Sworcery EP",
             "language":"english",
-            "name":"Superbrothers: Sword & Sworcery EP",
-            "releaseDate":{
-                "day":"16",
-                "month":"Apr",
-                "original":"Apr 16, 2012",
-                "year":"2012"
-            }
+            "name":"Superbrothers: Sword & Sworcery EP"
         },
         "204300":{
             "204301":"8421281606144038072",
@@ -628,46 +580,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Funny",
-                "Co-op",
-                "Superhero",
-                "Sci-fi",
-                "Great Soundtrack",
-                "Singleplayer",
-                "Adventure",
-                "Parody",
-                "Multiplayer",
-                "Character Customization",
-                "Sandbox",
-                "Online Co-Op",
-                "Third Person",
-                "Dark Humor",
-                "Action",
-                "Female Protagonist",
-                "Comedy",
-                "Aliens",
-                "Open World",
-                "Third-Person Shooter",
-                "Single-player",
-                "Co-op",
-                "Steam Achievements",
-                "Full controller support",
-                "Steam Trading Cards",
-                "Steam Cloud"
-            ],
             "appid":"206420",
             "buildid":"169280",
             "installdir":"Saints Row IV",
             "language":"english",
-            "name":"Saints Row IV",
-            "releaseDate":{
-                "day":"19",
-                "month":"Aug",
-                "original":"Aug 19, 2013",
-                "year":"2013"
-            }
+            "name":"Saints Row IV"
         },
         "206440":{
             "206441":"6387052800794306865",
@@ -910,48 +827,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "JRPG",
-                "Funny",
-                "Multiplayer",
-                "Great Soundtrack",
-                "Fantasy",
-                "Fast-Paced",
-                "Adventure",
-                "Puzzle",
-                "Singleplayer",
-                "2D",
-                "Indie",
-                "Anime",
-                "Co-op",
-                "Retro",
-                "RPG",
-                "Action",
-                "Comedy",
-                "Casual",
-                "Experimental",
-                "Parody",
-                "Single-player",
-                "Multi-player",
-                "Co-op",
-                "Steam Achievements",
-                "Full controller support",
-                "Steam Cloud",
-                "Stats",
-                "Steam Leaderboards"
-            ],
             "appid":"214830",
             "buildid":"29070",
             "installdir":"Half Minute Hero",
             "language":"english",
-            "name":"Half Minute Hero: Super Mega Neo Climax Ultimate Boy",
-            "releaseDate":{
-                "day":"27",
-                "month":"Sep",
-                "original":"Sep 27, 2012",
-                "year":"2012"
-            }
+            "name":"Half Minute Hero: Super Mega Neo Climax Ultimate Boy"
         },
         "215690":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -996,45 +876,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Moddable",
-                "Funny",
-                "Education",
-                "Singleplayer",
-                "Indie",
-                "Puzzle",
-                "Multiplayer",
-                "Platformer",
-                "Strategy",
-                "2D",
-                "Fantasy",
-                "Sandbox",
-                "Adventure",
-                "Action",
-                "Cute",
-                "Family Friendly",
-                "Comedy",
-                "Replay Value",
-                "Casual",
-                "Open World",
-                "Single-player",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Steam Workshop",
-                "Steam Cloud"
-            ],
             "appid":"218680",
             "buildid":"46238",
             "installdir":"Scribblenauts",
             "language":"english",
-            "name":"Scribblenauts Unlimited",
-            "releaseDate":{
-                "day":"19",
-                "month":"Nov",
-                "original":"Nov 19, 2012",
-                "year":"2012"
-            }
+            "name":"Scribblenauts Unlimited"
         },
         "219680":{
             "219681":"5616161979702663446",
@@ -1150,40 +996,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Minimalist",
-                "Atmospheric",
-                "Colorful",
-                "Singleplayer",
-                "Indie",
-                "Puzzle",
-                "Great Soundtrack",
-                "Metroidvania",
-                "Psychological",
-                "Surreal",
-                "Platformer",
-                "Exploration",
-                "Adventure",
-                "Walking Simulator",
-                "First-Person",
-                "Abstract",
-                "Psychedelic",
-                "Difficult",
-                "Single-player",
-                "Steam Trading Cards"
-            ],
             "appid":"219890",
             "buildid":"296940",
             "installdir":"Antichamber",
             "language":"english",
-            "name":"Antichamber",
-            "releaseDate":{
-                "day":"31",
-                "month":"Jan",
-                "original":"Jan 31, 2013",
-                "year":"2013"
-            }
+            "name":"Antichamber"
         },
         "220200":{
             "220201":"5810943251826528410",
@@ -1219,39 +1036,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Education",
-                "Design & Illustration",
-                "Game Development",
-                "Adventure",
-                "Programming",
-                "2D",
-                "Fantasy",
-                "Sandbox",
-                "GameMaker",
-                "Web Publishing",
-                "Anime",
-                "RPG",
-                "RPGMaker",
-                "Action",
-                "JRPG",
-                "Pixel Graphics",
-                "Software",
-                "Steam Trading Cards",
-                "Steam Workshop"
-            ],
             "appid":"220700",
             "buildid":"573866",
             "installdir":"RPGVXAce",
             "language":"english",
-            "name":"RPG Maker VX Ace",
-            "releaseDate":{
-                "day":"10",
-                "month":"Dec",
-                "original":"Dec 10, 2012",
-                "year":"2012"
-            }
+            "name":"RPG Maker VX Ace"
         },
         "221180":{
             "0":"_CommonRedist\\\\vcredist\\\\2008\\\\installscript.vdf",
@@ -1290,11 +1079,41 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
+            "__scraped":true,
+            "__tags":[
+                "Funny",
+                "Point & Click",
+                "Short",
+                "Atmospheric",
+                "Touch-Friendly",
+                "Singleplayer",
+                "Indie",
+                "Puzzle",
+                "Great Soundtrack",
+                "Satire",
+                "Dark",
+                "Surreal",
+                "Sandbox",
+                "Adventure",
+                "Dark Humor",
+                "2D",
+                "Story Rich",
+                "Comedy",
+                "Casual",
+                "Parody",
+                "Single-player"
+            ],
             "appid":"221260",
             "buildid":"80693",
             "installdir":"Little Inferno Beta",
             "language":"english",
-            "name":"Little Inferno"
+            "name":"Little Inferno",
+            "releaseDate":{
+                "day":"19",
+                "month":"Nov",
+                "original":"Nov 19, 2012",
+                "year":"2012"
+            }
         },
         "221910":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -1676,15 +1495,15 @@
             "228990":"1829726630299308803",
             "229003":"8740933542064151477",
             "229020":"5799761707845834510",
-            "229581":"246373488692527711",
+            "229581":"3295180135593982578",
             "3":"_CommonRedist\\\\OpenAL\\\\2.0.7.0\\\\installscript.vdf",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
             "BytesDownloaded":"0",
             "BytesToDownload":"0",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1431542037",
-            "SizeOnDisk":"4321786753",
+            "LastUpdated":"1438383181",
+            "SizeOnDisk":"3123823052",
             "StateFlags":"6",
             "Universe":"1",
             "UpdateResult":"0",
@@ -1714,7 +1533,7 @@
                 "Steam Cloud"
             ],
             "appid":"229580",
-            "buildid":"620082",
+            "buildid":"715993",
             "installdir":"Dream",
             "language":"english",
             "name":"Dream",
@@ -1947,12 +1766,12 @@
             "233251":"4421504380850365101",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"35794400",
-            "BytesToDownload":"35794400",
+            "BytesDownloaded":"0",
+            "BytesToDownload":"73043952",
             "LastOwner":"76561198001922710",
             "LastUpdated":"1436325433",
             "SizeOnDisk":"2284790435",
-            "StateFlags":"4",
+            "StateFlags":"1030",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
@@ -2071,33 +1890,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "JRPG",
-                "Funny",
-                "Short",
-                "Singleplayer",
-                "Indie",
-                "Pixel Graphics",
-                "Puzzle",
-                "Comedy",
-                "2D",
-                "Fantasy",
-                "Adventure",
-                "RPG",
-                "Action",
-                "Parody",
-                "Casual",
-                "Retro",
-                "Single-player",
-                "Full controller support"
-            ],
             "appid":"233470",
             "buildid":"83993",
             "installdir":"Evoland",
             "language":"english",
-            "name":"Evoland",
-            "releaseDate":{}
+            "name":"Evoland"
         },
         "233720":{
             "233721":"8469634463222804287",
@@ -2296,21 +2093,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Agriculture",
-                "Casual",
-                "Simulation",
-                "Single-player",
-                "Steam Achievements",
-                "Stats"
-            ],
             "appid":"236790",
             "buildid":"149148",
             "installdir":"Agricultural Simulator 2013",
             "language":"english",
-            "name":"Agricultural Simulator 2013 Steam Edition",
-            "releaseDate":{}
+            "name":"Agricultural Simulator 2013 Steam Edition"
         },
         "236850":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -2548,25 +2335,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Singleplayer",
-                "Indie",
-                "Board Game",
-                "Simulation",
-                "Turn-Based",
-                "Historical",
-                "Strategy",
-                "Casual",
-                "Single-player",
-                "Steam Trading Cards"
-            ],
             "appid":"238930",
             "buildid":"83439",
             "installdir":"7 Grand Steps 01",
             "language":"english",
-            "name":"7 Grand Steps, Step 1: What Ancients Begat",
-            "releaseDate":{}
+            "name":"7 Grand Steps, Step 1: What Ancients Begat"
         },
         "239030":{
             "239031":"6441313121370367847",
@@ -2581,41 +2354,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Atmospheric",
-                "Dystopian",
-                "Singleplayer",
-                "Indie",
-                "Pixel Graphics",
-                "Puzzle",
-                "Great Soundtrack",
-                "Political",
-                "Difficult",
-                "Simulation",
-                "2D",
-                "Surreal",
-                "Retro",
-                "Story Rich",
-                "Point & Click",
-                "Replay Value",
-                "Strategy",
-                "Multiple Endings",
-                "Casual",
-                "Adventure",
-                "Single-player",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Steam Cloud",
-                "Stats",
-                "Steam Leaderboards"
-            ],
             "appid":"239030",
             "buildid":"239769",
             "installdir":"PapersPlease",
             "language":"english",
-            "name":"Papers, Please",
-            "releaseDate":{}
+            "name":"Papers, Please"
         },
         "239160":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -2771,45 +2514,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Magic",
-                "Action RPG",
-                "Atmospheric",
-                "Parkour",
-                "Hack and Slash",
-                "Singleplayer",
-                "Dark Fantasy",
-                "Open World",
-                "Lore-Rich",
-                "Based On A Novel",
-                "Sandbox",
-                "Fantasy",
-                "Stealth",
-                "Adventure",
-                "RPG",
-                "Action",
-                "Story Rich",
-                "Assassin",
-                "Third Person",
-                "Gore",
-                "Single-player",
-                "Steam Achievements",
-                "Full controller support",
-                "Steam Trading Cards",
-                "Steam Cloud"
-            ],
             "appid":"241930",
             "buildid":"639576",
             "installdir":"ShadowOfMordor",
             "language":"english",
-            "name":"Middle-earth: Shadow of Mordor",
-            "releaseDate":{
-                "day":"30",
-                "month":"Sep",
-                "original":"Sep 30, 2014",
-                "year":"2014"
-            }
+            "name":"Middle-earth: Shadow of Mordor"
         },
         "242050":{
             "0":"_CommonRedist\\\\vcredist\\\\2008\\\\installscript.vdf",
@@ -2875,12 +2584,12 @@
             "242681":"206146080436797751",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"50971840",
-            "BytesToDownload":"50971840",
+            "BytesDownloaded":"0",
+            "BytesToDownload":"0",
             "LastOwner":"76561198001922710",
             "LastUpdated":"1437968003",
             "SizeOnDisk":"164010519",
-            "StateFlags":"4",
+            "StateFlags":"6",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
@@ -2963,42 +2672,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Building",
-                "Management",
-                "City Builder",
-                "Medieval",
-                "Relaxing",
-                "Singleplayer",
-                "Indie",
-                "Survival",
-                "Resource Management",
-                "Simulation",
-                "Procedural Generation",
-                "Sandbox",
-                "Historical",
-                "Atmospheric",
-                "RTS",
-                "Strategy",
-                "Economy",
-                "Casual",
-                "Open World",
-                "Difficult",
-                "Single-player",
-                "Steam Achievements"
-            ],
             "appid":"242920",
             "buildid":"451677",
             "installdir":"Banished",
             "language":"english",
-            "name":"Banished",
-            "releaseDate":{
-                "day":"18",
-                "month":"Feb",
-                "original":"Feb 18, 2014",
-                "year":"2014"
-            }
+            "name":"Banished"
         },
         "243220":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -3052,20 +2730,20 @@
             "228983":"8124929965194586177",
             "228984":"3215975441341951460",
             "228990":"1829726630299308803",
-            "243971":"9079473345424823938",
+            "243971":"3181354865871505065",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"14144432",
-            "BytesToDownload":"14144432",
+            "BytesDownloaded":"56459504",
+            "BytesToDownload":"56459504",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1432259432",
-            "SizeOnDisk":"1258537738",
+            "LastUpdated":"1438912038",
+            "SizeOnDisk":"1268116495",
             "StateFlags":"4",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
             "appid":"243970",
-            "buildid":"631395",
+            "buildid":"723608",
             "installdir":"InvisibleInc",
             "language":"english",
             "name":"Invisible, Inc."
@@ -3153,38 +2831,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "2D",
-                "Management",
-                "Singleplayer",
-                "Indie",
-                "Political",
-                "Strategy",
-                "Moddable",
-                "Sandbox",
-                "Turn-Based",
-                "Politics",
-                "Simulation",
-                "Difficult",
-                "Economy",
-                "Single-player",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Steam Workshop",
-                "Steam Leaderboards"
-            ],
             "appid":"245470",
             "buildid":"650705",
             "installdir":"Democracy 3",
             "language":"english",
-            "name":"Democracy 3",
-            "releaseDate":{
-                "day":"14",
-                "month":"Oct",
-                "original":"Oct 14, 2013",
-                "year":"2013"
-            }
+            "name":"Democracy 3"
         },
         "246090":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -3229,44 +2880,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Funny",
-                "Education",
-                "FPS",
-                "Arcade",
-                "On-Rails Shooter",
-                "Score Attack",
-                "Singleplayer",
-                "Multiplayer",
-                "Shooter",
-                "First-Person",
-                "Co-op",
-                "Zombies",
-                "Typing",
-                "Action",
-                "Comedy",
-                "Horror",
-                "Parody",
-                "Single-player",
-                "Multi-player",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Partial Controller Support",
-                "Steam Cloud",
-                "Steam Leaderboards"
-            ],
             "appid":"246580",
             "buildid":"569304",
             "installdir":"Typing of the Dead Overkill",
             "language":"english",
-            "name":"The Typing of The Dead: Overkill",
-            "releaseDate":{
-                "day":"29",
-                "month":"Oct",
-                "original":"Oct 29, 2013",
-                "year":"2013"
-            }
+            "name":"The Typing of The Dead: Overkill"
         },
         "246620":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -3412,29 +3030,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Sci-fi",
-                "Singleplayer",
-                "Multiplayer",
-                "Strategy",
-                "Alternate History",
-                "RTS",
-                "Action",
-                "Base-Building",
-                "Single-player"
-            ],
             "appid":"24800",
             "buildid":"756",
             "installdir":"Command and Conquer Red Alert 3 Uprising",
             "language":"english",
-            "name":"Command and Conquer: Red Alert 3 - Uprising",
-            "releaseDate":{
-                "day":"12",
-                "month":"Mar",
-                "original":"Mar 12, 2009",
-                "year":"2009"
-            }
+            "name":"Command and Conquer: Red Alert 3 - Uprising"
         },
         "248800":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -3531,47 +3131,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Procedural Generation",
-                "Perma Death",
-                "Co-op",
-                "Sci-fi",
-                "Singleplayer",
-                "Indie",
-                "Pixel Graphics",
-                "Tower Defense",
-                "Great Soundtrack",
-                "Resource Management",
-                "Strategy",
-                "Rogue-like",
-                "Rogue-lite",
-                "Adventure",
-                "RPG",
-                "2D",
-                "Dungeon Crawler",
-                "Replay Value",
-                "Survival",
-                "Difficult",
-                "Single-player",
-                "Multi-player",
-                "Cross-Platform Multiplayer",
-                "Co-op",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Steam Cloud"
-            ],
             "appid":"249050",
             "buildid":"654710",
             "installdir":"Dungeon of the Endless",
             "language":"english",
-            "name":"Dungeon of the Endless",
-            "releaseDate":{
-                "day":"27",
-                "month":"Oct",
-                "original":"Oct 27, 2014",
-                "year":"2014"
-            }
+            "name":"Dungeon of the Endless"
         },
         "249130":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -3748,7 +3312,26 @@
             "language":"english",
             "name":"Super Time Force Ultra"
         },
-        "250820":null,
+        "250820":{
+            "250821":"4751580218406516326",
+            "250824":"5986547462080014238",
+            "AllowOtherDownloadsWhileRunning":"0",
+            "AutoUpdateBehavior":"0",
+            "BytesDownloaded":"0",
+            "BytesToDownload":"0",
+            "LastOwner":"0",
+            "LastUpdated":"1438909907",
+            "SizeOnDisk":"668089411",
+            "StateFlags":"68",
+            "Universe":"1",
+            "UpdateResult":"0",
+            "__Installed":true,
+            "appid":"250820",
+            "betakey":"public",
+            "buildid":"710329",
+            "installdir":"SteamVR",
+            "name":"SteamVR"
+        },
         "251990":{
             "251992":"8001033322976313465",
             "251996":"6316627589046917109",
@@ -3800,14 +3383,14 @@
         "252250":{
             "0":"_CommonRedist\\\\vcredist\\\\2013\\\\installscript.vdf",
             "228985":"5758075142805954616",
-            "252251":"4833331286823652695",
+            "252251":"6248469360321324162",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"4151904",
-            "BytesToDownload":"4151904",
+            "BytesDownloaded":"1695520",
+            "BytesToDownload":"1695520",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1438283211",
-            "SizeOnDisk":"1349514530",
+            "LastUpdated":"1438913560",
+            "SizeOnDisk":"1335948578",
             "StateFlags":"4",
             "Universe":"1",
             "UpdateResult":"0",
@@ -3827,7 +3410,7 @@
                 "Single-player"
             ],
             "appid":"252250",
-            "buildid":"714270",
+            "buildid":"719806",
             "installdir":"Maia",
             "language":"english",
             "name":"Maia",
@@ -4336,11 +3919,44 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
+            "__scraped":true,
+            "__tags":[
+                "Funny",
+                "Co-op",
+                "Singleplayer",
+                "Indie",
+                "Local Co-Op",
+                "Stealth",
+                "Simulation",
+                "Moddable",
+                "MMORPG",
+                "Sandbox",
+                "Exploration",
+                "Third Person",
+                "Action",
+                "Local Multiplayer",
+                "Family Friendly",
+                "Comedy",
+                "Physics",
+                "Casual",
+                "Open World",
+                "Destruction",
+                "Single-player",
+                "Local Co-op",
+                "Steam Achievements",
+                "Full controller support",
+                "Steam Trading Cards",
+                "Steam Workshop",
+                "Steam Cloud",
+                "Steam Leaderboards",
+                "Includes level editor"
+            ],
             "appid":"265930",
             "buildid":"657595",
             "installdir":"GoatSimulator",
             "language":"english",
-            "name":"Goat Simulator"
+            "name":"Goat Simulator",
+            "releaseDate":{}
         },
         "266170":{
             "0":"_CommonRedist\\\\DotNet\\\\4.0 Client Profile\\\\installscript.vdf",
@@ -4391,20 +4007,20 @@
         "268870":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
             "228983":"8124929965194586177",
-            "268871":"5689503090307066069",
+            "268871":"8508688898182171266",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"230730000",
-            "BytesToDownload":"230730000",
+            "BytesDownloaded":"259616960",
+            "BytesToDownload":"259616960",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1436951680",
-            "SizeOnDisk":"2095861072",
+            "LastUpdated":"1438918669",
+            "SizeOnDisk":"2128594203",
             "StateFlags":"4",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
             "appid":"268870",
-            "buildid":"693964",
+            "buildid":"717778",
             "installdir":"SatelliteReign",
             "language":"english",
             "name":"Satellite Reign"
@@ -4528,39 +4144,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Action",
-                "Short",
-                "Atmospheric",
-                "Parkour",
-                "Singleplayer",
-                "Indie",
-                "Puzzle",
-                "Fantasy",
-                "Platformer",
-                "Adventure",
-                "First-Person",
-                "Story Rich",
-                "Casual",
-                "Sci-fi",
-                "Single-player",
-                "Steam Achievements",
-                "Full controller support",
-                "Steam Trading Cards",
-                "Steam Cloud"
-            ],
             "appid":"278360",
             "buildid":"414673",
             "installdir":"A Story About My Uncle",
             "language":"english",
-            "name":"A Story About My Uncle",
-            "releaseDate":{
-                "day":"28",
-                "month":"May",
-                "original":"May 28, 2014",
-                "year":"2014"
-            }
+            "name":"A Story About My Uncle"
         },
         "282070":{
             "0":"_CommonRedist\\\\vcredist\\\\2005\\\\installscript.vdf",
@@ -4820,33 +4408,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Short",
-                "Sci-fi",
-                "Space",
-                "Indie",
-                "Pixel Graphics",
-                "Singleplayer",
-                "Exploration",
-                "Adventure",
-                "Walking Simulator",
-                "Point & Click",
-                "Retro",
-                "Single-player",
-                "Steam Trading Cards"
-            ],
             "appid":"295250",
             "buildid":"273863",
             "installdir":"Stranded",
             "language":"english",
-            "name":"Stranded",
-            "releaseDate":{
-                "day":"20",
-                "month":"May",
-                "original":"May 20, 2014",
-                "year":"2014"
-            }
+            "name":"Stranded"
         },
         "296070":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
@@ -4904,22 +4470,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Indie",
-                "Action",
-                "Tower Defense",
-                "RTS",
-                "Strategy",
-                "Single-player",
-                "Partial Controller Support"
-            ],
             "appid":"297060",
             "buildid":"648957",
             "installdir":"Freaking Meatbags",
             "language":"english",
-            "name":"Freaking Meatbags",
-            "releaseDate":{}
+            "name":"Freaking Meatbags"
         },
         "297350":{
             "0":"_CommonRedist\\\\vcredist\\\\2013\\\\installscript.vdf",
@@ -5067,25 +4622,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Detective",
-                "Mystery",
-                "Noir",
-                "Indie",
-                "Pixel Graphics",
-                "Rogue-like",
-                "Adventure",
-                "RPG",
-                "Single-player",
-                "Steam Trading Cards"
-            ],
             "appid":"299780",
             "buildid":"412636",
             "installdir":"NoirSyndrome",
             "language":"english",
-            "name":"Noir Syndrome",
-            "releaseDate":{}
+            "name":"Noir Syndrome"
         },
         "304650":{
             "304651":"2255098849273534837",
@@ -5179,6 +4720,7 @@
                 "Funny",
                 "Surreal",
                 "Adventure",
+                "Horror",
                 "Point & Click",
                 "Comedy",
                 "Casual",
@@ -5254,7 +4796,8 @@
                 "Warhammer 40K",
                 "Single-player",
                 "Steam Achievements",
-                "Steam Trading Cards"
+                "Steam Trading Cards",
+                "Steam Leaderboards"
             ],
             "appid":"317620",
             "buildid":"596294",
@@ -5272,12 +4815,12 @@
             "318971":"1036143215807837862",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"39545008",
-            "BytesToDownload":"39545008",
+            "BytesDownloaded":"0",
+            "BytesToDownload":"0",
             "LastOwner":"76561198001922710",
             "LastUpdated":"1438195670",
             "SizeOnDisk":"1228541459",
-            "StateFlags":"4",
+            "StateFlags":"6",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
@@ -5286,6 +4829,29 @@
             "installdir":"StarCrawlers",
             "language":"english",
             "name":"StarCrawlers"
+        },
+        "320340":{
+            "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
+            "1":"_CommonRedist\\\\DirectX\\\\Jun2010\\\\installscript.vdf",
+            "228983":"8124929965194586177",
+            "228990":"1829726630299308803",
+            "320341":"2835801829860809175",
+            "AllowOtherDownloadsWhileRunning":"0",
+            "AutoUpdateBehavior":"0",
+            "BytesDownloaded":"571904256",
+            "BytesToDownload":"571904256",
+            "LastOwner":"76561198001922710",
+            "LastUpdated":"1438916722",
+            "SizeOnDisk":"776097480",
+            "StateFlags":"4",
+            "Universe":"1",
+            "UpdateResult":"0",
+            "__Installed":true,
+            "appid":"320340",
+            "buildid":"719451",
+            "installdir":"Cosmonautica",
+            "language":"english",
+            "name":"Cosmonautica"
         },
         "32340":{
             "32341":"6858475458390401706",
@@ -5461,53 +5027,20 @@
             "335674":"4948359649978551244",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"7614144",
-            "BytesToDownload":"7614144",
+            "BytesDownloaded":"0",
+            "BytesToDownload":"0",
             "LastOwner":"76561198001922710",
             "LastUpdated":"1437432600",
             "SizeOnDisk":"615983270",
-            "StateFlags":"4",
+            "StateFlags":"6",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Side Scroller",
-                "Funny",
-                "Atmospheric",
-                "Psychological Horror",
-                "Great Soundtrack",
-                "Indie",
-                "Pixel Graphics",
-                "Horror",
-                "RPGMaker",
-                "Singleplayer",
-                "2D",
-                "Choices Matter",
-                "Post-apocalyptic",
-                "Adventure",
-                "RPG",
-                "Dark Humor",
-                "Platformer",
-                "Story Rich",
-                "Comedy",
-                "Single-player",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Partial Controller Support",
-                "Steam Cloud"
-            ],
             "appid":"335670",
             "buildid":"700698",
             "installdir":"LISA",
             "language":"english",
-            "name":"LISA",
-            "releaseDate":{
-                "day":"15",
-                "month":"Dec",
-                "original":"Dec 15, 2014",
-                "year":"2014"
-            }
+            "name":"LISA"
         },
         "34270":{
             "34271":"5044486625535061932",
@@ -5551,6 +5084,25 @@
             "language":"english",
             "name":"Fortune's Tavern - The Fantasy Tavern Simulator!"
         },
+        "352220":{
+            "352221":"13938841957552158",
+            "AllowOtherDownloadsWhileRunning":"0",
+            "AutoUpdateBehavior":"0",
+            "BytesDownloaded":"294637136",
+            "BytesToDownload":"294637136",
+            "LastOwner":"76561198001922710",
+            "LastUpdated":"1438916479",
+            "SizeOnDisk":"345501694",
+            "StateFlags":"4",
+            "Universe":"1",
+            "UpdateResult":"0",
+            "__Installed":true,
+            "appid":"352220",
+            "buildid":"711774",
+            "installdir":"King of Dragon Pass",
+            "language":"english",
+            "name":"King of Dragon Pass"
+        },
         "359320":{
             "0":"_CommonRedist\\\\vcredist\\\\2010\\\\installscript.vdf",
             "1":"_CommonRedist\\\\vcredist\\\\2012\\\\installscript.vdf",
@@ -5559,15 +5111,15 @@
             "228984":"3215975441341951460",
             "228990":"1829726630299308803",
             "359321":"7145699271870699095",
-            "359322":"7354169728647114891",
+            "359322":"6024414285247089015",
             "359323":"6421232734138010041",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"65254464",
-            "BytesToDownload":"65254464",
+            "BytesDownloaded":"7837664",
+            "BytesToDownload":"7837664",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1436323091",
-            "SizeOnDisk":"6122302734",
+            "LastUpdated":"1438915188",
+            "SizeOnDisk":"6122298126",
             "StateFlags":"4",
             "Universe":"1",
             "UpdateResult":"0",
@@ -5601,7 +5153,7 @@
                 "Partial Controller Support"
             ],
             "appid":"359320",
-            "buildid":"680911",
+            "buildid":"717262",
             "installdir":"Elite Dangerous",
             "language":"english",
             "name":"Elite: Dangerous",
@@ -5611,12 +5163,12 @@
             "370361":"1289387387958825547",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"7803008",
-            "BytesToDownload":"7803008",
+            "BytesDownloaded":"0",
+            "BytesToDownload":"0",
             "LastOwner":"76561198001922710",
             "LastUpdated":"1437527634",
             "SizeOnDisk":"50180823",
-            "StateFlags":"4",
+            "StateFlags":"6",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
@@ -5723,63 +5275,22 @@
             "250824":"250820",
             "440":"1118032470228587934",
             "441":"3704041027226853666",
-            "AllowOtherDownloadsWhileRunning":"0",
+            "AllowOtherDownloadsWhileRunning":"2",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"50010992",
-            "BytesToDownload":"50010992",
+            "BytesDownloaded":"21309792",
+            "BytesToDownload":"21309792",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1437789300",
+            "LastUpdated":"1438909907",
             "SizeOnDisk":"16206216871",
             "StateFlags":"4",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Comedy",
-                "Funny",
-                "Crafting",
-                "Shooter",
-                "Free to Play",
-                "Team-Based",
-                "Multiplayer",
-                "Robots",
-                "Competitive",
-                "Cartoon",
-                "Moddable",
-                "First-Person",
-                "Co-op",
-                "Trading",
-                "FPS",
-                "Tactical",
-                "Action",
-                "Online Co-Op",
-                "Class-Based",
-                "Cartoony",
-                "Multi-player",
-                "Cross-Platform Multiplayer",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Captions available",
-                "VR Support",
-                "Steam Workshop",
-                "Partial Controller Support",
-                "Valve Anti-Cheat enabled",
-                "Stats",
-                "Includes level editor",
-                "Commentary available"
-            ],
             "appid":"440",
             "buildid":"706558",
             "installdir":"Team Fortress 2",
             "language":"english",
-            "name":"Team Fortress 2",
-            "releaseDate":{
-                "day":"10",
-                "month":"Oct",
-                "original":"Oct 10, 2007",
-                "year":"2007"
-            }
+            "name":"Team Fortress 2"
         },
         "4500":{
             "254531":"3753194324543219319",
@@ -5892,43 +5403,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Shooter",
-                "Atmospheric",
-                "Sci-fi",
-                "Space",
-                "Futuristic",
-                "Adventure",
-                "Horror",
-                "Singleplayer",
-                "Multiplayer",
-                "Survival",
-                "Blood",
-                "Co-op",
-                "Gore",
-                "3D Vision",
-                "Story Rich",
-                "Action",
-                "Survival Horror",
-                "Aliens",
-                "Third Person",
-                "Third-Person Shooter",
-                "Single-player",
-                "Multi-player",
-                "Partial Controller Support"
-            ],
             "appid":"47780",
             "buildid":"21478",
             "installdir":"Dead Space 2",
             "language":"english",
-            "name":"Dead Space 2",
-            "releaseDate":{
-                "day":"25",
-                "month":"Jan",
-                "original":"Jan 25, 2011",
-                "year":"2011"
-            }
+            "name":"Dead Space 2"
         },
         "48000":{
             "48001":"1261656871327265848",
@@ -6122,16 +5601,16 @@
             "1":"_CommonRedist\\\\DirectX\\\\Jun2010\\\\installscript.vdf",
             "228983":"8124929965194586177",
             "228990":"1829726630299308803",
-            "571":"8742592821954142362",
-            "573":"9210655221250554177",
+            "571":"8470676915097530815",
+            "573":"7721910543094214975",
             "575":"1210797147059675668",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"5946832",
-            "BytesToDownload":"5946832",
+            "BytesDownloaded":"31190720",
+            "BytesToDownload":"31190720",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1438068370",
-            "SizeOnDisk":"14917599036",
+            "LastUpdated":"1438910000",
+            "SizeOnDisk":"14934191547",
             "StateFlags":"4",
             "Universe":"1",
             "UpdateResult":"0",
@@ -6165,7 +5644,7 @@
                 "Valve Anti-Cheat enabled"
             ],
             "appid":"570",
-            "buildid":"710717",
+            "buildid":"722739",
             "installdir":"dota 2 beta",
             "language":"english",
             "name":"Dota 2",
@@ -6483,75 +5962,32 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Tactical",
-                "Sci-fi",
-                "Singleplayer",
-                "Multiplayer",
-                "RTS",
-                "Futuristic",
-                "Games Workshop",
-                "Real-Time",
-                "Action",
-                "Strategy",
-                "Base-Building",
-                "Warhammer 40K",
-                "Single-player",
-                "Multi-player"
-            ],
             "appid":"9310",
             "buildid":"681488",
             "installdir":"Dawn of War Gold",
             "language":"english",
-            "name":"Warhammer 40,000: Dawn of War  Winter Assault",
-            "releaseDate":{}
+            "name":"Warhammer 40,000: Dawn of War  Winter Assault"
         },
         "94300":{
-            "94301":"6407989089707476263",
-            "94302":"6445760968844024775",
-            "94303":"5819493680824624021",
+            "94301":"1796151996664849061",
+            "94302":"4947318618603518036",
+            "94303":"3667712837530039742",
             "AllowOtherDownloadsWhileRunning":"0",
             "AutoUpdateBehavior":"0",
-            "BytesDownloaded":"23629680",
-            "BytesToDownload":"23629680",
+            "BytesDownloaded":"59524704",
+            "BytesToDownload":"59524704",
             "LastOwner":"76561198001922710",
-            "LastUpdated":"1435781139",
-            "SizeOnDisk":"202183195",
+            "LastUpdated":"1438912009",
+            "SizeOnDisk":"189716204",
             "StateFlags":"4",
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "2D",
-                "Atmospheric",
-                "Episodic",
-                "Singleplayer",
-                "Indie",
-                "Puzzle",
-                "Interactive Fiction",
-                "Dark",
-                "Surreal",
-                "Adventure",
-                "Story Rich",
-                "Point & Click",
-                "Casual",
-                "Single-player",
-                "Steam Trading Cards",
-                "Steam Cloud"
-            ],
             "appid":"94300",
-            "buildid":"679841",
+            "buildid":"720055",
             "installdir":"The Dream Machine",
             "language":"english",
-            "name":"The Dream Machine",
-            "releaseDate":{
-                "day":"11",
-                "month":"May",
-                "original":"May 11, 2012",
-                "year":"2012"
-            }
+            "name":"The Dream Machine"
         },
         "98800":{
             "98801":"3357870713289374721",
@@ -6569,46 +6005,11 @@
             "Universe":"1",
             "UpdateResult":"0",
             "__Installed":true,
-            "__scraped":true,
-            "__tags":[
-                "Moddable",
-                "Funny",
-                "Perma Death",
-                "Top-Down",
-                "Singleplayer",
-                "Indie",
-                "Adventure",
-                "Procedural Generation",
-                "Crafting",
-                "Rogue-like",
-                "Fantasy",
-                "Rogue-lite",
-                "Turn-Based",
-                "RPG",
-                "2D",
-                "Dungeon Crawler",
-                "Replay Value",
-                "Comedy",
-                "Casual",
-                "Difficult",
-                "Single-player",
-                "Steam Achievements",
-                "Steam Trading Cards",
-                "Steam Workshop",
-                "Stats",
-                "Steam Leaderboards"
-            ],
             "appid":"98800",
             "buildid":"150078",
             "installdir":"Dungeons of Dredmor",
             "language":"english",
-            "name":"Dungeons of Dredmor",
-            "releaseDate":{
-                "day":"13",
-                "month":"Jul",
-                "original":"Jul 13, 2011",
-                "year":"2011"
-            }
+            "name":"Dungeons of Dredmor"
         }
     },
     "profile":[
@@ -6637,9 +6038,9 @@
                 "stats":true
             },
             "friendlyURL":"TF2",
-            "hours":"14.6",
-            "hours_forever":"470",
-            "last_played":1438362437,
+            "hours":"15.5",
+            "hours_forever":"476",
+            "last_played":1438911986,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/440/07385eb55b5ba974aebbe74d3c99626bda7920b8.jpg",
             "name":"Team Fortress 2"
         },
@@ -6653,8 +6054,9 @@
                 "stats":false
             },
             "friendlyURL":248820,
+            "hours":"0.7",
             "hours_forever":"127",
-            "last_played":1438204323,
+            "last_played":1438818581,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/248820/62869ec060e6dfdd3ca53e23c85e30a16de9c291.jpg",
             "name":"Risk of Rain"
         },
@@ -6914,7 +6316,7 @@
                 "stats":false
             },
             "friendlyURL":250320,
-            "hours":"3.3",
+            "hours":"1.6",
             "hours_forever":"31",
             "last_played":1437794792,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/250320/78ca4e28c36df80deac8f3c6499ce4e0c0d5a821.jpg",
@@ -6996,6 +6398,22 @@
             "last_played":1416192625,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/212910/cb4cc34a1ec14a3237748919df4ad4d8aec946db.jpg",
             "name":"Call of Duty: Black Ops II - Zombies"
+        },
+        {
+            "appid":261640,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":261640,
+            "hours":"23.1",
+            "hours_forever":"25",
+            "last_played":1438916130,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/261640/df64c72fd335a03dbcc0a19b1f81acc8db1b94ba.jpg",
+            "name":"Borderlands: The Pre-Sequel"
         },
         {
             "appid":200710,
@@ -7197,6 +6615,22 @@
             "name":"Warhammer 40,000 Space Marine"
         },
         {
+            "appid":330830,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":330830,
+            "hours":"3.3",
+            "hours_forever":"15.3",
+            "last_played":1438840522,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/330830/7e7183b717e05a2972e796d56526c260e7238f58.jpg",
+            "name":"Tales from the Borderlands"
+        },
+        {
             "appid":41500,
             "availStatLinks":{
                 "achievements":true,
@@ -7395,22 +6829,6 @@
             "last_played":1417843362,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/43160/b110ee3812ac0cad68505772019cf2bdc3ce1cc3.jpg",
             "name":"Metro: Last Light"
-        },
-        {
-            "appid":330830,
-            "availStatLinks":{
-                "achievements":true,
-                "global_achievements":true,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":330830,
-            "hours":"2.7",
-            "hours_forever":"12.0",
-            "last_played":1437455699,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/330830/7e7183b717e05a2972e796d56526c260e7238f58.jpg",
-            "name":"Tales from the Borderlands"
         },
         {
             "appid":3830,
@@ -7626,21 +7044,6 @@
             "name":"Orcs Must Die!"
         },
         {
-            "appid":273070,
-            "availStatLinks":{
-                "achievements":true,
-                "global_achievements":true,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":273070,
-            "hours_forever":"9.6",
-            "last_played":1417820357,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/273070/a74256663a010213f4f812a8790e73dd98f9bb91.jpg",
-            "name":"The Last Federation"
-        },
-        {
             "appid":206420,
             "availStatLinks":{
                 "achievements":true,
@@ -7656,6 +7059,21 @@
             "last_played":1411567894,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/206420/49d796621c286130a8ddeea918d9aae8c8441455.jpg",
             "name":"Saints Row IV"
+        },
+        {
+            "appid":273070,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":273070,
+            "hours_forever":"9.6",
+            "last_played":1417820357,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/273070/a74256663a010213f4f812a8790e73dd98f9bb91.jpg",
+            "name":"The Last Federation"
         },
         {
             "appid":246580,
@@ -7779,21 +7197,6 @@
             "name":"Wasteland 2"
         },
         {
-            "appid":230230,
-            "availStatLinks":{
-                "achievements":true,
-                "global_achievements":true,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":230230,
-            "hours_forever":"7.5",
-            "last_played":1429760984,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/230230/8db78573d8f4d4ae61ba3e8ecd6478463705fb86.jpg",
-            "name":"Divinity: Original Sin"
-        },
-        {
             "appid":247080,
             "availStatLinks":{
                 "achievements":true,
@@ -7807,6 +7210,21 @@
             "last_played":1438108801,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/247080/fe3ff9862c49f34a6b8705bf98baa0f954fcd260.jpg",
             "name":"Crypt of the NecroDancer"
+        },
+        {
+            "appid":230230,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":230230,
+            "hours_forever":"7.5",
+            "last_played":1429760984,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/230230/8db78573d8f4d4ae61ba3e8ecd6478463705fb86.jpg",
+            "name":"Divinity: Original Sin"
         },
         {
             "appid":233450,
@@ -8206,21 +7624,6 @@
             "name":"Total War: SHOGUN 2"
         },
         {
-            "appid":232430,
-            "availStatLinks":{
-                "achievements":false,
-                "global_achievements":false,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":false,
-            "hours_forever":"4.7",
-            "last_played":1388898799,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/232430/8d86da75f094220994bdcd5f842469af36cacd8f.jpg",
-            "name":"Gone Home"
-        },
-        {
             "appid":203810,
             "availStatLinks":{
                 "achievements":true,
@@ -8235,6 +7638,21 @@
             "last_played":1408444493,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/203810/39f2f2baf454fabdd8a6161e9353ebd9ee335ed2.jpg",
             "name":"Dear Esther"
+        },
+        {
+            "appid":232430,
+            "availStatLinks":{
+                "achievements":false,
+                "global_achievements":false,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":false,
+            "hours_forever":"4.7",
+            "last_played":1388898799,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/232430/8d86da75f094220994bdcd5f842469af36cacd8f.jpg",
+            "name":"Gone Home"
         },
         {
             "appid":22200,
@@ -8421,6 +7839,21 @@
             "name":"Spacebase DF-9"
         },
         {
+            "appid":221260,
+            "availStatLinks":{
+                "achievements":false,
+                "global_achievements":false,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":false,
+            "hours_forever":"3.4",
+            "last_played":1432278046,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/221260/832ef3fdc5f9f38113302042f0c639ec9668ab73.jpg",
+            "name":"Little Inferno"
+        },
+        {
             "appid":222730,
             "availStatLinks":{
                 "achievements":true,
@@ -8435,21 +7868,6 @@
             "last_played":1409181971,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/222730/06920f2db1122c919fcbeeb3c8a88801e965adc8.jpg",
             "name":"Reus"
-        },
-        {
-            "appid":221260,
-            "availStatLinks":{
-                "achievements":false,
-                "global_achievements":false,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":false,
-            "hours_forever":"3.4",
-            "last_played":1432278046,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/221260/832ef3fdc5f9f38113302042f0c639ec9668ab73.jpg",
-            "name":"Little Inferno"
         },
         {
             "appid":255710,
@@ -8483,21 +7901,6 @@
             "name":"Antichamber"
         },
         {
-            "appid":72200,
-            "availStatLinks":{
-                "achievements":true,
-                "global_achievements":true,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":"UniverseSandbox",
-            "hours_forever":"3.4",
-            "last_played":1407175652,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/72200/e18118df8174e2e0538be9fc2e9f8fac9e8e5d8c.jpg",
-            "name":"Universe Sandbox"
-        },
-        {
             "appid":231160,
             "availStatLinks":{
                 "achievements":true,
@@ -8512,6 +7915,21 @@
             "last_played":1429762663,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/231160/11e08b7b00d8a24a1f83dec3e7c2ca08e98be78a.jpg",
             "name":"The Swapper"
+        },
+        {
+            "appid":72200,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":"UniverseSandbox",
+            "hours_forever":"3.4",
+            "last_played":1407175652,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/72200/e18118df8174e2e0538be9fc2e9f8fac9e8e5d8c.jpg",
+            "name":"Universe Sandbox"
         },
         {
             "appid":6040,
@@ -8650,6 +8068,21 @@
             "name":"Analogue: A Hate Story"
         },
         {
+            "appid":317620,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":true,
+                "leaderboards":true,
+                "stats":false
+            },
+            "friendlyURL":317620,
+            "hours_forever":"2.9",
+            "last_played":1424569324,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/317620/2344cae13e1a01c57dae03311723e03d25c3f52c.jpg",
+            "name":"Space Hulk Ascension"
+        },
+        {
             "appid":17480,
             "availStatLinks":{
                 "achievements":false,
@@ -8663,36 +8096,6 @@
             "last_played":1397109050,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/17480/1b9a5723f68bf15ba865e151afbde9f1eb9a3846.jpg",
             "name":"Command and Conquer: Red Alert 3"
-        },
-        {
-            "appid":317620,
-            "availStatLinks":{
-                "achievements":true,
-                "global_achievements":true,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":317620,
-            "hours_forever":"2.9",
-            "last_played":1424569324,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/317620/2344cae13e1a01c57dae03311723e03d25c3f52c.jpg",
-            "name":"Space Hulk Ascension"
-        },
-        {
-            "appid":297350,
-            "availStatLinks":{
-                "achievements":false,
-                "global_achievements":false,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":false,
-            "hours_forever":"2.9",
-            "last_played":1427929369,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/297350/cc64703fe4dbf19db4cd1e3077078ef2541f7378.jpg",
-            "name":"The Old City: Leviathan"
         },
         {
             "appid":242880,
@@ -8710,6 +8113,21 @@
             "name":"Sir, You Are Being Hunted"
         },
         {
+            "appid":297350,
+            "availStatLinks":{
+                "achievements":false,
+                "global_achievements":false,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":false,
+            "hours_forever":"2.9",
+            "last_played":1427929369,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/297350/cc64703fe4dbf19db4cd1e3077078ef2541f7378.jpg",
+            "name":"The Old City: Leviathan"
+        },
+        {
             "appid":29720,
             "availStatLinks":{
                 "achievements":false,
@@ -8723,22 +8141,6 @@
             "last_played":86400,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/29720/3b1200de3d28e469120c8a58dc57b956abe46fe4.jpg",
             "name":"Guild Wars"
-        },
-        {
-            "appid":261640,
-            "availStatLinks":{
-                "achievements":true,
-                "global_achievements":true,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":261640,
-            "hours":"1.3",
-            "hours_forever":"2.8",
-            "last_played":1438325982,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/261640/df64c72fd335a03dbcc0a19b1f81acc8db1b94ba.jpg",
-            "name":"Borderlands: The Pre-Sequel"
         },
         {
             "appid":25900,
@@ -8801,21 +8203,6 @@
             "name":"Transistor"
         },
         {
-            "appid":242920,
-            "availStatLinks":{
-                "achievements":true,
-                "global_achievements":true,
-                "global_leaderboards":false,
-                "leaderboards":false,
-                "stats":false
-            },
-            "friendlyURL":242920,
-            "hours_forever":"2.6",
-            "last_played":1418400786,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/242920/2a62342148979d18e2b50ab8c5eebcfe6c99295c.jpg",
-            "name":"Banished"
-        },
-        {
             "appid":265930,
             "availStatLinks":{
                 "achievements":true,
@@ -8831,7 +8218,7 @@
             "name":"Goat Simulator"
         },
         {
-            "appid":58520,
+            "appid":242920,
             "availStatLinks":{
                 "achievements":true,
                 "global_achievements":true,
@@ -8839,11 +8226,11 @@
                 "leaderboards":false,
                 "stats":false
             },
-            "friendlyURL":58520,
+            "friendlyURL":242920,
             "hours_forever":"2.6",
-            "last_played":1396384786,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/58520/b886e4a3c3ff13adc83dd7cc5ffe2711eecf36b1.jpg",
-            "name":"Blood Bowl: Legendary Edition"
+            "last_played":1418400786,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/242920/2a62342148979d18e2b50ab8c5eebcfe6c99295c.jpg",
+            "name":"Banished"
         },
         {
             "appid":215530,
@@ -8859,6 +8246,21 @@
             "last_played":1424670228,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/215530/af4c392d5bc11db6dad9a88fed0c65b0ba88c73a.jpg",
             "name":"The Incredible Adventures of Van Helsing"
+        },
+        {
+            "appid":58520,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":58520,
+            "hours_forever":"2.6",
+            "last_played":1396384786,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/58520/b886e4a3c3ff13adc83dd7cc5ffe2711eecf36b1.jpg",
+            "name":"Blood Bowl: Legendary Edition"
         },
         {
             "appid":232810,
@@ -11195,7 +10597,7 @@
             "friendlyURL":261530,
             "hours_forever":"0.5",
             "last_played":1415521996,
-            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/261530/4355da1622d8f3602eb4496cd03482c40da24f7e.jpg",
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/261530/2b20b200fae3a77c7af2d72918f24c7b26c70a4b.jpg",
             "name":"Lifeless Planet"
         },
         {
@@ -14698,6 +14100,32 @@
             "name":"Confrontation"
         },
         {
+            "appid":320340,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":320340,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/320340/2a72ef3c0d5e1a3fd22ebd1e33edaffd4d558bbb.jpg",
+            "name":"Cosmonautica"
+        },
+        {
+            "appid":383380,
+            "availStatLinks":{
+                "achievements":false,
+                "global_achievements":false,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":false,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/383380/2a72ef3c0d5e1a3fd22ebd1e33edaffd4d558bbb.jpg",
+            "name":"Cosmonautica - Soundtrack"
+        },
+        {
             "appid":314680,
             "availStatLinks":{
                 "achievements":true,
@@ -15338,6 +14766,19 @@
             "friendlyURL":35420,
             "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/35420/45178d4b1999cf466fdf1ee4551f29b7e02b2bdf.jpg",
             "name":"Killing Floor Mod: Defence Alliance 2"
+        },
+        {
+            "appid":352220,
+            "availStatLinks":{
+                "achievements":true,
+                "global_achievements":true,
+                "global_leaderboards":false,
+                "leaderboards":false,
+                "stats":false
+            },
+            "friendlyURL":352220,
+            "logo":"http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/352220/22c271f7583f812d0fe1d7dcef111a0553ad5707.jpg",
+            "name":"King of Dragon Pass"
         },
         {
             "appid":301220,
