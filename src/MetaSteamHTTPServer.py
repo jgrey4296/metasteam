@@ -21,7 +21,7 @@ allowedFiles = []
 continueRunning = True
 #turn off with 'global continueRunning, continueRunning = False'
 
-#commands to call from a post request:
+#commands to call from post request
 #close server
 def close_server(self):
     print "Triggering Server Shutdown"
