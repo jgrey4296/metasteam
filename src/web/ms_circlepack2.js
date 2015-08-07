@@ -135,7 +135,8 @@ define(['d3.min','underscore'],function(d3,_){
                     .attr("r",d.r + 50);
 
                 if(d.r < 20){
-                    d3.select(this).select("text").text(d.name);
+                    d3.select(this).select("text").text(d.name)
+                        .style("text-anchor","middle");
                 }
                 
                 d3.select(this).select("text").transition()
@@ -196,6 +197,7 @@ define(['d3.min','underscore'],function(d3,_){
                 return d.name;
             })
             .style("fill","white")
+            .style("text-anchor","middle")
             .attr("transform","translate(-20,0)")
             .each(function(d,i){
                 //For each node in the selection, have it fade its text in and out
