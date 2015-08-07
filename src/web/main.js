@@ -30,7 +30,7 @@ require(['libs/d3.min','ms_circlepack2','underscore','ms_tooltip'],function(d3,M
     var leftBar = d3.select('#mainsvg').append("g")
         .attr("id","leftBar");
     leftBar.append('rect')
-        .attr('width',100)
+        .attr('width',(window.innerWidth * 0.15) )
         .attr('height',svgHeight);
 
     var rightBar = d3.select("#mainsvg").append("g")

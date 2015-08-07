@@ -4,6 +4,8 @@
 
 define(['d3.min','underscore'],function(d3,_){
 
+    var idRegex = /\W/g;
+    
     /**The MetaSteam Circlepack class. Takes a list of games,
        and visualises them
        @class CirclePack
@@ -74,19 +76,20 @@ define(['d3.min','underscore'],function(d3,_){
             .attr("id","resetButton")
             .on("click",function(){
                 //On click, redraw from categories
+                console.log("Resetting");
                 d3.selectAll(".node").remove();
-                cpInstance.draw(_.values(cpInstance.categories));
+                cpInstance.draw();//_.values(cpInstance.categories));
             });
 
         resetButton.append("rect")
             .style("fill","red")
             .attr("width",100)
-            .attr("height",100);
+            .attr("height",50);
 
         resetButton.append("text")
             .style("text-anchor","middle")
             .text("reset")
-            .attr("transform","translate(50,50)");
+            .attr("transform","translate(50,25)");
         
     };
 
@@ -95,7 +98,7 @@ define(['d3.min','underscore'],function(d3,_){
        @method draw
     */
     CP.prototype.draw = function(data){
-
+        console.log("Drawing:",data);
         var main = d3.select("#circlePack");
 
         //Use passed in data, or default to the categories stored in the ctor
@@ -126,6 +129,9 @@ define(['d3.min','underscore'],function(d3,_){
         
         //Create a container for each element, binding mouse functions for them
         var containers = node.enter().append("g").classed("node",true)
+            .attr("id",function(d){
+                return "Node" + d.name.replace(idRegex,'');
+            })
             .attr("transform",function(d){
                 return "translate(" + (d.x + 40)  +","+ d.y + ")";
             })
@@ -134,11 +140,6 @@ define(['d3.min','underscore'],function(d3,_){
                 d3.select(this).select("circle").transition()
                     .attr("r",d.r + 50);
 
-                if(d.r < 20){
-                    d3.select(this).select("text").text(d.name)
-                        .style("text-anchor","middle");
-                }
-                
                 d3.select(this).select("text").transition()
                     .style("opacity",1);
             })
@@ -146,13 +147,9 @@ define(['d3.min','underscore'],function(d3,_){
                 //mouseout reduces the node size to normal, and hides the text
                 d3.select(this).select("circle").transition()
                     .attr("r",d.r);
+
                 d3.select(this).select("text").transition()
                     .style("opacity",0);
-
-                if(d.r < 20){
-                    d3.select(this).select("text").transtion()
-                        .style("opacity",0);
-                }
                 
             })
             .on("mousemove",function(d){
@@ -193,25 +190,26 @@ define(['d3.min','underscore'],function(d3,_){
         containers.append("text")
             .text(function(d) {
                 //If the node is too small, don't display its text
-                if(d.r < 20) return "";
                 return d.name;
             })
             .style("fill","white")
             .style("text-anchor","middle")
-            .attr("transform","translate(-20,0)")
+            .attr("transform","translate(0,0)")
             .each(function(d,i){
                 //For each node in the selection, have it fade its text in and out
-                if(d.r < 20) return;
-                var that = this;
-                var delay = 2000 * Math.random();
-                setInterval(function(){
-                    d3.select(that).transition().delay(function(d){
-                        return Math.random() * 2000;
-                    })
-                        .duration(1000).attr("opacity",1)
-                        .transition()
-                        .duration(1000).attr("opacity",0)
-                }, 3000);
+                    d3.select(this).style("opacity",0);
+                    return;
+                //
+                // var that = this;
+                // var delay = 2000 * Math.random();
+                // setInterval(function(){
+                //     d3.select(that).transition().delay(function(d){
+                //         return Math.random() * 2000;
+                //     })
+                //         .duration(1000).attr("opacity",1)
+                //         .transition()
+                //         .duration(1000).attr("opacity",0)
+                // }, 3000);
             })
                 .style("-moz-user-select","-moz-none"); //stop the user selecting the text in firefox
         
@@ -220,26 +218,98 @@ define(['d3.min','underscore'],function(d3,_){
         node.selectAll("circle").transition().attr('r',function(d){ return d.r;});
 
         //Draw the tooltip that was passed in as part of the ctor
-        this.tooltip.draw();
-        
+        //this.tooltip.draw();
+        this.drawNames(this.currentDataSet);
     };
 
     //----------------------------------------
     /**Helper function for draw, to draw all names of categories/ games in margins
        @function drawNames
+       @param data : the array of game objects, same as for drawGames
      */
-    var drawNames = function(data){
+    CP.prototype.drawNames = function(data){
         //split data in half?
+        console.log("Drawing Names:",data);
+        data.sort(function(l,r){
+            return l.name > r.name;
+        });
         
         //select the names group
+        var namesGroupLeft = d3.select("#gameNames");
+        if(namesGroupLeft.empty()){
+            namesGroupLeft = d3.select("#mainsvg").append("g").attr('id','gameNames')
+                .attr("transform",function(){
+                    return "translate(5," +
+                        (Number(d3.select("#resetButton").select("rect").attr("height")) + 20)  + ")";
+                });
+        }
+ 
+        var boundGroups = namesGroupLeft.selectAll('g').data(data,function(d){
+            if(d['appid']) return d['appid'];
+            return d['name'];
+        });
 
-        //clear names
+        boundGroups.exit().remove();
 
-        //select all and bind
+        var individualNames = boundGroups.enter().append("g")
+            .attr("transform",function(d,i){
+                return "translate(0," + (i * 20) + ")";
+            })
+            .on("mouseover",function(d){
+                //Draw a line to the corresponding circle
+                var theText = d3.select(this).select('text');
+                theText.transition()
+                    .style("fill","red")
+                    .text(function(d){
+                        d.shortName = theText.text();
+                        return d.name;
+                    });
 
-        //draw two columns of names
+                var idString = "#Node" + d.name.replace(idRegex,'');
+                if(d3.select(idString).empty()) return;
+                
+                d3.select(idString)
+                    .select("circle")
+                    .transition()
+                    .style("fill","red");
+            })
+            .on("mouseout",function(d){
+                //fade the line out
+                var theText = d3.select(this).select('text');
+                theText.transition()
+                    .style("fill",'white')
+                    .text(function(d){
+                        return d.shortName;
+                    });
 
+                var idString = "#Node" + d.name.replace(idRegex,'');
 
+                if(d3.select(idString).empty()) return;
+                
+                d3.select(idString)
+                    .select("circle")
+                    .transition()
+                    .style("fill","black");
+
+            });
+
+        individualNames.append("text")
+            .style("text-anchor","left")
+            .style("fill","white")
+            .text(function(d){
+                return d.name;
+            })
+            .each(function(d){
+                var bbox = this.getBBox();
+                var maxLength = d.name.length-4;
+                while(bbox.width > 10
+                     && maxLength > 10){//(window.innerWidth * 0.1) - 10){
+                    d3.select(this).text(d.name.slice(0,maxLength) + "...");
+                    bbox = this.getBBox();
+                    maxLength -= 2;
+                }
+            });
+        
     };
     
     return CP;
