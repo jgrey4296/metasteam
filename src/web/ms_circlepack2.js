@@ -67,6 +67,26 @@ define(['d3.min','underscore'],function(d3,_){
         this.categories['everything'].value = this.categories['everything']['games'].length;
 
         this.currentDataSet = _.values(this.categories);
+
+        cpInstance = this;
+        //Add a reset button
+        var resetButton = d3.select("#leftBar").append("g")
+            .attr("id","resetButton")
+            .on("click",function(){
+                //On click, redraw from categories
+                d3.selectAll(".node").remove();
+                cpInstance.draw(_.values(cpInstance.categories));
+            });
+
+        resetButton.append("rect")
+            .style("fill","red")
+            .attr("width",100)
+            .attr("height",100);
+
+        resetButton.append("text")
+            .style("text-anchor","middle")
+            .text("reset")
+            .attr("transform","translate(50,50)");
         
     };
 
@@ -147,9 +167,20 @@ define(['d3.min','underscore'],function(d3,_){
                     console.log("Redrawing",d.games);
                     cpInstance.draw(d.games);
                 }else{
-                    //or go back to drawing all categories
-                    console.log("other");
-                    cpInstance.draw(_.values(cpInstance.categories));
+                    //Send a start message:
+                    //TODO: check this
+                    var commandString = "";
+                    commandString += "&command=startGame";
+                    commandString += "&appid=";
+                    commandString += d.appid;
+                    var request = new XMLHttpRequest();
+                    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    request.setRequestHeader('Content-Length', urlEncodedData.length);
+                    request.open("POST","",true);
+                    request.send(commandString);
+                    // //or go back to drawing all categories
+                    // console.log("other");
+                    // cpInstance.draw(_.values(cpInstance.categories));
                 }
             });
 

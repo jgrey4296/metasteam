@@ -27,18 +27,21 @@ require(['libs/d3.min','ms_circlepack2','underscore','ms_tooltip'],function(d3,M
         .attr('height',svgHeight)
         .attr('width',svgWidth);
     //SideBar:
-    d3.select('#mainsvg').append('rect')
+    var leftBar = d3.select('#mainsvg').append("g")
+        .attr("id","leftBar");
+    leftBar.append('rect')
         .attr('width',100)
-        .attr('height',svgHeight)
-        .attr('id','leftBar');
+        .attr('height',svgHeight);
 
-    d3.select("#mainsvg").append('rect')
-        .attr('width',100)
-        .attr('height',svgHeight)
+    var rightBar = d3.select("#mainsvg").append("g")
+        .attr("id","rightBar")
         .attr('transform',function(){
             return 'translate(' + (svgWidth - 100) + ',0)';
-        })
-        .attr('id','rightBar');
+        });
+
+    rightBar.append('rect')
+        .attr('width',100)
+        .attr('height',svgHeight);
 
     d3.select("#mainsvg")
 	.append("g")
