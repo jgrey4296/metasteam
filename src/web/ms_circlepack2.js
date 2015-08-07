@@ -224,5 +224,23 @@ define(['d3.min','underscore'],function(d3,_){
         
     };
 
+    //----------------------------------------
+    /**Helper function for draw, to draw all names of categories/ games in margins
+       @function drawNames
+     */
+    var drawNames = function(data){
+        //split data in half?
+        
+        //select the names group
+
+        //clear names
+
+        //select all and bind
+
+        //draw two columns of names
+
+
+    };
+    
     return CP;
 });
