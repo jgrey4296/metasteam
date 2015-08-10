@@ -266,6 +266,7 @@ define(['d3.min','underscore'],function(d3,_){
                     });
 
                 var idString = "#Node" + d.name.replace(idRegex,'');
+
                 if(d3.select(idString).empty()) return;
                 
                 d3.select(idString)
