@@ -106,5 +106,20 @@ class SteamStoreScraper:
         reviews = soup.find_all(class_="game_review_summary")
         if len(reviews) > 0:
             review = get_unicode(reviews[0].string.strip())
+
+        #Publisher, developer extraction:
+        publisher = ""
+        developer = ""
+        try:
+            block = soup.find_all(class_="block_content_inner")[0].findAll(text=True)
+            for x in block:
+                curr = block[x]
+                if curr == u'Publisher:':
+                    publisher = block[x+2]
+                if curr == u'Developer:':
+                    developer = block[x+2]
+        except Exception:
+            print "Failure in pub/dev detection";
             
-        return [extractedTags,releaseDate,description,review]
+            
+        return [extractedTags,releaseDate,description,review,developer,publisher]

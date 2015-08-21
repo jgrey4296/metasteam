@@ -12,6 +12,7 @@ define(['d3.min','underscore'],function(d3,_){
     */
     var CP = function(sizeX,sizeY,listOfGames,tooltip){
 	    console.log("Sizes:",sizeX,sizeY);//the tooltip for the visualisation:
+
         this.tooltip = tooltip;
         
         //The data the circle pack will be using:
@@ -35,7 +36,11 @@ define(['d3.min','underscore'],function(d3,_){
             games: [],
             value: 0.1
         };
+    };
 
+    CP.prototype.registerData = function(data){
+        console.log("registering data:",data);
+        this.baseData = data;
         //for every game
         for(var i in this.baseData){
             var game = this.baseData[i];
@@ -69,7 +74,16 @@ define(['d3.min','underscore'],function(d3,_){
         this.categories['everything'].value = this.categories['everything']['games'].length;
 
         this.currentDataSet = _.values(this.categories);
+    };
 
+
+
+    //--------------------
+    /**The Main Draw method for circlepacking
+       @method draw
+    */
+    CP.prototype.draw = function(data){
+        console.log("Drawing:",data);
         cpInstance = this;
         //Add a reset button
         var resetButton = d3.select("#leftBar").append("g")
@@ -91,14 +105,7 @@ define(['d3.min','underscore'],function(d3,_){
             .text("reset")
             .attr("transform","translate(50,25)");
         
-    };
-
-    //--------------------
-    /**The Main Draw method for circlepacking
-       @method draw
-    */
-    CP.prototype.draw = function(data){
-        console.log("Drawing:",data);
+        
         var main = d3.select("#circlePack");
 
         //Use passed in data, or default to the categories stored in the ctor
@@ -197,8 +204,8 @@ define(['d3.min','underscore'],function(d3,_){
             .attr("transform","translate(0,0)")
             .each(function(d,i){
                 //For each node in the selection, have it fade its text in and out
-                    d3.select(this).style("opacity",0);
-                    return;
+                d3.select(this).style("opacity",0);
+                return;
                 //
                 // var that = this;
                 // var delay = 2000 * Math.random();
@@ -226,7 +233,7 @@ define(['d3.min','underscore'],function(d3,_){
     /**Helper function for draw, to draw all names of categories/ games in margins
        @function drawNames
        @param data : the array of game objects, same as for drawGames
-     */
+    */
     CP.prototype.drawNames = function(data){
         //split data in half?
         console.log("Drawing Names:",data);
@@ -243,7 +250,7 @@ define(['d3.min','underscore'],function(d3,_){
                         (Number(d3.select("#resetButton").select("rect").attr("height")) + 20)  + ")";
                 });
         }
- 
+        
         var boundGroups = namesGroupLeft.selectAll('g').data(data,function(d){
             if(d['appid']) return d['appid'];
             return d['name'];
@@ -304,7 +311,7 @@ define(['d3.min','underscore'],function(d3,_){
                 var bbox = this.getBBox();
                 var maxLength = d.name.length-4;
                 while(bbox.width > 10
-                     && maxLength > 10){//(window.innerWidth * 0.1) - 10){
+                      && maxLength > 10){//(window.innerWidth * 0.1) - 10){
                     d3.select(this).text(d.name.slice(0,maxLength) + "...");
                     bbox = this.getBBox();
                     maxLength -= 2;

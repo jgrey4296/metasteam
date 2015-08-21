@@ -208,10 +208,16 @@ class MetaSteam:
             extractedInfo = self.scraper.scrape(game['appid'])
             game['__tags'] = extractedInfo[0]
             game['releaseDate'] = extractedInfo[1]
+            game['__description'] = extractedInfo[2]
+            game['__review'] = extractedInfo[3]
+            game['__developer'] = extractedInfo[4]
+            game['__publisher'] = extractedInfo[5]
             game['__scraped'] = True
+
             return game
         except Exception as e:
             print e
+            return game
             
     #automate
     #@TODO: be able to reset __scraped
