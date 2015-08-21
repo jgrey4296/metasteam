@@ -20,20 +20,23 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         this.margin = 30;
         this.svgHeight = window.innerHeight - this.margin;
         this.svgWidth = window.innerWidth - this.margin;
+        //Width of the non-sidebarred screen
+        this.sideBarWidth = this.svgWidth * 0.15;
+        this.internalWidth = this.svgWidth - (2 *(this.svgWidth * 0.15));
         console.log("Height:",this.svgHeight,"Width:",this.svgWidth);
 
         //Reusable Scale for graph drawing
         this.scale = d3.scale.linear();
-        this.scale.range([0, (this.svgHeight * 0.25)]);
+        this.scale.range([0, (this.svgHeight * 0.18)]);
 
         //Scale for colouring
         this.colourScale = d3.scale.category10();
 
         //Data For buttons:
         this.buttons = [
-            {name:"reset"},
+            {name:"Hub"},
             {name:"circlePack",
-             value:new MSCP(this.svgWidth-200,this.svgHeight),
+             value:new MSCP(this.svgWidth - (this.svgWidth * 0.15) - 100,this.svgHeight),
             },
             {name:"timeline"},
             {name:"chord"},
@@ -56,22 +59,46 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         var leftBar = d3.select('#mainsvg').append("g")
             .attr("id","leftBar");
         leftBar.append('rect')
-            .attr('width',(window.innerWidth * 0.15) )
-            .attr('height',this.svgHeight);
+            .attr('width',this.sideBarWidth )
+            .attr('height',this.svgHeight)
+            .attr("rx",5)
+            .attr("ry",5);
 
-        console.log("Translating:",this.svgWidth - 100);
         var rightBar = d3.select("#mainsvg").append("g")
             .attr("id","rightBar")
-            .attr('transform',function(){
-                return 'translate(' + (hubReference.svgWidth - 100) + ',0)';
-            });
+            .attr('transform',
+                  'translate(' +
+                  (this.svgWidth - this.sideBarWidth)
+                  + ',0)');
+       
         rightBar.append('rect')
-            .attr('width',100)
-            .attr('height',this.svgHeight);
+            .attr('width',this.sideBarWidth)
+            .attr('height',this.svgHeight)
+            .attr("rx",5)
+            .attr("ry",5);
+
+        //Draw the Header bar:
+        var header = d3.select("#mainsvg").append("g")
+            .attr("id","headerBar")
+            .attr("transform",
+                  "translate(" +
+                  (this.sideBarWidth + 20) + ",0)");
+
+        header.append("rect")
+            .attr("width",this.internalWidth - 40)
+            .attr("height",80)
+            .attr("rx",5)
+            .attr("ry",5);
+
+
         
         d3.select("#mainsvg")
 	        .append("g")
-	        .attr("id","circlePack");
+	        .attr("id","mainVisualisation")
+            .attr("transform",
+                  "translate("
+                  + this.sideBarWidth + ",0)")
+            .attr("width",this.sideBarWidth);
     };
 
     //Load data in for visualisations to use
@@ -96,7 +123,8 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             if(d3.select("svg").select("#generalStats").empty()){
                 //domRoot->svg->genStats->[each child stat]
                 var genStats = d3.select("svg").append("g").attr("id","generalStats")
-                    .attr("transform","translate("+ d3.select("#leftBar").select("rect").attr("width") + ",0)");
+                    .attr("transform","translate("+
+                          (this.sideBarWidth + 20) + ",0)");
 
                 genStats.append("g").attr("id","playedGames")
                     .attr("transform","translate(0,"
@@ -107,11 +135,20 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
                     .attr("transform","translate(0," + (this.svgHeight * 0.7) + ")");
 
                 //Aim for this width for the stat bars
-                var aimWidth = this.svgWidth - 102 - (this.svgWidth * 0.15);
+                var aimWidth = this.internalWidth - 40;
                 //Create a rectance to backdrop each stat
-                d3.select("#playedGames").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25);
-                d3.select("#scraped").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25);
-                d3.select("#installed").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25);
+                d3.select("#playedGames").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25)
+                    .attr("rx",5)
+                    .attr("ry",5);
+
+                d3.select("#scraped").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25)
+                    .attr("rx",5)
+                    .attr("ry",5);
+
+                d3.select("#installed").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25)
+                    .attr("rx",5)
+                    .attr("ry",5);
+
             }else{
                 var genStats = d3.select("#generalStats");
             }
@@ -210,21 +247,22 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         //remove unneeded data
         root.exit().remove();
         //draw the data
+        var barWidth = (hubRef.internalWidth * 0.8) / data.length;
         var graphGroup = root.enter().append("g")
             .attr("id",function(d){
                 return d.name;
             })
             .attr("transform",function(d,i){
                 console.log(d,i);
-                return "translate(" + ((hubRef.svgWidth * 0.15) + (i * hubRef.svgWidth * 0.25)) + "," + (0) +")";
+                return "translate(" + ((hubRef.internalWidth * 0.1) + (i * barWidth)) + "," + (0) +")";
             });
 
         //rectangle, size of the value of the datum, scaled
         graphGroup.append("rect")
-            .attr("width",hubRef.svgWidth * 0.25)
+            .attr("width",barWidth)
             .attr("transform",function(d){
                 return "translate(0," +
-                    (hubRef.scale.range()[1] - hubRef.scale(_.keys(d.games).length)) + ")";
+                    (hubRef.scale.range()[1] - hubRef.scale(_.keys(d.games).length) + 10) + ")";
             })
             .attr("height",function(d){
                 var val = hubRef.scale((_.keys(d.games)).length);
@@ -233,7 +271,10 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             })
             .style("fill",function(d,i){
                 return hubRef.colourScale(i);
-            });        
+            })
+            .attr("rx",5)
+            .attr("ry",5);
+
 
         //Draw a label:
         graphGroup.append("text")
@@ -243,41 +284,51 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             })
             .attr("transform",
                   "translate(0," +
-                  (hubRef.scale.range()[1] + 25) + ")");
+                  (hubRef.scale.range()[1] + 25) + ")")
+            .style("fill","white");
         
     };
     
     //Draw the navigation buttons on the right
     Hub.prototype.drawButtons = function(data){
         var hubRef = this;
-        console.log("Drawing Buttons:",data);
+        var buttonWidth = (hubRef.internalWidth * 0.8) / data.length;
+        console.log("Drawing Buttons:",data,buttonWidth);
         //select the right bar and bind
-        var groups = d3.select("#rightBar").selectAll("g").data(data,function(d){return d.name;});
+        var groups = d3.select("#headerBar").selectAll("g").data(data,function(d){return d.name;});
 
         groups.enter().append("g").attr("id",function(d){
             return "button_"+ d.name;
         })
             .attr("transform",function(d,i){
-                return "translate(" + 14 +"," + (25 + (i * 80)) + ")";
+                return "translate(" + ((hubRef.internalWidth * 0.1) + (i * (buttonWidth))) +"," + 10 + ")";
             })
             .on("click",function(d){
                 console.log("Clicked on:",d.name);
-                if(d.name === "reset"){
+                if(d.name === "Hub"){
+                    d3.select("#mainVisualisation").selectAll(".node").remove();
                     hubRef.draw();
+                }
+                if(d.name === "circlePack"){
+                    d3.select("#generalStats").remove();
+                    d.value.registerData(hubRef.data.installed);
+                    d.value.draw();
                 }
             });
 
         groups.append("rect")
-            .attr("width",75)
-            .attr("height",50)
-            .style("fill","red");
+            .attr("width",buttonWidth - 5)
+            .attr("height",60)
+            .style("fill","red")
+            .attr("rx",10)
+            .attr("ry",10);
         
         groups.append("text")
             .text(function(d){
                 return d.name;
             })
-            .attr("transform","translate(0,45)")
-            .style("text-anchor","right");
+            .attr("transform","translate(" + (buttonWidth * 0.5) + ",45)")
+            .style("text-anchor","middle");
         
         //add on click
         //each on click cleans up the window,

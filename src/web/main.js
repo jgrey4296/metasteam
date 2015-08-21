@@ -23,6 +23,7 @@ require(['d3','ms_circlepack2','underscore','ms_tooltip','metaSteamHub'],functio
     //Load the json data
     console.log("hello world");
 
+    
     var data = undefined;
     var mscp = undefined;
 

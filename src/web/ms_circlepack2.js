@@ -88,6 +88,7 @@ define(['d3.min','underscore'],function(d3,_){
         //Add a reset button
         var resetButton = d3.select("#leftBar").append("g")
             .attr("id","resetButton")
+            .attr("transform","translate(" + (d3.select("#leftBar").select("rect").attr("width") * 0.1) + ",0)")
             .on("click",function(){
                 //On click, redraw from categories
                 console.log("Resetting");
@@ -106,7 +107,7 @@ define(['d3.min','underscore'],function(d3,_){
             .attr("transform","translate(50,25)");
         
         
-        var main = d3.select("#circlePack");
+        var main = d3.select("#mainVisualisation");
 
         //Use passed in data, or default to the categories stored in the ctor
 	    if(data !== undefined){
@@ -140,24 +141,55 @@ define(['d3.min','underscore'],function(d3,_){
                 return "Node" + d.name.replace(idRegex,'');
             })
             .attr("transform",function(d){
-                return "translate(" + (d.x + 40)  +","+ d.y + ")";
+                return "translate(" + (d.x)  +","+ d.y + ")";
             })
             .on("mouseover",function(d){
                 //Mouseover enlarges the node, and shows the nodes text
-                d3.select(this).select("circle").transition()
+                var original = d3.select(this);
+                var temp = d3.select("#temp");
+                //Create if it doesnt exist
+                if(temp.empty()){
+                    temp = d3.select("#mainVisualisation").append("g")
+                        .attr("id","temp")
+                        .datum(d);
+                    temp.append("circle")
+                        .attr("r",0);
+                    temp.append("text")
+                        .style("fill","white")
+                        .style("text-anchor","middle")
+                        .style("opacity",0);
+                    temp.on("mouseout",function(d){
+                        d3.select(this).select("circle")
+                            .transition().attr("r",0);
+                        d3.select(this).select("text")
+                            .transition().style("opacity",0);
+                    })
+                        .on("click",function(d){
+                            if(d3.event.altKey){
+                                d3.select("#temp").select("circle")
+                                    .transition().attr("r",0);
+                                d3.select("#temp").select("text")
+                                    .transition()
+                                    .attr("opacity",0);
+                            }
+                        });
+                }
+                //Modify for current circumstance
+                temp.attr("transform",original.attr("transform"));
+                
+                temp.select("circle")
+                    .transition()
                     .attr("r",d.r + 50);
 
-                d3.select(this).select("text").transition()
+                temp.select("text")
+                    .text(d.name)
+                    .style("fill","white")
+                    .style("text-anchor","middle")
+                    .transition()
                     .style("opacity",1);
             })
             .on("mouseout",function(d){
-                //mouseout reduces the node size to normal, and hides the text
-                d3.select(this).select("circle").transition()
-                    .attr("r",d.r);
-
-                d3.select(this).select("text").transition()
-                    .style("opacity",0);
-                
+                //mouseout moved to the temp g.
             })
             .on("mousemove",function(d){
 		        //currently unneeded
@@ -234,8 +266,9 @@ define(['d3.min','underscore'],function(d3,_){
        @function drawNames
        @param data : the array of game objects, same as for drawGames
     */
-    CP.prototype.drawNames = function(data){
+    CP.prototype.drawNames = function(data,rootDOM){
         //split data in half?
+        data = data.reverse().slice(0,40);
         console.log("Drawing Names:",data);
         data.sort(function(l,r){
             return l.name > r.name;
