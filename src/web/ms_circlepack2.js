@@ -10,13 +10,13 @@ define(['d3.min','underscore'],function(d3,_){
        and visualises them
        @class CirclePack
     */
-    var CP = function(sizeX,sizeY,listOfGames,tooltip){
-	    console.log("Sizes:",sizeX,sizeY);//the tooltip for the visualisation:
+    var CP = function(sizeX,sizeY,colours){
+	    console.log("Sizes:",sizeX,sizeY,colours);//the tooltip for the visualisation:
 
-        this.tooltip = tooltip;
+        this.colours = colours;
         
         //The data the circle pack will be using:
-        this.baseData = listOfGames;
+        this.baseData = null;
         this.categories = {};
 
         this.currentDataSet = [];
@@ -84,7 +84,7 @@ define(['d3.min','underscore'],function(d3,_){
     */
     CP.prototype.draw = function(data){
         console.log("Drawing:",data);
-        cpInstance = this;
+        var cpInstance = this;
         //Add a reset button
         var resetButton = d3.select("#leftBar").append("g")
             .attr("id","resetButton")
@@ -93,11 +93,14 @@ define(['d3.min','underscore'],function(d3,_){
                 //On click, redraw from categories
                 console.log("Resetting");
                 d3.selectAll(".node").remove();
+                //Reset the translation and scaling for the new draw:
+                d3.select("#mainVisualisation")
+                    .attr("transform","translate(0,0)scale(1,1)");
                 cpInstance.draw();//_.values(cpInstance.categories));
             });
 
         resetButton.append("rect")
-            .style("fill","red")
+            .style("fill",this.colours['green'])
             .attr("width",100)
             .attr("height",50);
 
@@ -105,11 +108,20 @@ define(['d3.min','underscore'],function(d3,_){
             .style("text-anchor","middle")
             .text("reset")
             .attr("transform","translate(50,25)");
-        
-        
-        var main = d3.select("#mainVisualisation");
 
-        //Use passed in data, or default to the categories stored in the ctor
+        //Finished with reset button, draw the vis
+        var main = d3.select("#mainVisualisation");
+        //Setup the zoom:
+        d3.select("#mainsvg")
+            .call(d3.behavior.zoom()
+                  .scaleExtent([1,2])
+                  .on("zoom",function(){
+                      main.attr("transform","translate(" + d3.event.translate +")scale(" + d3.event.scale + ")");            
+                  })
+                 );;
+        
+        //Use passed in data, or default
+        //to the categories stored in the ctor
 	    if(data !== undefined){
             this.currentDataSet = data;
         }else{
@@ -144,58 +156,48 @@ define(['d3.min','underscore'],function(d3,_){
                 return "translate(" + (d.x)  +","+ d.y + ")";
             })
             .on("mouseover",function(d){
-                //Mouseover enlarges the node, and shows the nodes text
+                //Mouseover enlarges the node,
+                //and shows the nodes text
+                //console.log("mscp mx: ", d3.event.pageX, d3.event.pageY);
                 var original = d3.select(this);
                 var temp = d3.select("#temp");
-                //Create if it doesnt exist
-                if(temp.empty()){
-                    temp = d3.select("#mainVisualisation").append("g")
-                        .attr("id","temp")
-                        .datum(d);
-                    temp.append("circle")
-                        .attr("r",0);
-                    temp.append("text")
-                        .style("fill","white")
-                        .style("text-anchor","middle")
-                        .style("opacity",0);
-                    temp.on("mouseout",function(d){
-                        d3.select(this).select("circle")
-                            .transition().attr("r",0);
-                        d3.select(this).select("text")
-                            .transition().style("opacity",0);
-                    })
-                        .on("click",function(d){
-                            if(d3.event.altKey){
-                                d3.select("#temp").select("circle")
-                                    .transition().attr("r",0);
-                                d3.select("#temp").select("text")
-                                    .transition()
-                                    .attr("opacity",0);
-                            }
-                        });
-                }
-                //Modify for current circumstance
-                temp.attr("transform",original.attr("transform"));
-                
-                temp.select("circle")
+                //Highlight the equivalent name:
+                d3.select("#name_"
+                          + d.name.replace(idRegex,""))
+                    .select("text")
                     .transition()
-                    .attr("r",d.r + 50);
+                    .style("fill","red");
 
-                temp.select("text")
-                    .text(d.name)
-                    .style("fill","white")
-                    .style("text-anchor","middle")
+                //Draw the title:
+                d3.select("#gameTitle")
+                    .select("text")
+                    .text(d.name + " : " + d.value);
+
+                //Colour the circle:
+                d3.select(this)
+                    .select("circle")
                     .transition()
-                    .style("opacity",1);
+                    .style("fill",cpInstance.colours["green"]);
             })
             .on("mouseout",function(d){
-                //mouseout moved to the temp g.
-            })
-            .on("mousemove",function(d){
-		        //currently unneeded
+                //recolour the text
+                d3.select("#name_"+d.name.replace(idRegex,""))
+                    .select("text")
+                    .transition()
+                    .style("fill",cpInstance.colours["textGrey"]);
+                //Remove the text:
+                d3.select("#gameTitle")
+                    .select("text")
+                    .text("");
+
+                //Return the colour:
+                d3.select(this)
+                    .select("circle")
+                    .transition()
+                    .style("fill",cpInstance.colours["lightBlue"]);
+                
             })
             .on("click",function(d){
-                //click on a node to
                 console.log(d.name);
                 main.selectAll(".node").remove();
                 //If there are games stored in the node (ie: its a category)
@@ -204,17 +206,17 @@ define(['d3.min','underscore'],function(d3,_){
                     console.log("Redrawing",d.games);
                     cpInstance.draw(d.games);
                 }else{
-                    //Send a start message:
-                    //TODO: check this
-                    var commandString = "";
-                    commandString += "&command=startGame";
-                    commandString += "&appid=";
-                    commandString += d.appid;
-                    var request = new XMLHttpRequest();
-                    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    request.setRequestHeader('Content-Length', urlEncodedData.length);
-                    request.open("POST","",true);
-                    request.send(commandString);
+                    //If there arent games, it is a game,
+                    //So send a start message  to the server?
+                    // var commandString = "";
+                    // commandString += "&command=startGame";
+                    // commandString += "&appid=";
+                    // commandString += d.appid;
+                    // var request = new XMLHttpRequest();
+                    // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    // request.setRequestHeader('Content-Length', urlEncodedData.length);
+                    // request.open("POST","",true);
+                    // request.send(commandString);
                     // //or go back to drawing all categories
                     // console.log("other");
                     // cpInstance.draw(_.values(cpInstance.categories));
@@ -223,8 +225,9 @@ define(['d3.min','underscore'],function(d3,_){
 
         //Create each node's representation, start it at 0 radius, enlarge it later
         containers.append("circle")
-            .attr("r",0);//function(d){ return d.r; });
-
+            .attr("r",0)  //function(d){ return d.r; });
+            .style("fill",this.colours["lightBlue"]);
+        
         //The text for each node
         containers.append("text")
             .text(function(d) {
@@ -238,17 +241,6 @@ define(['d3.min','underscore'],function(d3,_){
                 //For each node in the selection, have it fade its text in and out
                 d3.select(this).style("opacity",0);
                 return;
-                //
-                // var that = this;
-                // var delay = 2000 * Math.random();
-                // setInterval(function(){
-                //     d3.select(that).transition().delay(function(d){
-                //         return Math.random() * 2000;
-                //     })
-                //         .duration(1000).attr("opacity",1)
-                //         .transition()
-                //         .duration(1000).attr("opacity",0)
-                // }, 3000);
             })
                 .style("-moz-user-select","-moz-none"); //stop the user selecting the text in firefox
         
@@ -276,6 +268,7 @@ define(['d3.min','underscore'],function(d3,_){
 
     //Draw data as names under the dom element specified
     CP.prototype.drawNamesHalf = function(data,rootDom){
+        var cpInstance = this;
         console.log("Drawing Names:",data);
         data.sort(function(l,r){
             return l.name > r.name;
@@ -299,6 +292,9 @@ define(['d3.min','underscore'],function(d3,_){
         boundGroups.exit().remove();
 
         var individualNames = boundGroups.enter().append("g")
+            .attr("id",function(d){
+                return "name_" + d.name.replace(idRegex,"");
+            })
             .attr("transform",function(d,i){
                 return "translate(0," + (i * 20) + ")";
             })
@@ -306,7 +302,7 @@ define(['d3.min','underscore'],function(d3,_){
                 //Draw a line to the corresponding circle
                 var theText = d3.select(this).select('text');
                 theText.transition()
-                    .style("fill","red")
+                    .style("fill",cpInstance.colours["textBlue"])
                     .text(function(d){
                         d.shortName = theText.text();
                         return d.name;
@@ -319,13 +315,13 @@ define(['d3.min','underscore'],function(d3,_){
                 d3.select(idString)
                     .select("circle")
                     .transition()
-                    .style("fill","red");
+                    .style("fill",cpInstance.colours["green"]);
             })
             .on("mouseout",function(d){
                 //fade the line out
                 var theText = d3.select(this).select('text');
                 theText.transition()
-                    .style("fill",'white')
+                    .style("fill",cpInstance.colours["textGrey"])
                     .text(function(d){
                         return d.shortName;
                     });
@@ -337,13 +333,13 @@ define(['d3.min','underscore'],function(d3,_){
                 d3.select(idString)
                     .select("circle")
                     .transition()
-                    .style("fill","black");
+                    .style("fill",cpInstance.colours["lightBlue"]);
 
             });
 
         individualNames.append("text")
             .style("text-anchor","left")
-            .style("fill","white")
+            .style("fill",this.colours["textGrey"])
             .text(function(d){
                 return d.name;
             })

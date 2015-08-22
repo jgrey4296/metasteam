@@ -15,6 +15,20 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         //internal reference for use in d3 callback functions
         var hubReference = this;
 
+        //Colours:
+        this.colours = {
+            grey : d3.rgb(19,21,27),
+            text : d3.rgb(237,255,255),
+            textBlue : d3.rgb(98,188,238),
+            textGrey : d3.rgb(132,146,154),
+            darkBlue : d3.rgb(23,50,77),
+            darkerBlue : d3.rgb(20,38,60),
+            lightBlue: d3.rgb(53,99,142),
+            green : d3.rgb(108,141,7),
+            
+            
+        };
+        
         //Stored Data
         this.data = null;
         this.margin = 30;
@@ -25,6 +39,12 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         this.internalWidth = this.svgWidth - (2 *(this.svgWidth * 0.15));
         console.log("Height:",this.svgHeight,"Width:",this.svgWidth);
 
+        //Store for use in circlepack/other vis:
+        d3.select("head").append("g")
+            .attr("id","globalVars")
+            .attr("sideBarWidth",this.sideBarWidth)
+            .attr("internalWidth",this.internalWidth);
+        
         //Reusable Scale for graph drawing
         this.scale = d3.scale.linear();
         this.scale.range([0, (this.svgHeight * 0.18)]);
@@ -36,7 +56,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         this.buttons = [
             {name:"Hub"},
             {name:"circlePack",
-             value:new MSCP(this.svgWidth - (this.svgWidth * 0.15) - 100,this.svgHeight),
+             value:new MSCP(this.svgWidth - (this.svgWidth * 0.15) - 100,this.svgHeight,this.colours),
             },
             {name:"timeline"},
             {name:"chord"},
@@ -51,10 +71,16 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         //Reference for use in d3 callbacks
         var hubReference = this;
         //Setup the svg
-        d3.select('body').append('svg')
+        var body = d3.select('body').append('svg')
             .attr('id','mainsvg')
             .attr('height',this.svgHeight)
             .attr('width',this.svgWidth);
+
+
+        body.append("rect")
+            .attr("width",this.svgWidth)
+            .attr("height",this.svgHeight)
+            .style("fill",this.colours["grey"]);
         //SideBar:
         var leftBar = d3.select('#mainsvg').append("g")
             .attr("id","leftBar");
@@ -62,7 +88,8 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             .attr('width',this.sideBarWidth )
             .attr('height',this.svgHeight)
             .attr("rx",5)
-            .attr("ry",5);
+            .attr("ry",5)
+            .style("fill",this.colours["darkBlue"]);
 
         var rightBar = d3.select("#mainsvg").append("g")
             .attr("id","rightBar")
@@ -75,7 +102,8 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             .attr('width',this.sideBarWidth)
             .attr('height',this.svgHeight)
             .attr("rx",5)
-            .attr("ry",5);
+            .attr("ry",5)
+            .style("fill",this.colours["darkBlue"]);
 
         //Draw the Header bar:
         var header = d3.select("#mainsvg").append("g")
@@ -84,6 +112,17 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
                   "translate(" +
                   (this.sideBarWidth + 20) + ",0)");
 
+        var gameTitle = header.append("g")
+            .attr("id","gameTitle")
+            .attr("transform","translate("
+                  + (this.internalWidth * 0.5) + ",100)");
+
+        gameTitle.append("text")
+            .text("")
+            .style("fill",this.colours["textGrey"])
+            .style("text-anchor","middle");
+        
+        
         header.append("rect")
             .attr("width",this.internalWidth - 40)
             .attr("height",80)
@@ -295,11 +334,13 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         var buttonWidth = (hubRef.internalWidth * 0.8) / data.length;
         console.log("Drawing Buttons:",data,buttonWidth);
         //select the right bar and bind
-        var groups = d3.select("#headerBar").selectAll("g").data(data,function(d){return d.name;});
+        var groups = d3.select("#headerBar").selectAll(".button").data(data,function(d){return d.name;});
 
-        groups.enter().append("g").attr("id",function(d){
+        groups.exit().remove();
+        var newGroups = groups.enter().append("g").attr("id",function(d){
             return "button_"+ d.name;
         })
+            .attr("class","button")
             .attr("transform",function(d,i){
                 return "translate(" + ((hubRef.internalWidth * 0.1) + (i * (buttonWidth))) +"," + 10 + ")";
             })
@@ -314,26 +355,33 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
                     d.value.registerData(hubRef.data.installed);
                     d.value.draw();
                 }
+            })
+            .on("mouseover",function(d){
+                //on mouseover, turn the button green
+                console.log("mouseover button: ",d.name);
+                d3.select(("#button_" + d.name)).select("rect").transition()
+                    .style("fill",hubRef.colours["green"]);
+            })
+            .on("mouseout",function(d){
+                //on mouseout, return the button to orig colour
+                d3.select(("#button_" + d.name)).select("rect").transition()
+                    .style("fill",hubRef.colours["lightBlue"]);
             });
 
-        groups.append("rect")
+        //draw the button 
+        newGroups.append("rect")
             .attr("width",buttonWidth - 5)
             .attr("height",60)
-            .style("fill","red")
-            .attr("rx",10)
-            .attr("ry",10);
+            .style("fill",this.colours["lightBlue"]);
         
-        groups.append("text")
+        newGroups.append("text")
             .text(function(d){
                 return d.name;
             })
             .attr("transform","translate(" + (buttonWidth * 0.5) + ",45)")
-            .style("text-anchor","middle");
+            .style("text-anchor","middle")
+            .style("fill",this.colours["textBlue"]);
         
-        //add on click
-        //each on click cleans up the window,
-        //and then calls draw on the datum
-
     };
     
     
