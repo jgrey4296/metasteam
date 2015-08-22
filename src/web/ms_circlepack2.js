@@ -266,25 +266,32 @@ define(['d3.min','underscore'],function(d3,_){
        @function drawNames
        @param data : the array of game objects, same as for drawGames
     */
-    CP.prototype.drawNames = function(data,rootDOM){
-        //split data in half?
-        data = data.reverse().slice(0,40);
+    CP.prototype.drawNames = function(data){
+        var selectionAmount = 38;
+        var first = data.reverse().slice(0,selectionAmount);
+        var second = data.slice(selectionAmount,(selectionAmount * 2));
+        this.drawNamesHalf(first,d3.select("#leftBar"));
+        this.drawNamesHalf(second,d3.select("#rightBar"));
+    };
+
+    //Draw data as names under the dom element specified
+    CP.prototype.drawNamesHalf = function(data,rootDom){
         console.log("Drawing Names:",data);
         data.sort(function(l,r){
             return l.name > r.name;
         });
         
         //select the names group
-        var namesGroupLeft = d3.select("#gameNames");
-        if(namesGroupLeft.empty()){
-            namesGroupLeft = d3.select("#mainsvg").append("g").attr('id','gameNames')
+        var namesGroup = rootDom.select("#gameNames");
+        if(namesGroup.empty()){
+            namesGroup = rootDom.append("g").attr('id','gameNames')
                 .attr("transform",function(){
-                    return "translate(5," +
+                    return "translate(10," +
                         (Number(d3.select("#resetButton").select("rect").attr("height")) + 20)  + ")";
                 });
         }
         
-        var boundGroups = namesGroupLeft.selectAll('g').data(data,function(d){
+        var boundGroups = namesGroup.selectAll('g').data(data,function(d){
             if(d['appid']) return d['appid'];
             return d['name'];
         });
