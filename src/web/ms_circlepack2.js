@@ -20,7 +20,8 @@ define(['d3.min','underscore'],function(d3,_){
         this.categories = {};
 
         this.currentDataSet = [];
-
+        this.packSize = [sizeX,sizeY];
+        
         //Packer:
         this.bubble = d3.layout.pack()
             .sort(function(f,s){
@@ -29,17 +30,19 @@ define(['d3.min','underscore'],function(d3,_){
             .size([sizeX,sizeY])
             .padding(1.5);
 
-        
+    };
+
+    CP.prototype.registerData = function(data){
+        console.log("registering data:",data);
+        this.categories = {};
+               
         //Add a catchall to the categories
         this.categories['everything'] = {
             name: 'everything',
             games: [],
             value: 0.1
         };
-    };
-
-    CP.prototype.registerData = function(data){
-        console.log("registering data:",data);
+ 
         this.baseData = data;
         //for every game
         for(var i in this.baseData){
@@ -86,33 +89,38 @@ define(['d3.min','underscore'],function(d3,_){
         //console.log("Drawing:",data);
         var cpInstance = this;
         //Add a reset button
-        var resetButton = d3.select("#leftBar").append("g")
-            .attr("id","resetButton")
-            .attr("transform","translate(" + (d3.select("#leftBar").select("rect").attr("width") * 0.1) + ",0)")
-            .on("click",function(){
-                //On click, redraw from categories
-                console.log("Resetting");
-                d3.selectAll(".node").remove();
-                d3.selectAll("#gameNames").remove();
-                //Reset the translation and scaling for the new draw:
-                d3.select("#mainVisualisation")
-                    .attr("transform","translate(0,0)scale(1,1)");
-                cpInstance.draw();//_.values(cpInstance.categories));
-            });
+        var resetButton = d3.select("#resetButton");
+        if(resetButton.empty()){
+            resetButton = d3.select("#leftBar").append("g")
+                .attr("id","resetButton")
+                .attr("transform","translate(" + (d3.select("#leftBar").select("rect").attr("width") * 0.1) + ",0)")
+                .on("click",function(){
+                    //On click, redraw from categories
+                    console.log("Resetting");
+                    d3.selectAll(".node").remove();
+                    d3.selectAll("#gameNames").remove();
+                    //Reset the translation and scaling for the new draw:
+                    d3.select("#mainVisualisation")
+                        .attr("transform","translate("
+                              + (window.innerWidth * 0.25)+ ",0)scale(1,1)");
+                    cpInstance.draw();//_.values(cpInstance.categories));
+                });
 
-        resetButton.append("rect")
-            .style("fill",this.colours['green'])
-            .attr("width",100)
-            .attr("height",50);
+            resetButton.append("rect")
+                .style("fill",this.colours['green'])
+                .attr("width",100)
+                .attr("height",50);
 
-        resetButton.append("text")
-            .style("text-anchor","middle")
-            .text("reset")
-            .attr("transform","translate(50,25)");
+            resetButton.append("text")
+                .style("text-anchor","middle")
+                .text("reset")
+                .attr("transform","translate(50,25)");
 
+        }
         //Finished with reset button, draw the vis
         var main = d3.select("#mainVisualisation");
         //Setup the zoom:
+        d3.select("#mainsvg").on("zoom",null);
         d3.select("#mainsvg")
             .call(d3.behavior.zoom()
                   .scaleExtent([1,2])
@@ -131,58 +139,20 @@ define(['d3.min','underscore'],function(d3,_){
             this.currentDataSet = _.values(this.categories);
         }
         
-        //The node data structure from packing
-        console.log("Packing:",this.currentDataSet);
-        for (var x in this.currentDataSet){
-            var datum = this.currentDataSet[x];
-            if(datum.games === undefined &&
-               datum.hours_forever === undefined){
-                console.log("Bad Datum:",datum);
-                if(datum.appid){
-                    datum.hours_forever = 0;
-                }
-            }
+        var dataToUse = this.currentDataSet;
+        var dataString = "";
+        for(var x in dataToUse){
+            dataString += " " + dataToUse[x]['name'];
         }
 
+        console.log("Data: ",dataString);
         
-        if(this.currentDataSet[0].games){
-            this.bubble.value(function(d){
-                if(d.games.length > 1) return d.games.length;
-                return 1;
-            });
-        }else if(this.currentDataSet[0].hours_forever){
-            this.bubble.value(function(d){
-                if(d.hours_forever > 1) return d.hours_forever;
-                return 1;
-            });
-        };
-
-        //Filter out bad values:
-        var dataToUse = this.currentDataSet.filter(function(d){
-            if(d.appid && (d.hours_forever === undefined
-                           || d.hours_forever === 0)){
-                return false;
-            }else if(d.games && d.games.length < 1){
-                return false;
-            }
+        var packed_nodes = this.bubble.nodes({children:dataToUse});
+        
+        packed_nodes = packed_nodes.filter(function(d,i){
+            if(d['children']) return false;
             return true;
         });
-
-
-        dataToUse.filter(function(d){
-            if(d.hours_forever
-               && d.hours_forever < 1){
-                d.hours_forever = 1;
-            }
-            return true;
-        })
-        
-        console.log("DAta to use:",dataToUse);
-        var packed_nodes = this.bubble.nodes({children:dataToUse});
-            packed_nodes = packed_nodes.filter(function(d,i){
-                if(d['children']) return false;
-                return true;
-            });
 
         //Bind the data to nodes
         var node = main.selectAll(".node")
@@ -249,14 +219,12 @@ define(['d3.min','underscore'],function(d3,_){
             })
             .on("click",function(d){
                 console.log(d.name);
-                main.selectAll(".node").remove();
                 //If there are games stored in the node (ie: its a category)
                 if(d.games && d.games.length > 0){
                     //draw the pack of games for that category
                     console.log("Redrawing",d.games);
                     d3.selectAll("#gameNames").remove();
                     d3.selectAll(".node").remove();
-                    d3.select("#resetButton").remove();
                     cpInstance.draw(d.games);
                 }else{
                     //If there arent games, it is a game,
@@ -276,32 +244,19 @@ define(['d3.min','underscore'],function(d3,_){
                 }
             });
 
-        //Create each node's representation, start it at 0 radius, enlarge it later
+        //Create each node's representation,
+        //start it at 0 radius, enlarge it later
         containers.append("circle")
             .attr("r",0)  //function(d){ return d.r; });
             .style("fill",this.colours["lightBlue"]);
         
-        //The text for each node
-        // containers.append("text")
-        //     .text(function(d) {
-        //         //If the node is too small, don't display its text
-        //         return d.name;
-        //     })
-        //     .style("fill","white")
-        //     .style("text-anchor","middle")
-        //     .attr("transform","translate(0,0)")
-        //     .each(function(d,i){
-        //         //For each node in the selection, have it fade its text in and out
-        //         d3.select(this).style("opacity",0);
-        //         return;
-        //     })
-        //         .style("-moz-user-select","-moz-none"); //stop the user selecting the text in firefox
-        
 
         //here transitions all nodes up to their proper size
-        node.selectAll("circle").transition().attr('r',function(d){ return d.r;});
+        node.selectAll("circle").transition()
+            .attr('r',function(d){ return d.r;});
 
-        //Draw the tooltip that was passed in as part of the ctor
+        //Draw the tooltip that was passed in as
+        //part of the ctor
         //this.tooltip.draw();
         this.drawNames(this.currentDataSet);
     };
