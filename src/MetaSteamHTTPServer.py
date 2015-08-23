@@ -39,12 +39,16 @@ def save_json(self):
     print "Triggering Json Save"
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.exportToJson()
-            
+
+def compare_to_user(self):
+    print "TODO: allow comparison of user profiles"
+        
 #Command map for POST:
 postCommands = {
     'closeServer':close_server,
     'startGame': start_game,
-    'saveJson':save_json
+    'saveJson':save_json,
+    'compare' :compare_to_user,
     }
 
 class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequestHandler):
@@ -118,14 +122,7 @@ def runLocalServer(metaSteamInstance):
     if metaSteamInstance != None:
         MetaSteamHandler.registerInstance(metaSteamInstance)
     
-    setupAllowedFiles()
 
-    print "--------------------"
-    print "Allowed Files:"
-    for aFile in allowedFiles:
-        print aFile + " : " + allowedFiles[aFile]
-    print "--------------------"
-    
     #Create and Run the actual server:
     server = ServerClass(server_address, MetaSteamHandler)
     
@@ -137,13 +134,6 @@ def runLocalServer(metaSteamInstance):
     server.socket.close()
     print "Shutting Down Server"
 
-def setupAllowedFiles():
-    for root, subdirs, files in os.walk(os.getcwd()):
-        print root
-        for aFile in files:
-            print "Adding:",aFile,subdirs
-            #allowedFiles.append((aFile,os.path.join(root,aFile)))
-            allowedFiles[aFile] = os.path.join(root,aFile)
 
 if __name__ == "__main__":
     runLocalServer(None)    
