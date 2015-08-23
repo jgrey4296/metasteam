@@ -60,6 +60,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             },
             {name:"timeline"},
             {name:"chord"},
+            {name:"compare user"},
         ];
 
         this.setupSvg();
