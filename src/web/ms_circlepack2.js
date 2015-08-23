@@ -14,6 +14,16 @@ define(['d3.min','underscore'],function(d3,_){
 	    console.log("Sizes:",sizeX,sizeY,colours);//the tooltip for the visualisation:
 
         this.colours = colours;
+
+        //Colours scale:
+        this.scaleToColours = d3.scale.linear()
+            .domain([0,100])
+            .rangeRound([0,20]);
+        this.colourScale = d3.scale.category20b();
+
+        this.oneOf20Colours = function(val){
+            return this.colourScale(this.scaleToColours(val));
+        };
         
         //The data the circle pack will be using:
         this.baseData = null;
@@ -68,15 +78,19 @@ define(['d3.min','underscore'],function(d3,_){
                         value : 0.1
                     };
                 }
-                this.categories[tag]['games'].push(game);
-                this.categories[tag]['value'] += 1;
-                
+                //Guard to make sure duplicates arent used
+                if(this.categories[tag]['games'].indexOf(game) === -1){
+                    this.categories[tag]['games'].push(game);
+                    this.categories[tag]['value'] += 1;
+                }
             }
         }
 
         this.categories['everything'].value = this.categories['everything']['games'].length;
 
         this.currentDataSet = _.values(this.categories);
+
+        console.log("Co-op auto: ",this.categories['Co-op']);
     };
 
 
@@ -100,9 +114,9 @@ define(['d3.min','underscore'],function(d3,_){
                     d3.selectAll(".node").remove();
                     d3.selectAll("#gameNames").remove();
                     //Reset the translation and scaling for the new draw:
-                    d3.select("#mainVisualisation")
-                        .attr("transform","translate("
-                              + (window.innerWidth * 0.25)+ ",0)scale(1,1)");
+                    // d3.select("#mainVisualisation")
+                    //     .attr("transform","translate("
+                    //           + (window.innerWidth * 0.25)+ ",0)scale(1,1)");
                     cpInstance.draw();//_.values(cpInstance.categories));
                 });
 
@@ -120,14 +134,14 @@ define(['d3.min','underscore'],function(d3,_){
         //Finished with reset button, draw the vis
         var main = d3.select("#mainVisualisation");
         //Setup the zoom:
-        d3.select("#mainsvg").on("zoom",null);
-        d3.select("#mainsvg")
-            .call(d3.behavior.zoom()
-                  .scaleExtent([1,2])
-                  .on("zoom",function(){
-                      main.attr("transform","translate(" + d3.event.translate +")scale(" + d3.event.scale + ")");            
-                  })
-                 );;
+        // d3.select("#mainsvg").on("zoom",null);
+        // d3.select("#mainsvg")
+        //     .call(d3.behavior.zoom()
+        //           .scaleExtent([1,2])
+        //           .on("zoom",function(){
+        //               main.attr("transform","translate(" + d3.event.translate +")scale(" + d3.event.scale + ")");            
+        //           })
+        //          );;
         
         //Use passed in data, or default
         //to the categories stored in the ctor
@@ -140,12 +154,12 @@ define(['d3.min','underscore'],function(d3,_){
         }
         
         var dataToUse = this.currentDataSet;
-        var dataString = "";
-        for(var x in dataToUse){
-            dataString += " " + dataToUse[x]['name'];
-        }
+        // var dataString = "";
+        // for(var x in dataToUse){
+        //     dataString += " " + dataToUse[x]['name'];
+        // }
 
-        console.log("Data: ",dataString);
+        //console.log("Data: ",dataString,dataToUse);
         
         var packed_nodes = this.bubble.nodes({children:dataToUse});
         
@@ -154,6 +168,13 @@ define(['d3.min','underscore'],function(d3,_){
             return true;
         });
 
+        //Get the max of the values:
+        var maxVal = d3.max(packed_nodes,function(d){
+            return d.value;
+        });
+
+        this.scaleToColours.domain([0,maxVal]);
+        
         //Bind the data to nodes
         var node = main.selectAll(".node")
             .data(packed_nodes,
@@ -163,7 +184,7 @@ define(['d3.min','underscore'],function(d3,_){
                       console.log("A Node has neither appid or a name",d);
                       return "unknown";
                   });
-
+        
         //Enable access to the circlepack from inside d3 callbacks:
         var cpInstance = this;
         
@@ -191,13 +212,22 @@ define(['d3.min','underscore'],function(d3,_){
                 //Draw the title:
                 d3.select("#gameTitle")
                     .select("text")
-                    .text(d.name + " : " + d.value);
+                    .text(function(){
+                        var scaleVal = "";
+                        if(d.games) scaleVal = " Games";
+                        if(d.hours_forever) scaleVal = " Hours Played"
+                        return d.name + " : " + Math.round(d.value) + scaleVal;
+                    });
 
                 //Colour the circle:
                 d3.select(this)
                     .select("circle")
                     .transition()
-                    .style("fill",cpInstance.colours["green"]);
+                    .style("fill","red");
+                           //cpInstance.colours["green"]);
+
+                //TODO: reduce all other circles opacity
+                
             })
             .on("mouseout",function(d){
                 //recolour the text
@@ -214,8 +244,11 @@ define(['d3.min','underscore'],function(d3,_){
                 d3.select(this)
                     .select("circle")
                     .transition()
-                    .style("fill",cpInstance.colours["lightBlue"]);
-                
+                    .style("fill",
+                           cpInstance.oneOf20Colours(d.value));
+                           //cpInstance.colours["lightBlue"]);
+
+                //TODO: return opacity
             })
             .on("click",function(d){
                 console.log(d.name);
@@ -227,6 +260,10 @@ define(['d3.min','underscore'],function(d3,_){
                     d3.selectAll(".node").remove();
                     cpInstance.draw(d.games);
                 }else{
+                    console.log("Draw Details:",d.name);
+                    d3.selectAll("#gameNames").remove();
+                    d3.selectAll(".node").remove();
+                    cpInstance.drawGame(d);
                     //If there arent games, it is a game,
                     //So send a start message  to the server?
                     // var commandString = "";
@@ -248,7 +285,10 @@ define(['d3.min','underscore'],function(d3,_){
         //start it at 0 radius, enlarge it later
         containers.append("circle")
             .attr("r",0)  //function(d){ return d.r; });
-            .style("fill",this.colours["lightBlue"]);
+            .style("fill",function(d){
+                return cpInstance.oneOf20Colours(d.value);
+            });
+                   //this.colours["lightBlue"]);
         
 
         //here transitions all nodes up to their proper size
@@ -328,7 +368,9 @@ define(['d3.min','underscore'],function(d3,_){
                 //Draw a line to the corresponding circle
                 var theText = d3.select(this).select('text');
                 theText.transition()
-                    .style("fill",cpInstance.colours["textBlue"])
+                    .style("fill","red")
+                           //cpInstance.oneOf20Colours(d.value))
+                           //cpInstance.colours["textBlue"])
                     .text(function(d){
                         d.shortName = theText.text();
                         return d.name;
@@ -341,13 +383,19 @@ define(['d3.min','underscore'],function(d3,_){
                 d3.select(idString)
                     .select("circle")
                     .transition()
-                    .style("fill",cpInstance.colours["green"]);
+                    .style("fill","red");
+                           //cpInstance.colours["green"]);
+
+                //reduce all other circles opacity
+                
             })
             .on("mouseout",function(d){
                 //fade the line out
                 var theText = d3.select(this).select('text');
                 theText.transition()
-                    .style("fill",cpInstance.colours["textGrey"])
+                    .style("fill",
+                           cpInstance.oneOf20Colours(d.value))
+                           //cpInstance.colours["textGrey"])
                     .text(function(d){
                         return d.shortName;
                     });
@@ -359,13 +407,20 @@ define(['d3.min','underscore'],function(d3,_){
                 d3.select(idString)
                     .select("circle")
                     .transition()
-                    .style("fill",cpInstance.colours["lightBlue"]);
+                    .style("fill",
+                           cpInstance.oneOf20Colours(d.value));
+                           //cpInstance.colours["lightBlue"]);
 
+                //reset opacity
+                
             });
 
         individualNames.append("text")
             .style("text-anchor","left")
-            .style("fill",this.colours["textGrey"])
+            .style("fill",function(d){
+                return cpInstance.oneOf20Colours(d.value)
+            })
+                   //this.colours["textGrey"])
             .text(function(d){
                 return d.name;
             })
@@ -381,6 +436,43 @@ define(['d3.min','underscore'],function(d3,_){
             });
         
     };
+
+    //--------------------
+    //Draw a Single Game:
+    CP.prototype.drawGame = function(game){
+        d3.select("#mainVisualisation")
+            .append("rect")
+            .attr("width",100)
+            .attr("height",100)
+            .style("fill","red")
+            .attr("transform",
+                  "translate(" + (this.packSize[0] * 0.5)
+                  + "," + (this.packSize[1] * 0.5) +")");
+
+
+    };
+
+    //--------------------
+    //CleanUp Utility Functions:
+
+    CP.prototype.cleanUpNames = function(){
+
+    };
+
+    CP.prototype.cleanUpNodes = function(){
+
+    };
+
+    CP.prototype.cleanUpGame = function(){
+
+
+    };
+
+    CP.prototype.cleanUpResetButton = function(){
+
+
+    };
+
     
     return CP;
 });
