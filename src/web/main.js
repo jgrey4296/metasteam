@@ -7,8 +7,9 @@
 */
 require.config({
     paths:{
-        underscore:"/libs/underscore",
-        d3:"/libs/d3.min",
+        baseUrl : 'web',
+        underscore:"libs/underscore",
+        d3:"libs/d3.min",
     },
     shim:{
         underscore:{
@@ -31,7 +32,7 @@ require(['d3','ms_circlepack2','underscore','ms_tooltip','metaSteamHub'],functio
     metaSteamHub.draw();
     
     //Load the json Data:
-    d3.json("gameData.json",function(d){
+    d3.json("/data/gameData.json",function(d){
         data = d;
         console.log("Base DATA:",d);
 

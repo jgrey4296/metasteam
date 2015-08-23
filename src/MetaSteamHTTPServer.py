@@ -16,7 +16,7 @@ import cgi
 ServerClass  = BaseHTTPServer.HTTPServer
 Protocol     = "HTTP/1.0"
 
-allowedFiles = []
+allowedFiles = {}
 
 continueRunning = True
 #turn off with 'global continueRunning, continueRunning = False'
@@ -47,7 +47,7 @@ postCommands = {
     'saveJson':save_json
     }
 
-class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequestHandler):
     metaSteamInstance = None
 
     @staticmethod
@@ -63,45 +63,21 @@ class MetaSteamHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         else:
             return False
         
-    #Main GET handler
-    #used for basic web serving of files
+    # #Main GET handler
+    # #used for basic web serving of files
     def do_GET(self):
-        print "do_GET"
+        print "Getting path: " + self.path
+        #if file is the json:
+        #acquire  the lock
+        if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
+            MeetaSteamHandler.metaSteamInstance.jsonLock.acquire()
+        #perform the request
+        SimpleHTTPRequestHandler.do_GET(self)
+        #Release the lock
+        if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
+            MeetaSteamHandler.metaSteamInstance.jsonLock.release()
 
-        #search the allowed files for a match with the input path
-        #open that file and return it
-        locked = False
-        for fileName, filePath in allowedFiles:
-            if fileName in self.path[1:]:
-                print "Found file: " + fileName + " for " + self.path
-                self.send_response(200)
-                if fileName[-3:] == ".js":
-                    self.send_header('Content-type','application/javascript')
-
-                elif fileName[-5:] == ".json":
-                    self.send_header('Content-type','application/json')
-                    if MetaSteamHandler.cmsi():
-                        MetaSteamHandler.metaSteamInstance.jsonLock.acquire()
-                    locked = True
-                elif fileName[-4:] == ".css":
-                    self.send_header('Content-type','text/css')
-                else:
-                    self.send_header('Content-type','text/html')
-                    
-                self.end_headers()
-                theFile = open(filePath)
-                self.wfile.write(theFile.read())
-                theFile.close()
-
-                if locked and MetaSteamHandler.cmsi():
-                    MetaSteamHandler.metaSteamInstance.jsonLock.release()
-                    
-                
-                return
-        #otherwise send error:
-        print "Could Not Find: " + self.path
-        self.send_error(404,'File not found')
-
+        
     #Main POST handler
     #Used for starting games, and exiting
     def do_POST(self):
@@ -136,7 +112,8 @@ def runLocalServer(metaSteamInstance):
     print "Run Local Server recieved: " + str(metaSteamInstance)
     #Setup:
     port = 8000
-    server_address = ('127.0.0.1', port)
+    #server_address = ('127.0.0.1', port)
+    server_address = ('localhost',port)
     MetaSteamHandler.protocol_version = Protocol
     if metaSteamInstance != None:
         MetaSteamHandler.registerInstance(metaSteamInstance)
@@ -145,8 +122,8 @@ def runLocalServer(metaSteamInstance):
 
     print "--------------------"
     print "Allowed Files:"
-    for aFile,path in allowedFiles:
-        print aFile + " : " + path
+    for aFile in allowedFiles:
+        print aFile + " : " + allowedFiles[aFile]
     print "--------------------"
     
     #Create and Run the actual server:
@@ -162,8 +139,11 @@ def runLocalServer(metaSteamInstance):
 
 def setupAllowedFiles():
     for root, subdirs, files in os.walk(os.getcwd()):
+        print root
         for aFile in files:
-            allowedFiles.append((aFile,os.path.join(root,aFile)))
+            print "Adding:",aFile,subdirs
+            #allowedFiles.append((aFile,os.path.join(root,aFile)))
+            allowedFiles[aFile] = os.path.join(root,aFile)
 
 if __name__ == "__main__":
     runLocalServer(None)    

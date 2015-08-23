@@ -2,7 +2,7 @@
    Second attempt at circle pack visualisation for metasteam
 */
 
-define(['d3.min','underscore'],function(d3,_){
+define(['d3','underscore'],function(d3,_){
 
     var idRegex = /\W/g;
     
@@ -102,6 +102,7 @@ define(['d3.min','underscore'],function(d3,_){
     CP.prototype.draw = function(data){
         //console.log("Drawing:",data);
         var cpInstance = this;
+        //todo: abstract this out:
         //Add a reset button
         var resetButton = d3.select("#resetButton");
         if(resetButton.empty()){
@@ -110,6 +111,7 @@ define(['d3.min','underscore'],function(d3,_){
                 .attr("transform","translate(" + (d3.select("#leftBar").select("rect").attr("width") * 0.1) + ",0)")
                 .on("click",function(){
                     //On click, redraw from categories
+                    //todo: call cleanup utilities instead
                     console.log("Resetting");
                     d3.selectAll(".node").remove();
                     d3.selectAll("#gameNames").remove();
@@ -131,6 +133,9 @@ define(['d3.min','underscore'],function(d3,_){
                 .attr("transform","translate(50,25)");
 
         }
+
+        //Draw a button to switch between installed and all profile games
+        
         //Finished with reset button, draw the vis
         var main = d3.select("#mainVisualisation");
         //Setup the zoom:
@@ -255,12 +260,14 @@ define(['d3.min','underscore'],function(d3,_){
                 //If there are games stored in the node (ie: its a category)
                 if(d.games && d.games.length > 0){
                     //draw the pack of games for that category
+                    //todo: call cleanup utilities
                     console.log("Redrawing",d.games);
                     d3.selectAll("#gameNames").remove();
                     d3.selectAll(".node").remove();
                     cpInstance.draw(d.games);
                 }else{
                     console.log("Draw Details:",d.name);
+                    //todo: call cleanup utilities
                     d3.selectAll("#gameNames").remove();
                     d3.selectAll(".node").remove();
                     cpInstance.drawGame(d);
@@ -414,7 +421,9 @@ define(['d3.min','underscore'],function(d3,_){
                 //reset opacity
                 
             });
+        //todo add click?
 
+        
         individualNames.append("text")
             .style("text-anchor","left")
             .style("fill",function(d){

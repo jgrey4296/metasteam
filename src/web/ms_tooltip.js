@@ -5,7 +5,7 @@ if(typeof define !== 'function'){
     var define = require('amdefine')(module);
 }
 
-define(['libs/d3.min'],function(d3){
+define(['d3'],function(d3){
 
     var ToolTip = function(){
         this.setup();
