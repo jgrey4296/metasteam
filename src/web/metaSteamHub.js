@@ -276,7 +276,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         scaleDomain[1] = _.keys(data[0].games).length +
             _.keys(data[1].games).length;
         this.scale.domain(scaleDomain);
-        console.log(this.scale.domain(),this.scale.range());
+        //console.log(this.scale.domain(),this.scale.range());
 
         //Bind the data
         var root = domElement.selectAll("g").data(data,function(d){
@@ -292,7 +292,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
                 return d.name;
             })
             .attr("transform",function(d,i){
-                console.log(d,i);
+                //console.log(d,i);
                 return "translate(" + ((hubRef.internalWidth * 0.1) + (i * barWidth)) + "," + (0) +")";
             });
 
@@ -305,7 +305,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             })
             .attr("height",function(d){
                 var val = hubRef.scale((_.keys(d.games)).length);
-                console.log("Height for ", d.name,val);
+                //console.log("Height for ", d.name,val);
                 return val;
             })
             .style("fill",function(d,i){
@@ -332,7 +332,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
     Hub.prototype.drawButtons = function(data){
         var hubRef = this;
         var buttonWidth = (hubRef.internalWidth * 0.8) / data.length;
-        console.log("Drawing Buttons:",data,buttonWidth);
+        //console.log("Drawing Buttons:",data,buttonWidth);
         //select the right bar and bind
         var groups = d3.select("#headerBar").selectAll(".button").data(data,function(d){return d.name;});
 
@@ -352,13 +352,17 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
                 }
                 if(d.name === "circlePack"){
                     d3.select("#generalStats").remove();
+                    d3.selectAll("#gameNames").remove();
+                    d3.selectAll(".node").remove();
+                    d3.select("#leftBar").select("#resetButton")
+                        .remove();
                     d.value.registerData(hubRef.data.installed);
                     d.value.draw();
                 }
             })
             .on("mouseover",function(d){
                 //on mouseover, turn the button green
-                console.log("mouseover button: ",d.name);
+                //console.log("mouseover button: ",d.name);
                 d3.select(("#button_" + d.name)).select("rect").transition()
                     .style("fill",hubRef.colours["green"]);
             })

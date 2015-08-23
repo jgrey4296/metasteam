@@ -83,7 +83,7 @@ define(['d3.min','underscore'],function(d3,_){
        @method draw
     */
     CP.prototype.draw = function(data){
-        console.log("Drawing:",data);
+        //console.log("Drawing:",data);
         var cpInstance = this;
         //Add a reset button
         var resetButton = d3.select("#leftBar").append("g")
@@ -93,6 +93,7 @@ define(['d3.min','underscore'],function(d3,_){
                 //On click, redraw from categories
                 console.log("Resetting");
                 d3.selectAll(".node").remove();
+                d3.selectAll("#gameNames").remove();
                 //Reset the translation and scaling for the new draw:
                 d3.select("#mainVisualisation")
                     .attr("transform","translate(0,0)scale(1,1)");
@@ -123,16 +124,65 @@ define(['d3.min','underscore'],function(d3,_){
         //Use passed in data, or default
         //to the categories stored in the ctor
 	    if(data !== undefined){
+            console.log("Using passed in data");
             this.currentDataSet = data;
         }else{
+            console.log("Using Categories");
             this.currentDataSet = _.values(this.categories);
         }
         
         //The node data structure from packing
-        var packed_nodes = this.bubble.nodes({children:this.currentDataSet}).filter(function(d,i){
-            if(d['children']) return false;
+        console.log("Packing:",this.currentDataSet);
+        for (var x in this.currentDataSet){
+            var datum = this.currentDataSet[x];
+            if(datum.games === undefined &&
+               datum.hours_forever === undefined){
+                console.log("Bad Datum:",datum);
+                if(datum.appid){
+                    datum.hours_forever = 0;
+                }
+            }
+        }
+
+        
+        if(this.currentDataSet[0].games){
+            this.bubble.value(function(d){
+                if(d.games.length > 1) return d.games.length;
+                return 1;
+            });
+        }else if(this.currentDataSet[0].hours_forever){
+            this.bubble.value(function(d){
+                if(d.hours_forever > 1) return d.hours_forever;
+                return 1;
+            });
+        };
+
+        //Filter out bad values:
+        var dataToUse = this.currentDataSet.filter(function(d){
+            if(d.appid && (d.hours_forever === undefined
+                           || d.hours_forever === 0)){
+                return false;
+            }else if(d.games && d.games.length < 1){
+                return false;
+            }
             return true;
         });
+
+
+        dataToUse.filter(function(d){
+            if(d.hours_forever
+               && d.hours_forever < 1){
+                d.hours_forever = 1;
+            }
+            return true;
+        })
+        
+        console.log("DAta to use:",dataToUse);
+        var packed_nodes = this.bubble.nodes({children:dataToUse});
+            packed_nodes = packed_nodes.filter(function(d,i){
+                if(d['children']) return false;
+                return true;
+            });
 
         //Bind the data to nodes
         var node = main.selectAll(".node")
@@ -201,9 +251,12 @@ define(['d3.min','underscore'],function(d3,_){
                 console.log(d.name);
                 main.selectAll(".node").remove();
                 //If there are games stored in the node (ie: its a category)
-                if(d.games){
+                if(d.games && d.games.length > 0){
                     //draw the pack of games for that category
                     console.log("Redrawing",d.games);
+                    d3.selectAll("#gameNames").remove();
+                    d3.selectAll(".node").remove();
+                    d3.select("#resetButton").remove();
                     cpInstance.draw(d.games);
                 }else{
                     //If there arent games, it is a game,
@@ -229,20 +282,20 @@ define(['d3.min','underscore'],function(d3,_){
             .style("fill",this.colours["lightBlue"]);
         
         //The text for each node
-        containers.append("text")
-            .text(function(d) {
-                //If the node is too small, don't display its text
-                return d.name;
-            })
-            .style("fill","white")
-            .style("text-anchor","middle")
-            .attr("transform","translate(0,0)")
-            .each(function(d,i){
-                //For each node in the selection, have it fade its text in and out
-                d3.select(this).style("opacity",0);
-                return;
-            })
-                .style("-moz-user-select","-moz-none"); //stop the user selecting the text in firefox
+        // containers.append("text")
+        //     .text(function(d) {
+        //         //If the node is too small, don't display its text
+        //         return d.name;
+        //     })
+        //     .style("fill","white")
+        //     .style("text-anchor","middle")
+        //     .attr("transform","translate(0,0)")
+        //     .each(function(d,i){
+        //         //For each node in the selection, have it fade its text in and out
+        //         d3.select(this).style("opacity",0);
+        //         return;
+        //     })
+        //         .style("-moz-user-select","-moz-none"); //stop the user selecting the text in firefox
         
 
         //here transitions all nodes up to their proper size
@@ -259,9 +312,27 @@ define(['d3.min','underscore'],function(d3,_){
        @param data : the array of game objects, same as for drawGames
     */
     CP.prototype.drawNames = function(data){
+        if(data[0].appid){
+            //data is a list of games, sort by amount of time played
+            data.sort(function(f,s){
+                var f_h_f = f.hours_forever | 1;
+                var s_h_f = s.hours_forever | 1;
+                return f_h_f - s_h_f;
+            });
+            data.reverse();
+        }else if(data[0].games){
+            data.sort(function(f,s){
+                var f_gl = f.games.length | 1;
+                var s_gl = s.games.length | 1;
+                return f_gl - s_gl;
+            });
+            data.reverse();
+        }
+        
+        console.log("Going to Draw Data:",data);
         var selectionAmount = 38;
-        var first = data.reverse().slice(0,selectionAmount);
-        var second = data.slice(selectionAmount,(selectionAmount * 2));
+        var first = data.slice(0,selectionAmount);
+        var second = data.slice(-38);
         this.drawNamesHalf(first,d3.select("#leftBar"));
         this.drawNamesHalf(second,d3.select("#rightBar"));
     };
@@ -269,10 +340,10 @@ define(['d3.min','underscore'],function(d3,_){
     //Draw data as names under the dom element specified
     CP.prototype.drawNamesHalf = function(data,rootDom){
         var cpInstance = this;
-        console.log("Drawing Names:",data);
-        data.sort(function(l,r){
-            return l.name > r.name;
-        });
+        //console.log("Drawing Names:",data);
+        // data.sort(function(l,r){
+        //     return l.name > r.name;
+        // });
         
         //select the names group
         var namesGroup = rootDom.select("#gameNames");
