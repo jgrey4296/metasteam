@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
+define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline){
 
     /**The Main hub for MetaSteamWeb
        Provides buttons for the visualisations
@@ -53,19 +53,42 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         this.colourScale = d3.scale.category10();
 
         //Data For buttons:
-        this.buttons = [
-            {name:"Hub"},
-            {name:"circlePack",
-             value:new MSCP(this.svgWidth - (this.svgWidth * 0.15) - 100,this.svgHeight,this.colours),
-            },
-            {name:"timeline"},
-            {name:"chord"},
-            {name:"compare user"},
-        ];
+        this.buttons = {};
 
+        this.registerButton("Hub",this);
+        this.registerButton("Circle Pack",new MetaSteamCirclePack(this.internalWidth,this.svgHeight,this.colours));
+
+        this.registerButton("timeline",new MetaSteamTimeline(this.internalWidth,this.svgHeight,this.colours));
+        //            {name:"timeline"},
+        //          {name:"chord"},
+        //        {name:"compare user"},
         this.setupSvg();
     };
 
+
+    Hub.prototype.registerButton = function(name,instance){
+        if(! instance.cleanUp){
+            throw new Error("Button instance with no cleanUp Method: " + name);
+        }
+        if(! instance.draw){
+            throw new Error("Button instance with no draw method " + name);
+        }
+        if(! instance.registerData){
+            throw new Error("Button instance with no registerData Method " + name)
+        }
+        this.buttons[name] = instance;
+    };
+    
+    //Main cleanup routine
+    Hub.prototype.cleanUp = function(){
+        d3.select("#generalStats").remove();
+        for(var x in this.buttons){
+            if(x == "Hub") continue;
+            this.buttons[x].cleanUp();
+        }
+    };
+
+    
     //Setup the sides of the svg, which are the same
     //for all parts of MetaSteamWeb
     Hub.prototype.setupSvg = function(){
@@ -153,7 +176,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         //Draw Button to clear and draw circlepack:
         //Draw Button to clear and draw timeline mockup
         //Draw button for chord diagram
-        this.drawButtons(this.buttons);
+        this.drawButtons(_.values(this.buttons));
         
         //If there is data to draw, create
         //the general statistics view
@@ -194,42 +217,31 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             }
 
             //Draw graphs for each of the three sections
-            var playedData = [
-                {
+            var playedData = [{
                     name:"played",
                     games:{},
-                },
-                {
+                },{
                     name:"not played",
                     games: {},
-                }
-            ];
+                }];
             //Draw Games Installed
-            var scannedData = [
-                {
+            var scannedData = [{
                     name: "Scanned",
                     games: {},
-                },
-                {
+                },{
                     name: "Not Scanned",
                     games : {},
-                }
-            ];
+                }];
 
-            
             //Create the data:
-            var installedData = [
-                //Installed Games
-                {
-                    name: "Installed",
-                    games: {},
-                },
-                //Not Installed Games
-                {
-                    name: "UnInstalled",
-                    games: {},
-                }
-            ];
+            var installedData = [{
+                name: "Installed",
+                games: {},
+            },{
+                name: "UnInstalled",
+                games: {},
+            }];
+            
             //Get All installed Games
             for (var x in this.data.installed){
                 var game = this.data.installed[x];
@@ -329,9 +341,6 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
         
     };
 
-    Hub.prototype.cleanUp = function(){
-        d3.select("#generalStats").remove();
-    };
     
     //Draw the navigation buttons on the right
     Hub.prototype.drawButtons = function(data){
@@ -351,17 +360,14 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             })
             .on("click",function(d){
                 console.log("Clicked on:",d.name);
-                if(d.name === "Hub"){
+                if(hubRef.buttons[d.name]){
+                    //Clean up
                     hubRef.cleanUp();
-                    hubRef[1].cleanUp();
-                    d3.select("#mainVisualisation").selectAll(".node").remove();
-                    hubRef.draw();
-                }
-                if(d.name === "circlePack"){
-                    hubRef.cleanUp();
-                    d.value.cleanUp();
-                    d.value.registerData(hubRef.data.installed);
-                    d.value.draw();
+                    //register data
+                    //ess. 'no-op' for 'hub'
+                    hubRef.buttons[d.name].value.registerData(hubRef.data);
+                    //draw
+                    hubRef.buttons[d.name].value.draw();
                 }
             })
             .on("mouseover",function(d){
@@ -391,7 +397,6 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             .style("fill",this.colours["textBlue"]);
         
     };
-    
     
     return Hub;
 
