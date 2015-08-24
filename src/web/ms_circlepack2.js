@@ -355,6 +355,7 @@ define(['d3','underscore'],function(d3,_){
         this.cleanUpNodes();
         this.cleanUpGame();
         this.cleanUpResetButton();
+        d3.select("#gameTitle").select("text").text("");
     };
     
     CP.prototype.cleanUpNames = function(){

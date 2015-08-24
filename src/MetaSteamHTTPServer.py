@@ -112,10 +112,8 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         
 
             
-def runLocalServer(metaSteamInstance):
+def runLocalServer(metaSteamInstance,port=8000):
     print "Run Local Server recieved: " + str(metaSteamInstance)
-    #Setup:
-    port = 8000
     #server_address = ('127.0.0.1', port)
     server_address = ('localhost',port)
     MetaSteamHandler.protocol_version = Protocol
@@ -136,4 +134,4 @@ def runLocalServer(metaSteamInstance):
 
 
 if __name__ == "__main__":
-    runLocalServer(None)    
+    runLocalServer(None,port=8888)    
