@@ -346,7 +346,7 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
                 return "translate(" + ((hubRef.internalWidth * 0.1) + (i * (buttonWidth))) +"," + 10 + ")";
             })
             .on("click",function(d){
-                console.log("biaoejh Clicked on:",d.name);
+                console.log("Clicked on aweg:",d.name);
                 if(d.name === "Hub"){
                     hubRef[1].cleanUp();
                     d3.select("#mainVisualisation").selectAll(".node").remove();
