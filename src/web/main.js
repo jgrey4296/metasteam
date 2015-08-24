@@ -19,7 +19,7 @@ require.config({
 });
 
 
-require(['d3','ms_circlepack2','underscore','ms_tooltip','metaSteamHub'],function(d3,Mscp,_,Tooltip,Hub){
+require(['d3','ms_circlepack2','underscore','ms_tooltip','MetaSteamHub'],function(d3,Mscp,_,Tooltip,Hub){
     //Main:
     //Load the json data
     console.log("hello world");
