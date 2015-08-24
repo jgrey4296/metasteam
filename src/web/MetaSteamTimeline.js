@@ -25,8 +25,21 @@ define(['d3','underscore'],function(d3,_){
         this.axis = d3.svg.axis().scale(this.timeScale);
 
         //Play time axis:
-        this.playScale = d3.scale.linear()
-            .range([0,height * 0.8]);
+        this.playScale = d3.scale.log()
+            .range([0,height * 0.5]);
+
+        //Colours scaling
+        this.scaleToColours = d3.scale.linear()
+            .domain([0,100])
+            .rangeRound([0,20]);
+        this.colourScale = d3.scale.category20b();
+
+        //Function to get a colour from a value
+        this.oneOf20Colours = function(val){
+            return this.colourScale(this.scaleToColours(val));
+        };
+
+
         
     };
 
@@ -36,6 +49,15 @@ define(['d3','underscore'],function(d3,_){
     Timeline.prototype.registerData = function(data){
         this.data = data;
         var releaseDates = [];
+
+        //copy over hours_forever from profile
+        for(var x in data.profile){
+            var game = data.profile[x];
+            if(data.installed[game.appid]){
+                data.installed[game.appid]["hours_forever"] = game.hours_forever;
+            }
+        }
+        
         //Set the scale for the release dates:
         for(var x in data.installed){
             var game = data.installed[x];
@@ -47,29 +69,26 @@ define(['d3','underscore'],function(d3,_){
         var extent = d3.extent(releaseDates);
         //Use the release dates to set the timescales domain:
         this.timeScale.domain(extent);
-
-        //Get the extent
-        var played_extent = d3.extent(
-            _.values(data.profile).filter(function(d){
-                if(d.last_played && d.last_played > 90000) return true;
+        
+        //Get the extent of time played
+        var time_played_extent = d3.extent(
+            data.profile.filter(function(d){
+                if(d.hours_forever) return true;
                 return false;
-            }),function(d){
-                return d.last_played;
+            }), function(d){
+                return Number(d.hours_forever);
             });
 
-        var max = d3.max(_.values(data.profile),function(d){
-            return d.last_played;
-        });
-        var min = d3.min(_.values(data.profile),function(d){
-            return d.last_played;
-        });
-        console.log("MAx:",new Date(Date.now() - max),"MIN:",new Date(Date.now() - min));
+        console.log("Hours Played Extent:",time_played_extent);
+        this.playScale.domain(time_played_extent);
+
+        //Setup scaleToColours for size on disk
+        var sizeExtent = d3.extent(
+            _.values(data.installed),function(d){
+                return Number(d.SizeOnDisk);
+            });
         
-        console.log("Played Extents:",played_extent);
-        for(var i in played_extent){
-            console.log(played_extent[i],new Date(Date.now() - played_extent[i]));
-        }
-        
+        this.scaleToColours.domain(sizeExtent);
     };
 
     /**
@@ -96,13 +115,39 @@ define(['d3','underscore'],function(d3,_){
             .classed("indGame",true)
             .attr("transform",function(d){
                 return "translate(" + (10 + tlRef.timeScale(d["_parsedReleaseDate"])) + "," + (tlRef.height * 0.8) + ")";
-                });
+            })
+            .on("mouseover",function(d){
+                var outString = d.name;
+                outString += ": Hours: " + d.hours_forever;
+                outString += " Released: " + d.releaseDate.original;
+                d3.select("#gameTitle").select("text")
+                    .text(outString);
+
+            })
+            .on("mouseout",function(d){
+                d3.select("#gameTitle").select("text")
+                    .text("");
+            });
 
         indGames.append("rect")
-            .attr("height",200)
+            .attr("height",function(d){
+                if(d.hours_forever){
+                    return tlRef.playScale(Number(d.hours_forever));
+                }else{
+                    return 0;
+                }
+            })
             .attr("width",5)
-            .attr("transform","translate(0,-200)")
-            .style("fill","white");
+            .attr("transform",function(d){
+                var a = 0;
+                if(d.hours_forever){
+                    a = tlRef.playScale(Number(d.hours_forever));
+                }
+                return "translate(0," + -(a) + ")";
+            })
+            .style("fill",function(d){
+                return tlRef.oneOf20Colours(d.sizeOnDisk);
+            });
         
     };
 
