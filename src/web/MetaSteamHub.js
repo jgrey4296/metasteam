@@ -5,6 +5,8 @@
 
 define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline){
 
+    var idRegex = /\W/g;
+    
     /**The Main hub for MetaSteamWeb
        Provides buttons for the visualisations
        and general stats
@@ -76,7 +78,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         if(! instance.registerData){
             throw new Error("Button instance with no registerData Method " + name)
         }
-        this.buttons[name] = instance;
+        this.buttons[name] = {"name":name,"value":instance};
     };
     
     //Main cleanup routine
@@ -84,7 +86,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         d3.select("#generalStats").remove();
         for(var x in this.buttons){
             if(x == "Hub") continue;
-            this.buttons[x].cleanUp();
+            this.buttons[x].value.cleanUp();
         }
     };
 
@@ -352,14 +354,15 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
 
         groups.exit().remove();
         var newGroups = groups.enter().append("g").attr("id",function(d){
-            return "button_"+ d.name;
+            if(! d.id) d.id = d.name.replace(idRegex,"");
+            return "button_"+ d.id;
         })
             .attr("class","button")
             .attr("transform",function(d,i){
                 return "translate(" + ((hubRef.internalWidth * 0.1) + (i * (buttonWidth))) +"," + 10 + ")";
             })
             .on("click",function(d){
-                console.log("Clicked on:",d.name);
+                console.log("Clicked on:",d.name,d.id);
                 if(hubRef.buttons[d.name]){
                     //Clean up
                     hubRef.cleanUp();
@@ -373,12 +376,12 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
             .on("mouseover",function(d){
                 //on mouseover, turn the button green
                 //console.log("mouseover button: ",d.name);
-                d3.select(("#button_" + d.name)).select("rect").transition()
+                d3.select(("#button_" + d.id)).select("rect").transition()
                     .style("fill",hubRef.colours["green"]);
             })
             .on("mouseout",function(d){
                 //on mouseout, return the button to orig colour
-                d3.select(("#button_" + d.name)).select("rect").transition()
+                d3.select(("#button_" + d.id)).select("rect").transition()
                     .style("fill",hubRef.colours["lightBlue"]);
             });
 

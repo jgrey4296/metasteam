@@ -52,9 +52,9 @@ define(['d3','underscore'],function(d3,_){
 
     //Register incoming data for display
     CP.prototype.registerData = function(data){
-        console.log("registering data:",data);
+        console.log("CP registering data:",data.installed);
         //Reset the internally stored data
-        this.baseData = data;
+        this.baseData = _.values(data.installed);
         //Clear the categories
         this.categories = {};
         
