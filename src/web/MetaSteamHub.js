@@ -328,6 +328,10 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
             .style("fill","white");
         
     };
+
+    Hub.prototype.cleanUp = function(){
+        d3.select("#generalStats").remove();
+    };
     
     //Draw the navigation buttons on the right
     Hub.prototype.drawButtons = function(data){
@@ -346,13 +350,15 @@ define(['d3','underscore','ms_circlepack2'],function(d3,_,MSCP){
                 return "translate(" + ((hubRef.internalWidth * 0.1) + (i * (buttonWidth))) +"," + 10 + ")";
             })
             .on("click",function(d){
-                console.log("Clicked on aweg:",d.name);
+                console.log("Clicked on:",d.name);
                 if(d.name === "Hub"){
+                    hubRef.cleanUp();
                     hubRef[1].cleanUp();
                     d3.select("#mainVisualisation").selectAll(".node").remove();
                     hubRef.draw();
                 }
                 if(d.name === "circlePack"){
+                    hubRef.cleanUp();
                     d.value.cleanUp();
                     d.value.registerData(hubRef.data.installed);
                     d.value.draw();
