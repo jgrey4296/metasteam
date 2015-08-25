@@ -144,10 +144,17 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
                   + (this.internalWidth * 0.5) + ",100)");
 
         gameTitle.append("text")
+            .attr("id","gameTitleMainText")
             .text("")
             .style("fill",this.colours["textGrey"])
             .style("text-anchor","middle");
-        
+
+        gameTitle.append("text")
+            .attr("id","gameTitleSecondary")
+            .text("")
+            .style("fill",this.colours["textGrey"])
+            .style("text-anchor","middle")
+            .attr("transform","translate(0,30)");
         
         header.append("rect")
             .attr("width",this.internalWidth - 40)
@@ -155,8 +162,6 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
             .attr("rx",5)
             .attr("ry",5);
 
-
-        
         d3.select("#mainsvg")
 	        .append("g")
 	        .attr("id","mainVisualisation")

@@ -91,11 +91,16 @@ define(['d3','underscore'],function(d3,_){
         this.scaleToColours.domain(sizeExtent);
 
         //get the date last played for each game, and the extent:
+        var tlRef = this;
         this.data.profile.forEach(function(d){
             if(!d.last_played) return;
+            if(d.last_played < 90000) return;
             var epoch = new Date(0);
             epoch.setUTCSeconds(d.last_played);
             d.__date_last_played = epoch;
+            if(d.appid && tlRef.data.installed[d.appid]){
+                tlRef.data.installed[d.appid]["__date_last_played"] = epoch;
+            }
         });
 
         var playedRange = d3.extent(this.data.profile,
@@ -134,15 +139,24 @@ define(['d3','underscore'],function(d3,_){
                 return "translate(" + (10 + tlRef.timeScale(d["_parsedReleaseDate"])) + "," + (tlRef.height * 0.8) + ")";
             })
             .on("mouseover",function(d){
+                //first line: hours and release date
                 var outString = d.name;
                 outString += ": Hours: " + d.hours_forever;
                 outString += " Released: " + d.releaseDate.original;
-                d3.select("#gameTitle").select("text")
+                console.log("Setting text to",outString);
+                d3.select("#gameTitle").select("#gameTitleMainText")
                     .text(outString);
 
+                //Second line: last played
+                if(d.__date_last_played){
+                    var s = " Last Played: " + d.__date_last_played.toDateString();
+                    d3.select("#gameTitle").select("#gameTitleSecondary")
+                        .text(s);
+                }
+                    
             })
             .on("mouseout",function(d){
-                d3.select("#gameTitle").select("text")
+                d3.select("#gameTitle").selectAll("text")
                     .text("");
             });
 
@@ -195,6 +209,7 @@ define(['d3','underscore'],function(d3,_){
     Timeline.prototype.cleanUp = function(){
         d3.select("#axis").remove();
         d3.selectAll(".indGame").remove();
+        d3.select("#gameTitle").selectAll("text").text("");
     };
 
     return Timeline;

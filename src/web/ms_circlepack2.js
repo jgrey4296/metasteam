@@ -355,7 +355,7 @@ define(['d3','underscore'],function(d3,_){
         this.cleanUpNodes();
         this.cleanUpGame();
         this.cleanUpResetButton();
-        d3.select("#gameTitle").select("text").text("");
+        d3.select("#gameTitle").selectAll("text").text("");
     };
     
     CP.prototype.cleanUpNames = function(){
@@ -429,7 +429,7 @@ define(['d3','underscore'],function(d3,_){
 
         //Draw the title:
         d3.select("#gameTitle")
-            .select("text")
+            .select("#gameTitleMainText")
             .text(function(){
                 var scaleVal = "";
                 if(d.games) scaleVal = " Games";
@@ -466,7 +466,7 @@ define(['d3','underscore'],function(d3,_){
             .style("fill",this.oneOf20Colours(d.value));
         //Remove the text:
         d3.select("#gameTitle")
-            .select("text")
+            .select("#gameTitleMainText")
             .text("");
         
         //Return the colour:
