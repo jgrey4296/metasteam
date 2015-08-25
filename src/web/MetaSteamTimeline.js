@@ -61,7 +61,7 @@ define(['d3','underscore'],function(d3,_){
         //Set the scale for the release dates:
         for(var x in data.installed){
             var game = data.installed[x];
-            if(game.releaseDate.original){
+            if(game.releaseDate && game.releaseDate.original){
                 game["_parsedReleaseDate"] = this.timeFormat.parse(game.releaseDate.original);
                 releaseDates.push(game["_parsedReleaseDate"]);
             }
