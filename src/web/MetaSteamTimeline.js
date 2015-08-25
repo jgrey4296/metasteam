@@ -89,6 +89,23 @@ define(['d3','underscore'],function(d3,_){
             });
         
         this.scaleToColours.domain(sizeExtent);
+
+        //get the date last played for each game, and the extent:
+        this.data.profile.forEach(function(d){
+            if(!d.last_played) return;
+            var epoch = new Date(0);
+            epoch.setUTCSeconds(d.last_played);
+            d.__date_last_played = epoch;
+        });
+
+        var playedRange = d3.extent(this.data.profile,
+                                    function(d){
+                                        if(!d.__date_last_played) return new Date()
+                                        return d.__date_last_played;
+                                    });
+
+        console.log("Played Range:",playedRange);
+        
     };
 
     /**

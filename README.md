@@ -7,7 +7,7 @@ A Python Information Scraper combined with d3 visualisation to improve browsing 
 A Variety of typical python modules, particularly:
 platform, subprocess, threading, webbrowser, json
 
-Less Typical:
+##Less Typical:
 win32api (pywin32)
 BeautifulSoup
 urllib and urllib2
@@ -16,7 +16,7 @@ BaseHTTPServer and SimpleHTTPServer
 cgi
 
 
-#JS Dependencies:
+##JS Dependencies:
 d3,
 require
 
