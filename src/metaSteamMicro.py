@@ -235,7 +235,7 @@ class MetaSteam:
                 game['__scraped'] = True
             self.exportToJson()
             self.globalNumberOfGamesToSearch -= 1
-            scrapedGames.append(game.name)
+            scrapedGames.append(game['name'])
             time.sleep(waitTime)
         print "Have scanned all games for this run: " + " ".join(scrapedGames)
         self.exportToJson()
