@@ -235,7 +235,7 @@ class MetaSteam:
                 game['__scraped'] = True
             self.exportToJson()
             self.globalNumberOfGamesToSearch -= 1
-            scrapedGames.append(game.name)
+            scrapedGames.append(game['name'])
             time.sleep(waitTime)
         print "Have scanned all games for this run: " + " ".join(scrapedGames)
         self.exportToJson()
@@ -266,9 +266,12 @@ class MetaSteam:
 if __name__ == "__main__":
     print "Default MetaSteam"
     globalNumToSearch = 10000
-    if len(sys.argv) > 1:
+    if len(sys.argv) >= 2:
         print "Setting no of games to search to " + str(sys.argv[1])
         globalNumToSearch = sys.argv[1]
-    metaSteam = MetaSteam("belial4296",globalNumToSearch)
+    userName = "belial4296"
+    if len(sys.argv) >= 3:
+        userName = sys.argv[2]
+    metaSteam = MetaSteam(userName,globalNumToSearch)
     metaSteam.loadVisualisation()
     #metaSteam.startGame(440)
