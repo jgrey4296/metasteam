@@ -74,12 +74,12 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         #if file is the json:
         #acquire  the lock
         if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
-            MeetaSteamHandler.metaSteamInstance.jsonLock.acquire()
+            MetaSteamHandler.metaSteamInstance.jsonLock.acquire()
         #perform the request
         SimpleHTTPRequestHandler.do_GET(self)
         #Release the lock
         if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
-            MeetaSteamHandler.metaSteamInstance.jsonLock.release()
+            MetaSteamHandler.metaSteamInstance.jsonLock.release()
 
         
     #Main POST handler
