@@ -3,3 +3,7 @@ latex/
 *.pyc
 .#*
 #*
+src/build
+*.zip
+src/data
+*~

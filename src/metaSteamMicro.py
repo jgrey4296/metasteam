@@ -41,7 +41,13 @@ from SteamStoreScraper import SteamStoreScraper
 from SteamProfileScraper import SteamProfileScraper
 import MetaSteamHTTPServer
 
+
 waitTime = 10
+
+#utility for py2exe:
+def isFrozen():
+    return hasattr(sys,"frozen")
+
 
 
 #Main MetaSteam class
@@ -62,7 +68,12 @@ class MetaSteam:
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
         #Location of meta steam program:
-        self.programLocation = os.path.dirname(os.path.abspath(__file__))
+        if isFrozen():
+            self.programLocation = os.path.dirname(unicode(sys.executable,sys.getfilesystemencoding()))
+        else:
+            self.programLocation = os.path.dirname(unicode(__file__,sys.getfilesystemencoding()))
+        #below line commented out for py2exe compatibility
+        #os.path.dirname(os.path.abspath(__file__))
         #Steam Libraries:
         self.libraryLocations =[]
         #Steam Executable Location:
