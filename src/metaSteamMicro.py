@@ -277,9 +277,12 @@ class MetaSteam:
 if __name__ == "__main__":
     print "Default MetaSteam"
     globalNumToSearch = 10000
-    if len(sys.argv) > 1:
+    if len(sys.argv) >= 2:
         print "Setting no of games to search to " + str(sys.argv[1])
         globalNumToSearch = sys.argv[1]
-    metaSteam = MetaSteam("belial4296",globalNumToSearch)
+    userName = "belial4296"
+    if len(sys.argv) >= 3:
+        userName = sys.argv[2]
+    metaSteam = MetaSteam(userName,globalNumToSearch)
     metaSteam.loadVisualisation()
     #metaSteam.startGame(440)
