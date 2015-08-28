@@ -12,6 +12,8 @@ import subprocess
 import threading
 import time
 import webbrowser
+import logging
+import datetime
 #Register Firefox:
 
 #print "TRY ORDER:"
@@ -56,6 +58,7 @@ class MetaSteam:
     #ctor
     def __init__(self,userName,globalNum):
 
+        logging.info("Initialising MetaSteam");
         #Locks: (TODO)
         self.jsonLock = threading.Lock()
         self.internalDataLock = threading.Lock()
@@ -72,8 +75,8 @@ class MetaSteam:
             self.programLocation = os.path.dirname(unicode(sys.executable,sys.getfilesystemencoding()))
         else:
             self.programLocation = os.path.dirname(unicode(__file__,sys.getfilesystemencoding()))
+        logging.info("programLocation="+self.programLocation)
         #below line commented out for py2exe compatibility
-        #os.path.dirname(os.path.abspath(__file__))
         #Steam Libraries:
         self.libraryLocations =[]
         #Steam Executable Location:
@@ -92,7 +95,7 @@ class MetaSteam:
         if not self.profileGames:
             self.getProfileGames()
         else:
-            print "Skipping Profile Scrape"
+            logging.info("Skipping Profile Scrape")
             
         self.loadGames()
         
@@ -106,37 +109,44 @@ class MetaSteam:
     #foreach drive that has a directory with 'steam'
     #in the name, add it to the list as 'drive\steam\steamapps'
     def findLibraries(self):
+        logging.info("finding libraries")
         if skipWin: return
         
         drives = win32api.GetLogicalDriveStrings()
-        print "Drives:" + str(drives)
+        logging.info("Drives:" + str(drives))
         drives = drives.split('\000')[:-1]
         for drive in drives:
-            print "Checking Drive: " + drive
+            logging.info( "Checking Drive: " + drive)
             loc = os.path.join(drive,"*")
             result = glob.glob(loc)
             if any("Steam" in s for s in result):
                 folder = os.path.join(drive,"Steam","steamapps")
-                print "Found: " + folder
+                logging.info( "Found: " + folder)
                 if os.path.exists(folder):
                     self.libraryLocations.append(folder)
                 else:
+                    logging.warn("Steam Location Doesnt Exist: " + folder)
                     raise MetaSteamException("Steam Location doesnt exist: " + folder)
 
     #====================
     def findSteam(self):
+        logging.info("Finding Steam")
         if skipWin: return
         
-        print "Hard coding Steam Location"
+        logging.info("Hard coding Steam Location")
         steamLocation = os.path.join("C:\\","Program Files (x86)","Steam")
+        logging.info("Steam Location: " + steamLocation)
         if os.path.exists(steamLocation):
+            logging.info("Steam Location Exists")
             self.steamLocation = steamLocation
             self.libraryLocations.append(os.path.join(steamLocation,"steamapps"))
         else:
+            logging.warn("Couldn't find Steam")
             raise MetaSteamException("Default Steam Location doesnt exist")
 
     #--------------------
     def exportToJson(self):
+        logging.info("Exporting to Json")
         #if not os.path.exists(os.path.join(self.programLocation,"data","gameData.json")): return
         self.jsonLock.acquire()
         self.internalDataLock.acquire()
@@ -155,7 +165,7 @@ class MetaSteam:
         try:
             self.jsonLock.acquire()
             self.internalDataLock.acquire()
-            print "Loading Json"
+            logging.info("Loading Json")
             inputFile = codecs.open(os.path.join(self.programLocation, "data","gameData.json"))
             importedJson = json.load(inputFile)
             #
@@ -165,7 +175,7 @@ class MetaSteam:
             for game in importedJson['profile'].values():
                 self.profileGames[game['appid']] = game
         except Exception as e:
-            print e
+            logging.warn(str(e))
         finally:
             self.jsonLock.release()
             self.internalDataLock.release()
@@ -184,14 +194,14 @@ class MetaSteam:
         data = {}
         for line in f:
             line = unicode(line,errors="ignore")
-            #print "Line type:",type(line)
+            logging.info("Line type: " + str(type(line)))
             match = regex.search(line)
             if match:
                 data[match.group(1)] = match.group(2)
         
         gameid = data['appid']
-        #print "Found: " + data['name']
-        #print "TYPE: ",type(gameid)
+        logging.info("Found: " + data['name'])
+        logging.info("TYPE: " + str(type(gameid)))
         data['__Installed'] = True
         if not gameid in self.installedGames.keys():
             self.installedGames[gameid] = data
@@ -202,10 +212,11 @@ class MetaSteam:
     #----------
     def combineData(self):
         print("TODO:combine data from store scraping and profile scraping")
+        logging.warn("Combine Data not implemented")
                 
     #--------------------
     def getProfileGames(self):
-        print "Getting Profile Games"
+        logging.info( "Getting Profile Games")
         extractedInfo = self.profileScraper.scrape()
         self.profileGames = extractedInfo
         
@@ -214,6 +225,7 @@ class MetaSteam:
     
     #get steam page tags and release date
     def getInfoForGame(self,game):
+        logging.info("Getting Info for Game: " + str(game['appid']))
         try:
 
             extractedInfo = self.scraper.scrape(game['appid'])
@@ -227,7 +239,7 @@ class MetaSteam:
 
             return game
         except Exception as e:
-            print e
+            logging.warn(str(e))
             return game
             
     #automate
@@ -242,22 +254,22 @@ class MetaSteam:
             self.installedGames[game['appid']] = self.getInfoForGame(game)
             self.internalDataLock.release()
             if 'name' in game.keys():
-                print "Game: " + game['name'] + " parsed"
+                logging.info("Game: " + game['name'] + " parsed")
                 game['__scraped'] = True
             self.exportToJson()
             self.globalNumberOfGamesToSearch -= 1
             scrapedGames.append(game['name'])
             time.sleep(waitTime)
-        print "Have scanned all games for this run: " + " ".join(scrapedGames)
+        logging.info( "Have scanned all games for this run: " + " ".join(scrapedGames))
         self.exportToJson()
         
     def loadVisualisation(self):
         #Start the web server in a separate thread
-        print "Sending to RunLocalServer: " + str(self)
+        logging.info( "Sending to RunLocalServer: " + str(self))
         serverThread = threading.Thread(target=MetaSteamHTTPServer.runLocalServer,args=(self,))
 
         serverThread.start()
-        print "\nOPENING WEBBROWSER:\n\n"
+        logging.info( "\nOPENING WEBBROWSER:\n\n")
 
 
         #webbrowser.open("http:\\google.com")
@@ -266,23 +278,27 @@ class MetaSteam:
 
     #called from the web interface, through the server
     def startGame(self,appid):
-        print "Starting game: " + str(appid)
+        logging.info( "Starting game: " + str(appid))
         if appid == None:
             appid = 440
-            print "No Appid, defaulting to TF2"
+            logging.warn( "No Appid, defaulting to TF2")
+        logging.info("Opening using: " + self.steamLocation)
         subprocess.call([os.path.join(self.steamLocation,"Steam.exe"),"-applaunch",str(appid)])
         
 
         
 if __name__ == "__main__":
-    print "Default MetaSteam"
+    logging.basicConfig(filename=
+                        str(datetime.date.today())
+                        + "_metaSteam.log")
     globalNumToSearch = 10000
     if len(sys.argv) >= 2:
-        print "Setting no of games to search to " + str(sys.argv[1])
         globalNumToSearch = sys.argv[1]
+    logging.info("globalNumToSearch=" + str(globalNumToSearch))
     userName = "belial4296"
     if len(sys.argv) >= 3:
         userName = sys.argv[2]
+    logging.info("UserName="+str(userName))
     metaSteam = MetaSteam(userName,globalNumToSearch)
     metaSteam.loadVisualisation()
     #metaSteam.startGame(440)
