@@ -1,0 +1,94 @@
+.largeimg {
+    align: left;
+    padding: 10%;
+    border: 2%;
+    height: 80%;
+    width: 80%;
+    
+
+}
+
+body{
+    background-color:white;
+    margin-left: 25%;
+    margin-right:25%;
+}
+
+h1 {
+    text-align: center;
+    color: black;
+    background-color: grey;
+    margin-right: 25%;
+    margin-left: 25%;
+    border-radius: 10px;
+}
+
+h2 {
+    text-align:center;
+    background-color:grey;
+    margin-left: auto;
+    margin-right:auto;
+    border-radius: 5px;
+}
+
+.textblock {
+
+    background-color:black;
+    color: white;
+    padding-top: 1%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    padding-left: 2%;
+    margin: 2%;
+    border-radius: 10px;
+}
+
+.jgimage {
+    padding-top: 1%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    padding-left: 2%;
+    margin: 2%;
+    border-radius: 10px;
+    
+}
+
+.links {
+    stroke: white;
+    stroke-width: 2;
+}
+
+g .nodes {
+
+}
+
+.nodes circle {
+    fill: green;
+}
+
+.xaxis path{
+    display: none;
+}
+
+.xaxis line{
+    stroke: grey;
+    opacity: 0.5;
+}
+
+.yaxis path{
+    display: none;
+}
+
+.yaxis line{
+    stroke: grey;
+    opacity: 0.2;
+}
+
+.unselectable{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
