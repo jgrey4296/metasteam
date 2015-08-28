@@ -10,6 +10,7 @@ import urllib
 from bs4 import BeautifulSoup
 from jgUtility import *
 import json
+import logging
 
 gamePattern = re.compile(r"^\s*var rgGames\s=(.*);")
 
@@ -17,8 +18,10 @@ gamePattern = re.compile(r"^\s*var rgGames\s=(.*);")
 class SteamProfileScraper:
 
     def __init__(self,profileName):
+        logging.info("Initialising SteamProfileScraper")
         self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
-
+        console.log("Profile Url:" + self.profileUrl)
+        
         cj = CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 
@@ -32,7 +35,7 @@ class SteamProfileScraper:
         profileHtml = self.webRequest(url,{'tab' : 'all'})
         extractedInfo = self.profileExtraction(profileHtml)
 
-        #print "Extracted Profile Info:",extractedInfo
+        logging.info( "Extracted Profile Info")#,extractedInfo
         return extractedInfo
         
     def webRequest(self,url,inValues):
@@ -43,6 +46,7 @@ class SteamProfileScraper:
         return html
 
     def profileExtraction(self,html):
+        logging.info("Extracting from Profile")
         soup = BeautifulSoup(html)
         extractedTags = []
         releaseDate = {}
@@ -53,12 +57,13 @@ class SteamProfileScraper:
                 try:
                     matched =  re.search(gamePattern,script.string)
                     if matched:
-                        print "found"
+                        logging.info( "found")
                         jsonline = get_unicode(matched.group(1))
-                        print "Converting from Json:"
+                        logging.info( "Converting from Json:")
                         gameDict = json.loads(jsonline)
                         return gameDict
                 except Exception as e:
-                    print e
+                    logging.warn( e)
                     return {}
-
+            else:
+                logging.warn("No Javascript suitable found")

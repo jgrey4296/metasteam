@@ -12,6 +12,7 @@ import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 import threading
 import cgi
+import logging
 
 ServerClass  = BaseHTTPServer.HTTPServer
 Protocol     = "HTTP/1.0"
@@ -24,24 +25,24 @@ continueRunning = True
 #commands to call from post request
 #close server
 def close_server(self):
-    print "Triggering Server Shutdown"
+    logging.info( "Triggering Server Shutdown")
     global continueRunning
     continueRunning = False
 
 #start game
 def start_game(self,appid):
-    print "Triggering Game Start"
+    logging.info( "Triggering Game Start")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.startGame(appid)
 
 #...save modifed json?
 def save_json(self):
-    print "Triggering Json Save"
+    logging.info( "Triggering Json Save")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.exportToJson()
 
 def compare_to_user(self):
-    print "TODO: allow comparison of user profiles"
+    logging.info( "TODO: allow comparison of user profiles")
         
 #Command map for POST:
 postCommands = {
@@ -56,7 +57,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
 
     @staticmethod
     def registerInstance(metaSteam):
-        print "Registering MetaSteam Instance"
+        logging.info( "Registering MetaSteam Instance")
         MetaSteamHandler.metaSteamInstance = metaSteam
 
     #check for meta steam instance
@@ -70,7 +71,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
     # #Main GET handler
     # #used for basic web serving of files
     def do_GET(self):
-        print "Getting path: " + self.path
+        logging.info( "Getting path: " + self.path)
         #if file is the json:
         #acquire  the lock
         if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
@@ -113,7 +114,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
 
             
 def runLocalServer(metaSteamInstance,port=8000):
-    print "Run Local Server recieved: " + str(metaSteamInstance)
+    logging.info( "Run Local Server recieved: " + str(metaSteamInstance))
     #server_address = ('127.0.0.1', port)
     server_address = ('localhost',port)
     MetaSteamHandler.protocol_version = Protocol
@@ -126,11 +127,13 @@ def runLocalServer(metaSteamInstance,port=8000):
     
     sa = server.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
+    logging.info("Servering HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
 
     while continueRunning:
         server.handle_request()
     server.socket.close()
     print "Shutting Down Server"
+    logging.info("Shutting Down Server")
 
 
 if __name__ == "__main__":
