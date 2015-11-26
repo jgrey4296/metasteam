@@ -1,6 +1,0 @@
-/*global defin */
-define([],function(){
-  
-
-
-});

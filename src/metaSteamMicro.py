@@ -119,7 +119,8 @@ class MetaSteam:
             logging.info( "Checking Drive: " + drive)
             loc = os.path.join(drive,"*")
             result = glob.glob(loc)
-            if any("Steam" in s for s in result):
+            #TODO: check lower case behaviour for windows
+            if any("steam" in s.lower() for s in result):
                 folder = os.path.join(drive,"Steam","steamapps")
                 logging.info( "Found: " + folder)
                 if os.path.exists(folder):
@@ -288,9 +289,11 @@ class MetaSteam:
 
         
 if __name__ == "__main__":
+    #setup the logging to a file
     logging.basicConfig(filename=
                         str(datetime.date.today())
                         + "_metaSteam.log")
+    #number of games to scrape in a session
     globalNumToSearch = 10000
     if len(sys.argv) >= 2:
         globalNumToSearch = sys.argv[1]
