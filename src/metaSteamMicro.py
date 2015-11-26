@@ -180,6 +180,19 @@ class MetaSteam:
         finally:
             self.jsonLock.release()
             self.internalDataLock.release()
+
+    #----------
+    #Loads the settings.json file from the data dir,
+    #and populates relevant variables with it
+    def loadSettingsFromJson(self):
+        try:
+            inputFile = codecs.open(os.path.join(self.programLocation,"data","settings.json"))
+            importedJson = json.load(inputFile)
+            #TODO: use the imported settings
+            
+        except Exception as e:
+            logging.warn(str(e))
+        
             
     #--------------------
     def loadGames(self):
