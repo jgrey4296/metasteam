@@ -62,26 +62,30 @@ class MetaSteam:
         #Locks: (TODO)
         self.jsonLock = threading.Lock()
         self.internalDataLock = threading.Lock()
-        
-        #Data:
-        self.userName = userName
-        self.globalNumberOfGamesToSearch = int(globalNum)
 
+        #Data:
+        self.userName = None
+        self.globalNumberOfGamesToSearch = int(globalNum)
+        #Steam Executable Location:
+        self.steamLocation = None
+        #Steam Libraries:
+        self.libraryLocations =[]
+
+        #Load settings
+        self.loadSettingsFromJson()
+        
+        
         #Found Game Information
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
+        
         #Location of meta steam program:
         if isFrozen():
             self.programLocation = os.path.dirname(unicode(sys.executable,sys.getfilesystemencoding()))
         else:
             self.programLocation = os.path.dirname(unicode(__file__,sys.getfilesystemencoding()))
         logging.info("programLocation="+self.programLocation)
-        #below line commented out for py2exe compatibility
-        #Steam Libraries:
-        self.libraryLocations =[]
-        #Steam Executable Location:
-
-        self.steamLocation = ""
+        
 
         #steam store scraper:
         self.scraper = SteamStoreScraper()
@@ -90,6 +94,7 @@ class MetaSteam:
         #initialisation:
         self.findLibraries()
         self.findSteam()
+        #import already scraped gameData
         self.importFromJson()
 
         if not self.profileGames:
@@ -120,8 +125,10 @@ class MetaSteam:
             loc = os.path.join(drive,"*")
             result = glob.glob(loc)
             #TODO: check lower case behaviour for windows
-            if any("steam" in s.lower() for s in result):
-                folder = os.path.join(drive,"Steam","steamapps")
+            potentials = [s for s in result if "steam" in s.lower()]
+            #if any("steam" in s.lower() for s in result):
+            for potential in potentials:
+                folder = os.path.join(potential,"steamapps")
                 logging.info( "Found: " + folder)
                 if os.path.exists(folder):
                     self.libraryLocations.append(folder)
@@ -188,7 +195,11 @@ class MetaSteam:
         try:
             inputFile = codecs.open(os.path.join(self.programLocation,"data","settings.json"))
             importedJson = json.load(inputFile)
-            #TODO: use the imported settings
+
+            self.userName = importedJson['steamProfileName']
+            self.steamLocation = importedJson['steamExecutableLocation']
+            self.libraryLocations = importedJson['steamLibraryLocations']
+            #todo: deal with web browser
             
         except Exception as e:
             logging.warn(str(e))
@@ -311,10 +322,6 @@ if __name__ == "__main__":
     if len(sys.argv) >= 2:
         globalNumToSearch = sys.argv[1]
     logging.info("globalNumToSearch=" + str(globalNumToSearch))
-    userName = "belial4296"
-    if len(sys.argv) >= 3:
-        userName = sys.argv[2]
-    logging.info("UserName="+str(userName))
-    metaSteam = MetaSteam(userName,globalNumToSearch)
+    metaSteam = MetaSteam(globalNumToSearch)
     metaSteam.loadVisualisation()
     #metaSteam.startGame(440)

@@ -35,7 +35,7 @@ def start_game(self,appid):
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.startGame(appid)
 
-#...save modifed json?
+#save modifed json
 def save_json(self):
     logging.info( "Triggering Json Save")
     if MetaSteamHandler.cmsi():
