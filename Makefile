@@ -12,9 +12,8 @@ testServer :
 testAll :
 	python -m unittest discover
 
-build : test
-	python setup.py py2exe
-	rm -r build
+build : 
+	- rm -r build
 	cp -r metaSteam/web dist/
 	cp -r metaSteam/data dist/
 	mkdir dist/logs
