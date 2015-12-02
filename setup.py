@@ -1,4 +1,4 @@
 from distutils.core import setup
 import py2exe
 
-setup(console=['metaSteamMicro.py'])
+setup(console=['metaSteam/metaSteamMicro.py'])
