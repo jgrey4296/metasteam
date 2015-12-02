@@ -59,7 +59,7 @@ class SteamStoreScraper:
 
     def avoidAgeCheck(self,html):
         logging.info("avoiding Age Check")
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html,"html.parser")
         agecheckform = soup.find_all(id="agecheck_form")
         if agecheckform:
             forminput = soup.find_all('input',type="hidden")
@@ -71,7 +71,7 @@ class SteamStoreScraper:
 
 
     def storeExtraction(self,html):
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html,"html.parser")
         extractedTags = []
         releaseDate = {}
         description = ""

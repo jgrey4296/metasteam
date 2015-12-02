@@ -12,8 +12,14 @@ testServer :
 testAll :
 	python -m unittest discover
 
-build : 
-	- rm -r build
-	cp -r metaSteam/web dist/
-	cp -r metaSteam/data dist/
-	mkdir dist/logs
+build :
+	- rm -r metaSteam/build
+	cp -r metaSteam/web metaSteam/dist/
+	cp -r metaSteam/data metaSteam/dist/
+	mkdir metaSteam/dist/logs
+	cp -r metaSteam/dist dist
+
+clean :
+	- rm -r metaSteam/build
+	- rm -r metaSteam/dist
+	- rm -r dist

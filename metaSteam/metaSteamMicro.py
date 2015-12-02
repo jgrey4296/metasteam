@@ -48,6 +48,7 @@ waitTime = 10
 
 #utility for py2exe:
 def isFrozen():
+    print("is frozen?: ",hasattr(sys,"frozen"))
     return hasattr(sys,"frozen")
 
 
@@ -64,13 +65,21 @@ class MetaSteam:
         self.internalDataLock = threading.Lock()
 
         #Data:
-        self.userName = None
+        self.userName = "unknown"
         self.globalNumberOfGamesToSearch = int(globalNum)
         #Steam Executable Location:
         self.steamLocation = None
         #Steam Libraries:
         self.libraryLocations =[]
 
+        #Location of meta steam program:
+        if isFrozen():
+            self.programLocation = os.path.dirname(unicode(sys.executable,sys.getfilesystemencoding()))
+        else:
+            self.programLocation = os.path.dirname(unicode(__file__,sys.getfilesystemencoding()))
+        logging.info("programLocation="+self.programLocation)
+
+        
         #Load settings
         self.loadSettingsFromJson()
         
@@ -79,12 +88,6 @@ class MetaSteam:
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
         
-        #Location of meta steam program:
-        if isFrozen():
-            self.programLocation = os.path.dirname(unicode(sys.executable,sys.getfilesystemencoding()))
-        else:
-            self.programLocation = os.path.dirname(unicode(__file__,sys.getfilesystemencoding()))
-        logging.info("programLocation="+self.programLocation)
         
 
         #steam store scraper:
@@ -103,12 +106,16 @@ class MetaSteam:
             logging.info("Skipping Profile Scrape")
             
         self.loadGames()
+
+        self.exportToJson()
         
         #By this point, all previously found games
         #should be loaded. Now just find new games,
         #and get info for them
 
+        logging.info("Setting up web info extraction thread")
         getInfoThread = threading.Thread(target=MetaSteam.getInfoForAllGames,args=(self,))
+        logging.info("Starting web info extraction thread")
         getInfoThread.start()
         
     #foreach drive that has a directory with 'steam'
@@ -173,7 +180,7 @@ class MetaSteam:
         try:
             self.jsonLock.acquire()
             self.internalDataLock.acquire()
-            logging.info("Loading Json")
+            logging.info("Loading Game Data Json")
             inputFile = codecs.open(os.path.join(self.programLocation, "data","gameData.json"))
             importedJson = json.load(inputFile)
             #
@@ -182,6 +189,8 @@ class MetaSteam:
             #
             for game in importedJson['profile'].values():
                 self.profileGames[game['appid']] = game
+                
+            inputFile.close()
         except Exception as e:
             logging.warn(str(e))
         finally:
@@ -193,13 +202,19 @@ class MetaSteam:
     #and populates relevant variables with it
     def loadSettingsFromJson(self):
         try:
+            logging.info("Loading settings from json")
             inputFile = codecs.open(os.path.join(self.programLocation,"data","settings.json"))
             importedJson = json.load(inputFile)
 
             self.userName = importedJson['steamProfileName']
+            logging.info("Loaded username:" + self.userName)
             self.steamLocation = importedJson['steamExecutableLocation']
+            logging.info("Loaded steam location:" + self.steamLocation)
             self.libraryLocations = importedJson['steamLibraryLocations']
+            logging.info("Loaded libraryLocations:" + str(self.libraryLocations))
             #todo: deal with web browser
+
+            inputFile.close()
             
         except Exception as e:
             logging.warn(str(e))
@@ -207,32 +222,39 @@ class MetaSteam:
             
     #--------------------
     def loadGames(self):
+        logging.info("Loading Games")
         for folder in self.libraryLocations:
             manifests = glob.glob(os.path.join(folder,"*.acf"))
+            logging.info(str(folder) + " : Number of found manifests: " + str(len(manifests)))
             for manifest in manifests:
                 self.parseManifest(manifest)
 
     #--------------------
     def parseManifest(self,manifest):
-        f = file(manifest,'r')
-        regex = re.compile('"(.+?)"\s+"(.+?)"')
-        data = {}
-        for line in f:
-            line = unicode(line,errors="ignore")
-            logging.info("Line type: " + str(type(line)))
-            match = regex.search(line)
-            if match:
-                data[match.group(1)] = match.group(2)
-        
-        gameid = data['appid']
-        logging.info("Found: " + data['name'])
-        logging.info("TYPE: " + str(type(gameid)))
-        data['__Installed'] = True
-        if not gameid in self.installedGames.keys():
-            self.installedGames[gameid] = data
-        else:
-            for field in data.keys():
-                self.installedGames[gameid][field] = data[field]
+        logging.info("Parsing a manifest")
+        try:
+            f = open(manifest,'r')
+            regex = re.compile('"(.+?)"\s+"(.+?)"')
+            data = {}
+            for line in f:
+                line = unicode(line,errors="ignore")
+                #logging.info("Line type: " + str(type(line)))
+                match = regex.search(line)
+                if match:
+                    data[match.group(1)] = match.group(2)
+            f.close()
+            
+            gameid = data['appid']
+            logging.info("Found: " + data['name'])
+            logging.info("TYPE: " + str(type(gameid)))
+            data['__Installed'] = True
+            if not gameid in self.installedGames.keys():
+                self.installedGames[gameid] = data
+            else:
+                for field in data.keys():
+                    self.installedGames[gameid][field] = data[field]
+        except Exception as e:
+            logging.warn(e)
 
     #----------
     def combineData(self):
@@ -270,6 +292,7 @@ class MetaSteam:
     #automate
     #@TODO: be able to reset __scraped
     def getInfoForAllGames(self):
+        logging.info("Getting web information for all games")
         scrapedGames = []
         for game in self.installedGames.values():
             if self.globalNumberOfGamesToSearch < 1: continue
@@ -285,7 +308,7 @@ class MetaSteam:
             self.globalNumberOfGamesToSearch -= 1
             scrapedGames.append(game['name'])
             time.sleep(waitTime)
-        logging.info( "Have scanned all games for this run: " + " ".join(scrapedGames))
+        logging.info( "Have scanned all games for this run: " + " ".join(len(scrapedGames)))
         self.exportToJson()
         
     def loadVisualisation(self):
@@ -314,9 +337,8 @@ class MetaSteam:
         
 if __name__ == "__main__":
     #setup the logging to a file
-    logging.basicConfig(filename=os.path.join("logs",
-                        str(datetime.date.today())
-                        + "_metaSteam.log"))
+    logName = "metaSteam_" + str(datetime.date.today()) + ".log"
+    logging.basicConfig(filename=os.path.join("logs",logName),level=logging.DEBUG)
     #number of games to scrape in a session
     globalNumToSearch = 10000
     if len(sys.argv) >= 2:

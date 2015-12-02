@@ -47,23 +47,26 @@ class SteamProfileScraper:
 
     def profileExtraction(self,html):
         logging.info("Extracting from Profile")
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "html.parser")
         extractedTags = []
         releaseDate = {}
         
         allScripts = soup.find_all("script")
+        foundSuitable = False
+        
         for script in allScripts:
             if 'language' in script.attrs and script['language'] == 'javascript':
                 try:
                     matched =  re.search(gamePattern,script.string)
                     if matched:
-                        logging.info( "found")
+                        foundSuitable = True
+                        logging.info( "found profile information")
                         jsonline = get_unicode(matched.group(1))
-                        logging.info( "Converting from Json:")
                         gameDict = json.loads(jsonline)
                         return gameDict
                 except Exception as e:
                     logging.warn( e)
                     return {}
-            else:
-                logging.warn("No Javascript suitable found")
+
+        if not foundSuitable:
+            logging.warn("No suitable javascript found for profile extraction")
