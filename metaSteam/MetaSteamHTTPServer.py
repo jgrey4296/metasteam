@@ -1,10 +1,11 @@
-## The MetaSteam python->js->python communication server
-# @module MetaSteamServer
-#
-# For Reference see:
-# http://fragments.turtlemeat.com/pythonwebserver.php
-# https://docs.python.org/2/library/basehttpserver.html#BaseHTTPServer.HTTPServer
-# 
+'''
+The MetaSteam python->js->python communication server
+@module MetaSteamServer
+
+For Reference see:
+http://fragments.turtlemeat.com/pythonwebserver.php
+https://docs.python.org/2/library/basehttpserver.html#BaseHTTPServer.HTTPServer
+''' 
 
 import sys
 import os
@@ -16,35 +17,50 @@ import logging
 
 ServerClass  = BaseHTTPServer.HTTPServer
 Protocol     = "HTTP/1.0"
-
 allowedFiles = {}
-
 continueRunning = True
-#turn off with 'global continueRunning, continueRunning = False'
+#note: turn off with 'global continueRunning, continueRunning = False'
 
-#commands to call from post request
-#close server
+'''
+@function close_server
+@purpose changes the global loop condition to stop the servers infinite loop
+'''
 def close_server(self):
     logging.info( "Triggering Server Shutdown")
     global continueRunning
     continueRunning = False
 
-#start game
+'''
+@function start_game
+@purpose calls metasteam to start a game
+@param appid the game id to start
+'''
 def start_game(self,appid):
     logging.info( "Triggering Game Start")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.startGame(appid)
 
-#save modifed json
+'''
+@function save_json
+@purpose calls metasteam to save modified json data about games
+'''
 def save_json(self):
     logging.info( "Triggering Json Save")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.exportToJson()
 
-def compare_to_user(self):
+'''
+@function compare_to_user
+@param username compare the operator of metasteam to the specified user
+@todo
+'''
+def compare_to_user(self,username):
     logging.info( "TODO: allow comparison of user profiles")
         
-#Command map for POST:
+'''
+@object postCommands
+@purpose stores functions for easy lookup from the server's handler
+'''
 postCommands = {
     'closeServer':close_server,
     'startGame': start_game,
@@ -52,15 +68,32 @@ postCommands = {
     'compare' :compare_to_user,
     }
 
+'''
+@class MetaSteamHandler
+@superclass SimpleHTTPRequestHandler
+@purpose The custom handler for the HTTP server
+'''
 class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequestHandler):
     metaSteamInstance = None
 
+    '''
+    @class MetaSteamHandler
+    @static
+    @method registerInstance
+    @purpose stores a reference to the main metasteam object for use within the server
+    '''
     @staticmethod
     def registerInstance(metaSteam):
         logging.info( "Registering MetaSteam Instance")
         MetaSteamHandler.metaSteamInstance = metaSteam
 
-    #check for meta steam instance
+    '''
+    @class MetaSteamHandler
+    @static
+    @method cmsi (Check for MetaSteam Instance)
+    @purpose check for a linked meta steam object
+    @returns boolean
+    '''
     @staticmethod
     def cmsi():
         if not MetaSteamHandler.metaSteamInstance is None:
@@ -68,8 +101,12 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         else:
             return False
         
-    # #Main GET handler
-    # #used for basic web serving of files
+    '''
+    @class MetaSteamHandler
+    @method do_GET
+    @purpose Deals with GET requests, serves basic files
+    @threadSafe
+    '''
     def do_GET(self):
         logging.info( "Getting path: " + self.path)
         #if file is the json:
@@ -82,9 +119,12 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
             MetaSteamHandler.metaSteamInstance.jsonLock.release()
 
-        
-    #Main POST handler
-    #Used for starting games, and exiting
+
+    '''
+    @class MetaSteamHandler
+    @method do_POST
+    @purpose Deals with POST requests, performing commands from the web interface
+    '''
     def do_POST(self):
         form = cgi.FieldStorage(
             fp=self.rfile,
@@ -94,9 +134,11 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
             })
 
         for key in form:
-            print key + ": " + form[key].value
+            logging.log(key + ": " + form[key].value)
 
-        if 'command' not in form: return
+        if 'command' not in form:
+            logging.warn("POST request recieved with no command")
+            return
             
         #switch on command:
         command = form['command'].value
@@ -112,7 +154,12 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         self.wfile.write("Command Complete")
         
 
-            
+'''
+@class runLocalServer
+@purpose Start a metasteam http server
+@param metaSteamInstance a reference to the python metasteam object for callbacks
+@param port the port to operate on
+'''            
 def runLocalServer(metaSteamInstance,port=8000):
     logging.info( "Run Local Server recieved: " + str(metaSteamInstance))
     #server_address = ('127.0.0.1', port)
@@ -121,20 +168,23 @@ def runLocalServer(metaSteamInstance,port=8000):
     if metaSteamInstance != None:
         MetaSteamHandler.registerInstance(metaSteamInstance)
     
-
     #Create and Run the actual server:
     server = ServerClass(server_address, MetaSteamHandler)
     
     sa = server.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
-    logging.info("Servering HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
+    logging.info("Serving HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
 
     while continueRunning:
         server.handle_request()
+        
     server.socket.close()
     print "Shutting Down Server"
     logging.info("Shutting Down Server")
 
-
+'''
+@main
+@purpose run the server without an accompanying meta steam instance
+'''
 if __name__ == "__main__":
     runLocalServer(None,port=8888)    

@@ -1,8 +1,8 @@
-## The Automated scaper to extract tags from steam store pages
-# @module MetaSteamScraper
-#
-#
-#
+'''
+The Automated scaper to extract tags from steam store pages
+@module MetaSteamScraper
+'''
+
 from cookielib import CookieJar
 import re
 import urllib2
@@ -11,11 +11,21 @@ from bs4 import BeautifulSoup
 from jgUtility import *
 import logging
 
+
 steamReleaseDateRegex = re.compile(r"(\w{2,4})\s(\d{2,2}),\s(\d{4,4})")
 
-
+'''
+@class SteamStoreScraper
+@purpose Scrape a page from the steam store for information about a game
+'''
 class SteamStoreScraper:
 
+    html = ""
+    
+    '''
+    @class SteamStoreScraper
+    @method __init__
+    '''
     def __init__(self):
         logging.info("Creating SteamStoreScraper")
         self.storeUrl = "http://store.steampowered.com/app/"
@@ -32,7 +42,13 @@ class SteamStoreScraper:
             'snr' : 'finVal',
         }
 
-    html = ""    
+    '''
+    @class SteamStoreScraper
+    @method scrape
+    @param appid
+    @purpose scrape the page for the specified game, by appid
+    @returns extracted information as a dictionary
+    '''
     def scrape(self,appid):
         logging.info("Scraping: " + str(appid))
         gameUrl = self.storeUrl + str(appid)
@@ -48,7 +64,12 @@ class SteamStoreScraper:
         
         #["tags","releaseDate"]
         return extractedInfo
-        
+
+    '''
+    @class SteamStoreScraper
+    @method webRequest
+    @purpose request the html
+    '''
     def webRequest(self,url,inValues):
         logging.info("sending a web request")
         data = urllib.urlencode(inValues)
@@ -57,6 +78,10 @@ class SteamStoreScraper:
         html = self.response.read()
         return html
 
+    '''
+    @class SteamStoreScraper
+    @method avoidAgeCheck
+    '''
     def avoidAgeCheck(self,html):
         logging.info("avoiding Age Check")
         soup = BeautifulSoup(html,"html.parser")
@@ -66,10 +91,14 @@ class SteamStoreScraper:
             self.ageCheckValues['snr'] = forminput[1]['value']
             return True
         else:
-            logging.warn("Avoiding an Age check, but theres no check")
             return False
 
-
+    '''
+    @class SteamStoreScraper
+    @method storeExtraction
+    @purpose extract information from the store page html
+    @returns array of tags,releasedate,description,review,dev,publisher
+    '''
     def storeExtraction(self,html):
         soup = BeautifulSoup(html,"html.parser")
         extractedTags = []
