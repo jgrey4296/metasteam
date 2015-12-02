@@ -23,3 +23,5 @@ clean :
 	- rm -r metaSteam/build
 	- rm -r metaSteam/dist
 	- rm -r dist
+	- rm metaSteam/*.pyc
+	- rm metaSteam/tests/*.pyc
