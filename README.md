@@ -37,6 +37,8 @@ which start the selected game, or a random game, through steam.
 
 #Building
 
+building the executable requires py2exe installed. run "python setup.py py2exe" in the metaSteam directory to build it. The top level makefile (target: 'build') shows how to include the other important information (ie: the web stuff). I run the py2exe stuff from command prompt, and the makefile stuff from cygwin at the moment. 
+
 
 #Notes:
 For information on structure see:
