@@ -36,4 +36,12 @@ which start the selected game, or a random game, through steam.
 
 
 #Building
-TODO: add makefile to use py2exe to make this a standalone program
+
+
+#Notes:
+For information on structure see:
+http://stackoverflow.com/questions/1896918/running-unittest-with-typical-test-directory-structure
+
+For information on py2exe see:
+http://py2exe.org/index.cgi/Tutorial
+
