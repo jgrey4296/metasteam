@@ -314,9 +314,9 @@ class MetaSteam:
         
 if __name__ == "__main__":
     #setup the logging to a file
-    logging.basicConfig(filename=
+    logging.basicConfig(filename=os.path.join("logs",
                         str(datetime.date.today())
-                        + "_metaSteam.log")
+                        + "_metaSteam.log"))
     #number of games to scrape in a session
     globalNumToSearch = 10000
     if len(sys.argv) >= 2:
