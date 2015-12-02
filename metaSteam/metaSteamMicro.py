@@ -56,7 +56,7 @@ def isFrozen():
 class MetaSteam:
 
     #ctor
-    def __init__(self,userName,globalNum):
+    def __init__(self,globalNum):
 
         logging.info("Initialising MetaSteam");
         #Locks: (TODO)
