@@ -189,7 +189,7 @@ class MetaSteam:
     def exportToJson(self):
         logging.info("Exporting to Json")
         if not os.path.exists(os.path.join(self.programLocation,"data")):
-            throw MetaSteamException("No Data Directory Exists")
+            raise MetaSteamException("No Data Directory Exists")
             
         self.jsonLock.acquire()
         self.internalDataLock.acquire()
