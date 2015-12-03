@@ -1,19 +1,20 @@
 import unittest
-from metaSteam import metaSteamMicro
+from metaSteam.SteamProfileScraper import SteamProfileScraper
 
 class TestFirstAttempt(unittest.TestCase):
 
-    def test_initial(self):
-        print("Testing foo")
-        print(metaSteamMicro)
-        self.assertEqual('foo'.upper(), 'FOO')
+    def test_ctor(self):
+        sps = SteamProfileScraper("belial4296")
+        self.assertEqual(sps.profileName,'belial4296')
 
-    def test_second(self):
-        print("testing second")
-        self.assertEqual('foo', 'foo')
+    def test_webRequest(self):
+        pass
 
-    def test_third(self):
-        self.assertTrue(1==1)
+    def test_profileExtraction(self):
+        pass
+
+    def test_scrape(self):
+        pass
         
 if __name__ == '__main__':
     unittest.main()

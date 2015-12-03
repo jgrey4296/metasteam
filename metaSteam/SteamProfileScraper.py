@@ -29,6 +29,7 @@ class SteamProfileScraper:
     '''
     def __init__(self,profileName):
         logging.info("Initialising SteamProfileScraper")
+        self.profileName = profileName
         self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
         logging.info("Profile Url:" + self.profileUrl)
         

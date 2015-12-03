@@ -1,5 +1,5 @@
 import unittest
-from metaSteam import metaSteamMicro
+from metaSteam.MetaSteamHTTPServer import *
 
 class TestFirstAttempt(unittest.TestCase):
 

@@ -1,19 +1,25 @@
 import unittest
-from metaSteam import metaSteamMicro
+from metaSteam.SteamStoreScraper import SteamStoreScraper
 
 class TestFirstAttempt(unittest.TestCase):
 
-    def test_initial(self):
-        print("Testing foo")
-        print(metaSteamMicro)
-        self.assertEqual('foo'.upper(), 'FOO')
+    def test_ctor(self):
+        pass
 
-    def test_second(self):
-        print("testing second")
-        self.assertEqual('foo', 'foo')
+    def test_webRequest(self):
+        pass
 
-    def test_third(self):
-        self.assertTrue(1==1)
+    def test_avoidAgeCheckTrue(self):
+        pass
+
+    def test_avoidAgeCheckFalse(self):
+        pass
+
+    def test_storeExtraction(self):
+        pass
+
+    def test_scrape(self):
+        pass
         
 if __name__ == '__main__':
     unittest.main()
