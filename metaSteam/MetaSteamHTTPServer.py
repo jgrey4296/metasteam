@@ -15,6 +15,8 @@ from SteamProfileScraper import SteamProfileScraper
 import threading
 import cgi
 import logging
+import json
+
 
 ServerClass  = BaseHTTPServer.HTTPServer
 Protocol     = "HTTP/1.0"
@@ -139,7 +141,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
             })
 
         for key in form:
-            logging.log(key + ": " + form[key].value)
+            logging.info(key + ": " + form[key].value)
 
         if 'command' not in form:
             logging.warn("POST request recieved with no command")
@@ -148,18 +150,26 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         #switch on command:
         command = form['command'].value
 
-        if command == 'startGame' and form['appid']:
+        if command == 'startGame' and 'appid' in form:
             postCommands[command](form['appid'].value)
-        if command == 'compareUser' and form['username']:
+        if command == 'compareUser' and 'username' in form:
             info = postCommands[command](form['username'].value)
             #TODO: return the information as json
-        else:
+        if command == "testCommand" and 'testField' in form:
+            print("testcommand: " + form['testField'].value)
+        elif command in postCommands:
             postCommands[command]()
+        else:
+            logging.warn("no suitable command found for: " + command)
 
         self.send_response(200)
-        self.send_header('Content-type','text-html')
+        self.send_header('Content-type','application/json')
         self.end_headers()
-        self.wfile.write("Command Complete")
+
+        testList = [1,2,3,4]
+        jsonString = json.dumps(testList)
+        
+        self.wfile.write(jsonString)
         
 
 '''
