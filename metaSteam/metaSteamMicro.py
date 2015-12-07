@@ -111,6 +111,9 @@ class MetaSteam:
         self.loadSettingsFromJson()
         self.findLibraries()
         self.findSteam()
+
+        #TODO: verify locations
+        
         #import already scraped gameData
         self.importFromJson()
 
@@ -169,16 +172,23 @@ class MetaSteam:
     '''
     def findSteam(self):
         if skipWin: return
-        logging.info("Finding Steam")        
-        steamLocation = os.path.join("C:\\","Program Files (x86)","Steam")
-        logging.info("Steam Location: " + steamLocation)
-        if os.path.exists(steamLocation):
-            logging.info("Steam Location Exists")
-            self.steamLocation = steamLocation
-            self.libraryLocations.append(os.path.join(steamLocation,"steamapps"))
+        logging.info("Finding Steam")
+
+        #if a steam location was loaded from settings:
+        if self.steamLocation and os.path.exists(self.steamLocation):
+            self.libraryLocations.append(os.path.join(self.steamLocation,"steamapps"))
+            return
+        #otherwise try to find steam manually:
         else:
-            logging.warn("Couldn't find Steam")
-            raise MetaSteamException("Default Steam Location doesnt exist")
+            steamLocation = os.path.join("C:\\","Program Files (x86)","Steam")
+            logging.info("Steam Location: " + steamLocation)
+            if os.path.exists(steamLocation):
+                logging.info("Steam Location Exists")
+                self.steamLocation = steamLocation
+                self.libraryLocations.append(os.path.join(steamLocation,"steamapps"))
+            else:
+                logging.warn("Couldn't find Steam")
+                raise MetaSteamException("Default Steam Location doesnt exist")
 
     '''
     @class MetaSteam

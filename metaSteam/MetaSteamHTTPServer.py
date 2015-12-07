@@ -11,6 +11,7 @@ import sys
 import os
 import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
+from SteamProfileScraper import SteamProfileScraper
 import threading
 import cgi
 import logging
@@ -56,7 +57,11 @@ def save_json(self):
 '''
 def compare_to_user(self,username):
     logging.info( "TODO: allow comparison of user profiles")
-        
+    profileScraper = SteamProfileScraper(username)
+    extractedInfo = profileScraper.scrape()
+    #now what? return the information to the web visualisation
+    
+    
 '''
 @object postCommands
 @purpose stores functions for easy lookup from the server's handler
@@ -145,6 +150,9 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
 
         if command == 'startGame' and form['appid']:
             postCommands[command](form['appid'].value)
+        if command == 'compareUser' and form['username']:
+            info = postCommands[command](form['username'].value)
+            #TODO: return the information as json
         else:
             postCommands[command]()
 
