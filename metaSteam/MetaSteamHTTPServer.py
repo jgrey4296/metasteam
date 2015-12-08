@@ -150,6 +150,8 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         #switch on command:
         command = form['command'].value
 
+        #lookup the command and perform it
+        
         if command == 'startGame' and 'appid' in form:
             postCommands[command](form['appid'].value)
         if command == 'compareUser' and 'username' in form:
@@ -162,6 +164,8 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         else:
             logging.warn("no suitable command found for: " + command)
 
+        #send the response (as json):
+            
         self.send_response(200)
         self.send_header('Content-type','application/json')
         self.end_headers()
@@ -179,26 +183,29 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
 @param port the port to operate on
 '''            
 def runLocalServer(metaSteamInstance,port=8000):
-    logging.info( "Run Local Server recieved: " + str(metaSteamInstance))
-    #server_address = ('127.0.0.1', port)
-    server_address = ('localhost',port)
-    MetaSteamHandler.protocol_version = Protocol
-    if metaSteamInstance != None:
-        MetaSteamHandler.registerInstance(metaSteamInstance)
+    try:
+        logging.info( "Run Local Server recieved: " + str(metaSteamInstance))
+        #server_address = ('127.0.0.1', port)
+        server_address = ('localhost',port)
+        MetaSteamHandler.protocol_version = Protocol
+        if metaSteamInstance != None:
+            MetaSteamHandler.registerInstance(metaSteamInstance)
+            
+        #Create and Run the actual server:
+        server = ServerClass(server_address, MetaSteamHandler)
     
-    #Create and Run the actual server:
-    server = ServerClass(server_address, MetaSteamHandler)
-    
-    sa = server.socket.getsockname()
-    print "Serving HTTP on", sa[0], "port", sa[1], "..."
-    logging.info("Serving HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
+        sa = server.socket.getsockname()
+        print "Serving HTTP on", sa[0], "port", sa[1], "..."
+        logging.info("Serving HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
 
-    while continueRunning:
-        server.handle_request()
-        
-    server.socket.close()
-    print "Shutting Down Server"
-    logging.info("Shutting Down Server")
+        while continueRunning:
+            server.handle_request()
+    except Exception as e:
+        logging.error("Exception: runLocalServer: " + str(e))
+    finally:
+        server.socket.close()
+        print "Shutting Down Server"
+        logging.info("Shutting Down Server")
 
 '''
 @main
