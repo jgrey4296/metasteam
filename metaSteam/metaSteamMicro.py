@@ -213,7 +213,7 @@ class MetaSteam:
         for location in self.libraryLocations:
             if not os.path.exists(location):
                 logging.warn("Removing non-existent location: " + location)
-                a.remove(location)
+                self.libraryLocations.remove(location)
         if self.steamLocation is not None and not os.path.exists(self.steamLocation):
             logging.warn("steamLocation doesnt exist: " + self.steamLocation)
             self.steamLocation = None
