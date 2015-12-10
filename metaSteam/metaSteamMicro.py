@@ -260,6 +260,7 @@ class MetaSteam:
     @threadSafe
     '''
     def importFromJson(self):
+        inputFile = None
         try:
             self.jsonLock.acquire()
             self.internalDataLock.acquire()
@@ -276,7 +277,8 @@ class MetaSteam:
         except Exception as e:
             logging.error("Exception: importFromJson: " + str(e))
         finally:
-            inputFile.close()
+            if inputFile:
+                inputFile.close()
             self.jsonLock.release()
             self.internalDataLock.release()
 

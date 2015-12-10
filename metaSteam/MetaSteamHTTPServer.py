@@ -121,10 +121,14 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
             MetaSteamHandler.metaSteamInstance.jsonLock.acquire()
         #perform the request
-        SimpleHTTPRequestHandler.do_GET(self)
-        #Release the lock
-        if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
-            MetaSteamHandler.metaSteamInstance.jsonLock.release()
+        try:
+            SimpleHTTPRequestHandler.do_GET(self)
+        except Exception as e:
+            logging.error("Exception: do_GET: " + str(e))
+        finally:
+            #Release the lock
+            if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
+                MetaSteamHandler.metaSteamInstance.jsonLock.release()
 
 
     '''
