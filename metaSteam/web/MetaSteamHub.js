@@ -92,22 +92,40 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
        @method sendStartMessageToServer
        @purpose sends a post request to the metaSteam server to start a specified game
      */
-    Hub.prototype.sendStartMessageToServer = function(appid){
+    Hub.prototype.sendStartMessageToServer = function(appid,callback){
         //Create the commands/parameters of the post message
         var commandString = "";
         commandString += "&command=" + "startGame";
-        commandString += '&appid=' + appid;
+        commandString += '&value=' + appid;
         console.log("Message To Send: " + commandString);
 
-        this.sendMessageToServer(commandString);
+        this.sendMessageToServer(commandString,callback);
     };
 
+
+    Hub.prototype.sendHowManyPlayingMessageToServer = function(appid,callback){
+        var commandString = "";
+        commandString += "&command=" + "howManyPlaying";
+        commandString += '&value=' + appid;
+        console.log("Message to send: " + commandString);
+
+        this.sendMessageToServer(commandString,callback);
+    };
+
+    Hub.prototype.sendCompareUserMessageToServer = function(username,callback){
+        var commandString = "";
+        commandString += "&command=" + "compare";
+        commandString += "&value=" + username;
+        console.log("Message to send: " + commandString);
+        this.sendMessageToServer(commandString,callback);
+    };
+    
     /**
        @class Hub
        @method sendMessageToServer
        @purpose the general method for communicating with the server
      */
-    Hub.prototype.sendMessageToServer = function(commandString){
+    Hub.prototype.sendMessageToServer = function(commandString,callback){
         //create the request
         var request = new XMLHttpRequest();
         request.open("POST","nowhere.html",true);
@@ -117,6 +135,9 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
                 var result = request.responseText;
                 var resultJson = JSON.parse(result)
                 console.log("XML Response:",resultJson);
+                if(callback && typeof callback === 'function'){
+                    callback(resultJson);
+                }
             }
         };
         //Set the headers of the request

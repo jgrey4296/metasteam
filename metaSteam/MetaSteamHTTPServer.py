@@ -13,6 +13,7 @@ import datetime
 import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from SteamProfileScraper import SteamProfileScraper
+from MultiplayerScraper import MultiplayerScraper
 import threading
 import cgi
 import logging
@@ -45,29 +46,35 @@ def start_game(self,appid):
         MetaSteamHandler.metaSteamInstance.startGame(appid)
     else:
         logging.info("Instanceless call: StartGame: " + str(appid))
-
+    return []
 '''
 @function save_json
 @purpose calls metasteam to save modified json data about games
 '''
-def save_json(self):
+def save_json():
     logging.info( "Triggering Json Save")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.exportToJson()
     else:
         logging.info("Instanceless call: save_json")
-
+    return []
 '''
 @function compare_to_user
 @param username compare the operator of metasteam to the specified user
 @todo
 '''
-def compare_to_user(self,username):
+def compare_to_user(username):
     logging.info( "TODO: allow comparison of user profiles")
     profileScraper = SteamProfileScraper(username)
     extractedInfo = profileScraper.scrape()
-    #now what? return the information to the web visualisation
+    return extractedInfo
     
+
+def howManyPlaying(appid):
+    mps = MultiplayerScraper()
+    extractedInfo = mps.scrape(appid)
+    return extractedInfo
+
     
 '''
 @object postCommands
@@ -78,6 +85,7 @@ postCommands = {
     'startGame': start_game,
     'saveJson':save_json,
     'compare' :compare_to_user,
+    'howmManyPlaying' : howManyPlaying
     }
 
 '''
@@ -160,28 +168,20 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         command = form['command'].value
 
         #lookup the command and perform it
-        
-        if command == 'startGame' and 'appid' in form:
-            postCommands[command](form['appid'].value)
-        if command == 'compareUser' and 'username' in form:
-            info = postCommands[command](form['username'].value)
-            #TODO: return the information as json
-        if command == "testCommand" and 'testField' in form:
-            print("testcommand: " + form['testField'].value)
+        returnedData = []
+
+        if 'value' in form and command in postCommands:
+            returnedData = postCommands[command](form['value'].value)
         elif command in postCommands:
-            postCommands[command]()
+            returnedData = postCommands[command]()
         else:
             logging.warn("no suitable command found for: " + command)
 
         #send the response (as json):
-            
         self.send_response(200)
         self.send_header('Content-type','application/json')
         self.end_headers()
-
-        testList = [1,2,3,4]
-        jsonString = json.dumps(testList)
-        
+        jsonString = json.dumps(returnedData)
         self.wfile.write(jsonString)
         
 
