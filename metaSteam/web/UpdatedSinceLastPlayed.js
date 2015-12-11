@@ -80,7 +80,29 @@ define(['d3','underscore'],function(d3,_){
      */
     Visualisation.prototype.draw = function(){
         console.log("Template: Drawing");
+
+        var list = d3.select("#mainVisualisation").append("g")
+            .attr("id","updatedSinceLastPlayedList");
+
+        var boundList = list.selectAll("g").data(this.data);
         
+        var indGame = boundList.enter().append("g")
+            .classed("game",true)
+            .attr("transform",function(d,i){
+                return "translate( " + 100 + "," + (i * 35)  + ")";
+            });
+
+        indGame.append("rect")
+            .attr("width",500).attr("height","30")
+            .style("fill",this.colours.darkBlue);
+
+        indGame.append("text")
+            .attr("transform",'translate(20,20)')
+            .text(function(d){
+                return d.name
+            })
+            .style("fill",this.colours.text);
+                
     };
 
 
@@ -90,7 +112,7 @@ define(['d3','underscore'],function(d3,_){
      */
     Visualisation.prototype.cleanUp = function(){
         console.log("Template: cleanUp");
-        d3.select("#mainVisualisation").selectAll().remove();
+        d3.select("#updatedSinceLastPlayedList").remove();
     };
 
     return Visualisation;

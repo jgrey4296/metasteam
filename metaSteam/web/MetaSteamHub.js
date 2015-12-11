@@ -87,6 +87,46 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed'],
 
     /**
        @class Hub
+       @method sendStartMessageToServer
+       @purpose sends a post request to the metaSteam server to start a specified game
+     */
+    Hub.prototype.sendStartMessageToServer = function(appid){
+        //Create the commands/parameters of the post message
+        var commandString = "";
+        commandString += "&command=" + "startGame";
+        commandString += '&appid=' + appid;
+        console.log("Message To Send: " + commandString);
+
+        this.sendMessageToServer(commandString);
+    };
+
+    /**
+       @class Hub
+       @method sendMessageToServer
+       @purpose the general method for communicating with the server
+     */
+    Hub.prototype.sendMessageToServer = function(commandString){
+        //create the request
+        var request = new XMLHttpRequest();
+        request.open("POST","nowhere.html",true);
+        //the callback for the request:
+        request.onreadystatechange = function(){
+            if(request.readyState === 4){
+                var result = request.responseText;
+                var resultJson = JSON.parse(result)
+                console.log("XML Response:",resultJson);
+            }
+        };
+        //Set the headers of the request
+        request.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        request.setRequestHeader('Content-Length',commandString.length);
+        //send it, with the parameters:
+        request.send(commandString);
+    };
+    
+
+    /**
+       @class Hub
        @method registerButton
        @purpose ensure a class has the required methods before adding it to the buttons object
        @note the buttons object is automatically turned into buttons in method:draw.
