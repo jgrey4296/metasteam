@@ -1,0 +1,18 @@
+1) visualisations are classes with three methods:
+registerData - this takes data from the hub and transforms it as necessary for the visualisation
+
+draw - this draws the visualisation upon command
+
+cleanup - this removes anything the visualisation draws
+
+all information in the hub can be used, as it will typically be passed in as part of the constructor
+
+See TemplateVisualisation.js for a stub example
+
+
+2) The new visualisation needs to be included in the MetaSteamHub imports, 
+and registered to a button at the end of the hub constructor using the format:
+
+this.registerButton(*name of visualisation*, new *VisualisationObject*(this));
+
+

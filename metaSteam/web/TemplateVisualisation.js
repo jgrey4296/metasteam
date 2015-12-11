@@ -11,7 +11,8 @@ define(['d3','underscore'],function(d3,_){
        @class Timeline
        @constructor
      */
-    var Visualisation = function(width,height,colours){
+    var Visualisation = function(hub,width,height,colours){
+        this.hub = hub;
         this.width = width - 30;
         this.height = height;
         this.colours = colours;
@@ -46,7 +47,7 @@ define(['d3','underscore'],function(d3,_){
     /**
        @method registerdata
     */
-    Timeline.prototype.registerData = function(data){
+    Visualisation.prototype.registerData = function(data){
         this.data = data;
         var releaseDates = [];
 
@@ -116,7 +117,7 @@ define(['d3','underscore'],function(d3,_){
     /**
        @method draw
      */
-    Timeline.prototype.draw = function(){
+    Visualisation.prototype.draw = function(){
         tlRef = this;
         this.drawAxes();
 
@@ -184,7 +185,7 @@ define(['d3','underscore'],function(d3,_){
 
 
     //Draw the axes:
-    Timeline.prototype.drawAxes = function(){
+    Visualisation.prototype.drawAxes = function(){
         if(!d3.select("#mainVisualisation").select("#axis").empty()){
             return;
         }
@@ -206,12 +207,12 @@ define(['d3','underscore'],function(d3,_){
     /**
        @method cleanUp
      */
-    Timeline.prototype.cleanUp = function(){
+    Visualisation.prototype.cleanUp = function(){
         d3.select("#axis").remove();
         d3.selectAll(".indGame").remove();
         d3.select("#gameTitle").selectAll("text").text("");
     };
 
-    return Timeline;
+    return Visualisation;
     
 });

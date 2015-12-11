@@ -15,9 +15,10 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
      */
     var Hub = function(){
         //internal reference for use in d3 callback functions
+        console.log("Creating MetaSteam Hub");
         var hubReference = this;
 
-        //Colours:
+        //Stored Colours:
         this.colours = {
             grey : d3.rgb(19,21,27),
             text : d3.rgb(237,255,255),
@@ -27,19 +28,20 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
             darkerBlue : d3.rgb(20,38,60),
             lightBlue: d3.rgb(53,99,142),
             green : d3.rgb(108,141,7),
-            
-            
         };
         
         //Stored Data
-        this.data = null;
-        this.margin = 30;
+        this.data = null;//the main game data
+        this.margin = 30;//side margins
+        //The usable size without causing scrolling:
         this.svgHeight = window.innerHeight - this.margin;
         this.svgWidth = window.innerWidth - this.margin;
-        //Width of the non-sidebarred screen
+        console.log("Height:",this.svgHeight,"Width:",this.svgWidth);        
+
         this.sideBarWidth = this.svgWidth * 0.15;
+        //The internal area without sidebars
         this.internalWidth = this.svgWidth - (2 *(this.svgWidth * 0.15));
-        console.log("Height:",this.svgHeight,"Width:",this.svgWidth);
+
 
         //Store for use in circlepack/other vis:
         d3.select("head").append("g")
@@ -57,10 +59,12 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         //Data For buttons:
         this.buttons = {};
 
+        /**
+           ADD ADDITIONAL MODES HERE:
+         */
         this.registerButton("Hub",this);
-        this.registerButton("Circle Pack",new MetaSteamCirclePack(this.internalWidth,this.svgHeight,this.colours));
-
-        this.registerButton("timeline",new MetaSteamTimeline(this.internalWidth,this.svgHeight,this.colours));
+        this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
+        this.registerButton("timeline",new MetaSteamTimeline(this,this.internalWidth,this.svgHeight,this.colours));
         //            {name:"timeline"},
         //          {name:"chord"},
         //        {name:"compare user"},
@@ -68,7 +72,14 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
     };
 
 
+    /**
+       @class Hub
+       @method registerButton
+       @purpose ensure a class has the required methods before adding it to the buttons object
+       @note the buttons object is automatically turned into buttons in method:draw.
+     */
     Hub.prototype.registerButton = function(name,instance){
+        console.log("Registering button: ",name);
         if(! instance.cleanUp){
             throw new Error("Button instance with no cleanUp Method: " + name);
         }
@@ -81,7 +92,12 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         this.buttons[name] = {"name":name,"value":instance};
     };
     
-    //Main cleanup routine
+    /**
+       @class Hub
+       @method cleanUp
+       @purpose cleanup the things drawn by this class. 
+       @note mainly the general stats, and any buttons
+     */
     Hub.prototype.cleanUp = function(){
         d3.select("#generalStats").remove();
         for(var x in this.buttons){
@@ -90,7 +106,12 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         }
     };
 
-    
+
+    /**
+       @class Hub
+       @method setupSvg
+       @purpose draw the things common to all views. sidebars, background etc.
+     */
     //Setup the sides of the svg, which are the same
     //for all parts of MetaSteamWeb
     Hub.prototype.setupSvg = function(){
@@ -171,15 +192,24 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
             .attr("width",this.sideBarWidth);
     };
 
-    //Load data in for visualisations to use
+    /**
+       @class Hub
+       @method registerData
+       @purpose take a loaded json file of data and store it for use
+     */
     Hub.prototype.registerData = function(data){
         console.log("Registering Data",data);
         this.data = data;
     };
 
-    //Draw the Hub:
+    /**
+       @class Hub
+       @method draw
+       @purpose draw this class.
+       @note ie: buttons, sidebars, graphs.
+     */
     Hub.prototype.draw = function(){
-        //IN RIGHT BAR:
+
         //Draw Button to clear and draw circlepack:
         //Draw Button to clear and draw timeline mockup
         //Draw button for chord diagram
@@ -218,7 +248,6 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
                 d3.select("#installed").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25)
                     .attr("rx",5)
                     .attr("ry",5);
-
             }else{
                 var genStats = d3.select("#generalStats");
             }
@@ -276,6 +305,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
                     playedData[0].games[game.appid] = game;
                 }
             };
+            
             //Draw the installed/not installed bar chart
             this.drawGraph("InstalledGames",d3.select("#installed"),installedData);
             this.drawGraph("ScrapedGames",d3.select("#scraped"),scannedData);
@@ -283,8 +313,11 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         }
     };
 
-
-    //Draw a graph, using the passed in group as the root, with data passed in
+    /**
+       @class Hub
+       @method drawGraph
+       @purpose draw some data to a domelement.
+     */
     Hub.prototype.drawGraph = function(name,domElement,data){
         console.log("Drawing Graph");
         var hubRef = this;
@@ -349,7 +382,11 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
     };
 
     
-    //Draw the navigation buttons on the right
+    /**
+       @class Hub
+       @method drawButtons
+       @purpose draw the passed in data about buttons, as buttons to the header bar dom element.
+     */
     Hub.prototype.drawButtons = function(data){
         var hubRef = this;
         var buttonWidth = (hubRef.internalWidth * 0.8) / data.length;
@@ -405,7 +442,5 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
             .style("fill",this.colours["textBlue"]);
         
     };
-    
     return Hub;
-
 });

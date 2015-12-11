@@ -9,6 +9,7 @@ https://docs.python.org/2/library/basehttpserver.html#BaseHTTPServer.HTTPServer
 
 import sys
 import os
+import datetime
 import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from SteamProfileScraper import SteamProfileScraper
@@ -42,6 +43,8 @@ def start_game(self,appid):
     logging.info( "Triggering Game Start")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.startGame(appid)
+    else:
+        logging.info("Instanceless call: StartGame: " + str(appid))
 
 '''
 @function save_json
@@ -51,6 +54,8 @@ def save_json(self):
     logging.info( "Triggering Json Save")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.exportToJson()
+    else:
+        logging.info("Instanceless call: save_json")
 
 '''
 @function compare_to_user
@@ -188,7 +193,10 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
 '''            
 def runLocalServer(metaSteamInstance,port=8000):
     try:
-        logging.info( "Run Local Server recieved: " + str(metaSteamInstance))
+        if(metaSteamInstance):
+            logging.info( "Run Local Server recieved: " + str(metaSteamInstance))
+        else:
+            logging.info("Running local server without MetaSteam Instance")
         #server_address = ('127.0.0.1', port)
         server_address = ('localhost',port)
         MetaSteamHandler.protocol_version = Protocol
@@ -216,4 +224,8 @@ def runLocalServer(metaSteamInstance,port=8000):
 @purpose run the server without an accompanying meta steam instance
 '''
 if __name__ == "__main__":
+    logName = "metaSteamHTTPServer_" + str(datetime.date.today()) + ".log"
+    logging.basicConfig(filename=os.path.join("logs",logName),level=logging.DEBUG)
+    logging.info("------------------------------")
+    logging.info("Starting Separate HTTPServer")
     runLocalServer(None,port=8888)    

@@ -7,26 +7,27 @@
 
 define(['d3','underscore'],function(d3,_){
 
-    /**The main class
+    /**
        @class Timeline
        @constructor
      */
-    var Timeline = function(width,height,colours){
-        this.width = width - 30;
-        this.height = height;
-        this.colours = colours;
+    var Timeline = function(hub){
+        this.hub = hub;
+        this.width = this.hub.internalWidth;
+        this.height = this.hub.svgHeight;
+        this.colours = this.hub.colours;
         //Time format:
         this.timeFormat = d3.time.format("%b %e, %Y");
-        console.log("Time format test:",this.timeFormat.parse("May 12, 2012"));
+        //console.log("Time format test:",this.timeFormat.parse("May 12, 2012"));
         //Time scale:
         this.timeScale = d3.time.scale().range([0,this.width]);
-        console.log(this.timeScale(this.timeFormat.parse("May 12,2012")));
+        //console.log(this.timeScale(this.timeFormat.parse("May 12,2012")));
         //Axis:
         this.axis = d3.svg.axis().scale(this.timeScale);
 
         //Play time axis:
         this.playScale = d3.scale.log()
-            .range([0,height * 0.5]);
+            .range([0,this.height * 0.5]);
 
         //Colours scaling
         this.scaleToColours = d3.scale.linear()
@@ -44,7 +45,9 @@ define(['d3','underscore'],function(d3,_){
     };
 
     /**
+       @class MetaSteamTimeline
        @method registerdata
+       @purpose load the data in and transform as necessary
     */
     Timeline.prototype.registerData = function(data){
         this.data = data;
@@ -114,7 +117,9 @@ define(['d3','underscore'],function(d3,_){
     };
 
     /**
+       @class MetaSteamTimeline
        @method draw
+       @purpose draws the visualisation
      */
     Timeline.prototype.draw = function(){
         tlRef = this;
@@ -183,7 +188,11 @@ define(['d3','underscore'],function(d3,_){
     };
 
 
-    //Draw the axes:
+    /**
+       @class MetaSteamTimeline
+       @method drawAxes
+       @purpose draw the axes of the visualisation
+     */
     Timeline.prototype.drawAxes = function(){
         if(!d3.select("#mainVisualisation").select("#axis").empty()){
             return;
@@ -204,7 +213,9 @@ define(['d3','underscore'],function(d3,_){
     };
 
     /**
+       @class MetaSteamTimeline
        @method cleanUp
+       @purpose cleans up any display elements added by the visualisation's draw method
      */
     Timeline.prototype.cleanUp = function(){
         d3.select("#axis").remove();

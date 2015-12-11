@@ -10,11 +10,11 @@ define(['d3','underscore'],function(d3,_){
        and visualises them
        @class CirclePack
     */
-    var CP = function(sizeX,sizeY,colours){
-	    console.log("Sizes:",sizeX,sizeY,colours);
-
+    var CP = function(hub){
+        //local reference to the hub:
+        this.hub = hub;
         //save the passed in colour dictionary
-        this.colours = colours;
+        this.colours = this.hub.colours;;
 
         //Colours scales:
         //from the domain to the range of 20,
@@ -38,19 +38,23 @@ define(['d3','underscore'],function(d3,_){
         //All of the current games/categories
         this.currentDataSet = [];
         //The dimensions the pack must fit into
-        this.packSize = [sizeX,sizeY];
+        this.packSize = [this.hub.internalWidth,this.hub.svgHeight];
         
         //The specific packer
         this.bubble = d3.layout.pack()
             .sort(function(f,s){ //sort by names
                 return f.name < s.name;
             })
-            .size([sizeX,sizeY])
+            .size(this.packSize)
             .padding(1.5);
 
     };
 
-    //Register incoming data for display
+    /**
+       @class Circlepack
+       @method registerData
+       @purpose register and modify passed in data to use for this visualisation
+     */
     CP.prototype.registerData = function(data){
         console.log("CP registering data:",data.installed);
         //Reset the internally stored data
@@ -114,9 +118,12 @@ define(['d3','underscore'],function(d3,_){
         this.currentDataSet = _.values(this.categories);
     };
 
-    //--------------------
-    /**The Main Draw method for circlepacking
+    //--------------------------------------------------
+    
+    /**
+       @class Circlepack
        @method draw
+       @purpose draw this visualisation
     */
     CP.prototype.draw = function(data){
         //console.log("Drawing:",data);
@@ -229,8 +236,10 @@ define(['d3','underscore'],function(d3,_){
     };
 
     //----------------------------------------
-    /**Helper function for draw, to draw all names of categories/ games in margins
-       @function drawNames
+    /**
+       @class Circlepack
+       @method drawNames
+       @purpose Draws the names of groups in the sidebars
        @param data : the array of game objects, same as for drawGames
     */
     CP.prototype.drawNames = function(data){
@@ -260,7 +269,11 @@ define(['d3','underscore'],function(d3,_){
         this.drawNamesHalf(second,d3.select("#rightBar"));
     };
 
-    //Draw data as names under the dom element specified
+    /**
+       @class Circlepack
+       @method drawNamesHalf
+       @purpose draws a selection of the data to one sidebar
+     */
     CP.prototype.drawNamesHalf = function(data,rootDom){
         var cpInstance = this;
         
@@ -328,7 +341,13 @@ define(['d3','underscore'],function(d3,_){
     };
 
     //--------------------
-    //Draw a Single Game:
+    /**
+       @class Circlepack
+       @method drawGame
+       @purpose draws a single game as a rectangle.
+       @STUB
+       @TODO
+     */
     CP.prototype.drawGame = function(game){
         var singleGame = d3.select("#singleGame");
         if(!singleGame.empty()){
@@ -348,7 +367,11 @@ define(['d3','underscore'],function(d3,_){
     };
 
     //--------------------
-    //CleanUp Utility Functions:
+    /**
+       @class Circlepack
+       @method cleanUp
+       @purpose calls utility methods to clean up elements of the visualisation
+     */
     CP.prototype.cleanUp = function(){
         console.log("Cleaning up");
         this.cleanUpNames();
@@ -375,8 +398,11 @@ define(['d3','underscore'],function(d3,_){
         d3.select("#resetButton").remove();
     };
 
-
-    //Draw reset button:
+    /**
+       @class Circlepack
+       @method drawResetButton
+       @purpose draws a button that can reset the visualisation to its starting state
+     */
     CP.prototype.drawResetButton = function(){
         var cpInstance = this;
         var resetButton = d3.select("#resetButton");
@@ -406,8 +432,13 @@ define(['d3','underscore'],function(d3,_){
             .attr("transform","translate(50,25)");
     };
 
-    //Draw a button to switch between vis of
-    //profile games, or installed games
+    /**
+       @TODO
+       @STUB
+       @class CirclePack
+       @method drawDataSwitch
+       @purpose a method to allow the user to switch between focus on time played and...other?
+     */
     CP.prototype.drawDataSwitch = function(){
         if(! d3.select("#dataSwitch").empty()){
             return;
@@ -416,7 +447,12 @@ define(['d3','underscore'],function(d3,_){
         
     };
 
-    //Highlight a name
+    /**
+       @class CirclePack
+       @method highlightName
+       @purpose modifies a name in a sidebar, and highlights the corresponding circle.
+       @callback
+     */
     CP.prototype.highlightName = function(d){
 
         //Highlight the equivalent name:
@@ -455,7 +491,11 @@ define(['d3','underscore'],function(d3,_){
         
     };
 
-    //reverse the above function
+    /**
+       @class Circlepack
+       @method unhighlightName
+       @purpose removes a highlighted name and its effects
+     */
     CP.prototype.unhighlightName = function(d){
         //recolour the text
         //ternary

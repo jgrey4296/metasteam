@@ -3,9 +3,10 @@ latex/
 *.pyc
 .#*
 #*
-src/build
+metaSteam/build
 *.zip
-src/data
+metaSteam/data
 *~
-src/dist
+metaSteam/dist
+dist
 util/node_modules

@@ -25,17 +25,13 @@ require.config({
 require(['d3','underscore','MetaSteamHub'],function(d3,_,Hub){
     //Main:
     //Load the json data
-    
-    var data = undefined;
     var metaSteamHub = new Hub();
-    //metaSteamHub.draw();
     
     //Load the json Data:
     d3.json("/data/gameData.json",function(d){
-        data = d;
-        console.log("Base DATA:",d);
+        console.log("Loaded Game Data:",d);
 
-        metaSteamHub.registerData(data);
+        metaSteamHub.registerData(d);
         metaSteamHub.draw();
     });
 
