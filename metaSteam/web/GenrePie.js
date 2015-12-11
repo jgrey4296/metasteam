@@ -34,6 +34,7 @@ define(['d3','underscore'],function(d3,_){
 
         //Border
         this.border = 10;
+        this.innerBorder = 100;
         
         //Radius:
         this.radius = Math.min(this.width,this.height) / 2;
@@ -42,11 +43,16 @@ define(['d3','underscore'],function(d3,_){
         //Arc:
         this.arc = d3.svg.arc()
             .outerRadius(this.radius - this.border)
-            .innerRadius(0);
+            .innerRadius(this.radius - this.innerBorder);
 
         
         this.pie = d3.layout.pie()
-            .value(function(d) { return d.value; });
+            .value(function(d) { return d.value; })
+            .sort(function(a,b){
+                if(a.name < b.name) return -1;
+                if(b.name < a.name) return 1;
+                return 0;
+            });
 
         
     };
@@ -60,16 +66,26 @@ define(['d3','underscore'],function(d3,_){
         
         var genresData = {};
 
+        var gameLookup = this.data.profile.reduce(function(m,v){
+            var numHours = Number(v['hours_forever']);
+            if(!isNaN(numHours)){
+                m[v.appid] = numHours;
+            }else{
+                m[v.appid] = 0;
+            }
+            return m;
+        },{});
+                
         _.values(this.data.installed).forEach(function(game){
             if(game.__tags){
                 game.__tags.forEach(function(tag){
                     if(genresData[tag] === undefined){
                         genresData[tag] = {
                             "name" : tag,
-                            "value" : 0
+                            "value" : 0,
                         };
                     }
-                    genresData[tag].value += 1;
+                    genresData[tag].value += gameLookup[game.appid];
                 });
             }
         });
@@ -102,7 +118,27 @@ define(['d3','underscore'],function(d3,_){
             .attr("d",this.arc)
             .style("fill",function(d){
                 return pieRef.oneOf20Colours(d.value);
+            })
+            .on("mouseover",function(d){
+                console.log(d);
+                d3.select("#pieChartTitle")
+                    .select("text")
+                    .text(d.data.name + " : " + Math.round(d.value) + " hours");
+            })
+            .on("mouseout",function(d){
+                d3.select("#pieChartTitle")
+                    .select("text")
+                    .text("Cumulative Hours Spent Playing by Tag");
             });
+
+        //Setup the Text in the centre:
+        pieChart.append("g").attr('id',"pieChartTitle")
+            .append("text")
+            .style("text-anchor","middle")
+            .style("fill",this.colours.text)
+            .text("Cumulative Hours Spend Playing by Tag");
+        
+
         
     };
 
