@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed){
+define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','GenrePie'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie){
 
     var idRegex = /\W/g;
     
@@ -40,8 +40,21 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed'],
 
         this.sideBarWidth = this.svgWidth * 0.15;
 
+        //Internal Width
+        this.internalWidth = this.svgWidth - (2 * this.sideBarWidth);
+
         //Storage For buttons:
         this.buttons = {};
+        this.buttonHeight = 60;
+        this.button_X_Offset = this.internalWidth * 0.1;
+        this.button_Y_Offset = 10;
+
+        //An additional offset to the main visualisation for clarity purposes
+        this.mainVisualisationOffset = 20;
+        
+        //Internal Height:
+        this.internalHeight = this.svgHeight - (this.mainVisualisationOffset + this.button_Y_Offset + this.buttonHeight);
+
         /**
            ADD ADDITIONAL MODES HERE:
          */
@@ -49,24 +62,13 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed'],
         this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
         this.registerButton("timeline",new MetaSteamTimeline(this));
         this.registerButton('UpdatedSincePlayed',new UpdatedSinceLastPlayed(this));
+        this.registerButton('GenrePie', new GenrePie(this));
         //            {name:"timeline"},
         //          {name:"chord"},
         //        {name:"compare user"},
-
-        //An additional offset to the main visualisation for clarity purposes
-        this.mainVisualisationOffset = 20;
-        
-        //Internal Width
-        this.internalWidth = this.svgWidth - (2 * this.sideBarWidth);
         
         //Button header details:
-        this.buttonHeight = 60;
         this.buttonWidth = (this.internalWidth * 0.8) / _.values(this.buttons).length;
-        this.button_X_Offset = this.internalWidth * 0.1;
-        this.button_Y_Offset = 10;
-
-        //Internal Height:
-        this.internalHeight = this.svgHeight - (this.mainVisualisationOffset + this.button_Y_Offset + this.buttonHeight);
         
         //Store for use in circlepack/other vis:
         d3.select("head").append("g")

@@ -14,6 +14,7 @@ define(['d3','underscore'],function(d3,_){
      */
     var Visualisation = function(hub){
         this.hub = hub;
+        //These will need to be updated in register data
         this.width = this.hub.internalWidth;
         this.height = this.hub.internalHeight;
         this.colours = this.hub.colours;
