@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline){
+define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed){
 
     var idRegex = /\W/g;
     
@@ -48,6 +48,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         this.registerButton("Hub",this);
         this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
         this.registerButton("timeline",new MetaSteamTimeline(this));
+        this.registerButton('UpdatedSincePlayed',new UpdatedSinceLastPlayed(this));
         //            {name:"timeline"},
         //          {name:"chord"},
         //        {name:"compare user"},
