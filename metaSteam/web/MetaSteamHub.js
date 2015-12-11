@@ -39,10 +39,34 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         console.log("Height:",this.svgHeight,"Width:",this.svgWidth);        
 
         this.sideBarWidth = this.svgWidth * 0.15;
-        //The internal area without sidebars
-        this.internalWidth = this.svgWidth - (2 *(this.svgWidth * 0.15));
 
+        //Storage For buttons:
+        this.buttons = {};
+        /**
+           ADD ADDITIONAL MODES HERE:
+         */
+        this.registerButton("Hub",this);
+        this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
+        this.registerButton("timeline",new MetaSteamTimeline(this));
+        //            {name:"timeline"},
+        //          {name:"chord"},
+        //        {name:"compare user"},
 
+        //An additional offset to the main visualisation for clarity purposes
+        this.mainVisualisationOffset = 20;
+        
+        //Internal Width
+        this.internalWidth = this.svgWidth - (2 * this.sideBarWidth);
+        
+        //Button header details:
+        this.buttonHeight = 60;
+        this.buttonWidth = (this.internalWidth * 0.8) / _.values(this.buttons).length;
+        this.button_X_Offset = this.internalWidth * 0.1;
+        this.button_Y_Offset = 10;
+
+        //Internal Height:
+        this.internalHeight = this.svgHeight - (this.mainVisualisationOffset + this.button_Y_Offset + this.buttonHeight);
+        
         //Store for use in circlepack/other vis:
         d3.select("head").append("g")
             .attr("id","globalVars")
@@ -51,23 +75,11 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         
         //Reusable Scale for graph drawing
         this.scale = d3.scale.linear();
-        this.scale.range([0, (this.svgHeight * 0.18)]);
+        this.scale.range([0, (this.internalHeight * 0.18)]);
 
         //Scale for colouring
         this.colourScale = d3.scale.category10();
 
-        //Data For buttons:
-        this.buttons = {};
-
-        /**
-           ADD ADDITIONAL MODES HERE:
-         */
-        this.registerButton("Hub",this);
-        this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
-        this.registerButton("timeline",new MetaSteamTimeline(this,this.internalWidth,this.svgHeight,this.colours));
-        //            {name:"timeline"},
-        //          {name:"chord"},
-        //        {name:"compare user"},
         this.setupSvg();
     };
 
@@ -100,10 +112,10 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
      */
     Hub.prototype.cleanUp = function(){
         d3.select("#generalStats").remove();
-        for(var x in this.buttons){
-            if(x == "Hub") continue;
-            this.buttons[x].value.cleanUp();
-        }
+        _.keys(this.buttons).forEach(function(d){
+            if(d === "Hub") return;
+            this.buttons[d].value.cleanUp();
+        },this);
     };
 
 
@@ -188,7 +200,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
 	        .attr("id","mainVisualisation")
             .attr("transform",
                   "translate("
-                  + this.sideBarWidth + ",0)")
+                  + this.sideBarWidth + "," + (this.button_Y_Offset + this.buttonHeight + this.mainVisualisationOffset) + ")")
             .attr("width",this.sideBarWidth);
     };
 
@@ -279,8 +291,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
             }];
             
             //Get All installed Games
-            for (var x in this.data.installed){
-                var game = this.data.installed[x];
+            _.values(this.data.installed).forEach(function(game){
                 if(game.__Installed){
                     installedData[0].games[game.appid] = game;
                 }else{
@@ -291,10 +302,9 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
                 }else{
                     scannedData[1].games[game.appid] = game;
                 }
-            };
+            });
             //Get All Not installed games:
-            for(var x in this.data.profile){
-                var game = this.data.profile[x];
+            this.data.profile.forEach(function(game){
                 if(installedData[0].games[game.appid] === undefined){
                     installedData[1].games[game.appid] = game;
                 }
@@ -304,7 +314,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
                 }else{
                     playedData[0].games[game.appid] = game;
                 }
-            };
+            });
             
             //Draw the installed/not installed bar chart
             this.drawGraph("InstalledGames",d3.select("#installed"),installedData);
@@ -386,10 +396,11 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
        @class Hub
        @method drawButtons
        @purpose draw the passed in data about buttons, as buttons to the header bar dom element.
+       @note EVERY button when clicked goes triggers: hub.cleanup, button.registerData, button.draw.
      */
     Hub.prototype.drawButtons = function(data){
         var hubRef = this;
-        var buttonWidth = (hubRef.internalWidth * 0.8) / data.length;
+        var buttonWidth = hubRef.buttonWidth;
         //console.log("Drawing Buttons:",data,buttonWidth);
         //select the right bar and bind
         var groups = d3.select("#headerBar").selectAll(".button").data(data,function(d){return d.name;});
@@ -401,7 +412,8 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         })
             .attr("class","button")
             .attr("transform",function(d,i){
-                return "translate(" + ((hubRef.internalWidth * 0.1) + (i * (buttonWidth))) +"," + 10 + ")";
+                return "translate(" + ((hubRef.button_X_Offset) + (i * (buttonWidth))) +","
+                    + hubRef.button_Y_Offset + ")";
             })
             .on("click",function(d){
                 console.log("Clicked on:",d.name,d.id);
@@ -430,7 +442,7 @@ define(['d3','underscore','msCirclePack','msTimeline'],function(d3,_,MetaSteamCi
         //draw the button 
         newGroups.append("rect")
             .attr("width",buttonWidth - 5)
-            .attr("height",60)
+            .attr("height",hubRef.buttonHeight)
             .style("fill",this.colours["lightBlue"]);
         
         newGroups.append("text")

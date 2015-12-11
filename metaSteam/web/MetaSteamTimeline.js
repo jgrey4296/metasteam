@@ -13,22 +13,27 @@ define(['d3','underscore'],function(d3,_){
      */
     var Timeline = function(hub){
         this.hub = hub;
-        this.width = this.hub.internalWidth;
-        this.height = this.hub.svgHeight;
         this.colours = this.hub.colours;
         //Time format:
         this.timeFormat = d3.time.format("%b %e, %Y");
         //console.log("Time format test:",this.timeFormat.parse("May 12, 2012"));
+        this.x_offset = 20;
+        /**
+           @IMPORTANT UPDATE ALL OF THESE IN REGISTER DATA FOR LATEST VALUES:
+        */
+        this.width = 1; 
+        this.height = 1;
         //Time scale:
-        this.timeScale = d3.time.scale().range([0,this.width]);
+        this.timeScale = d3.time.scale();//.range([0,this.width]);
         //console.log(this.timeScale(this.timeFormat.parse("May 12,2012")));
         //Axis:
-        this.axis = d3.svg.axis().scale(this.timeScale);
-
+        this.axis = d3.svg.axis();//.scale(this.timeScale);
         //Play time axis:
         this.playScale = d3.scale.log()
-            .range([0,this.height * 0.5]);
+            //.range([0,this.height * 0.5]);
 
+        //--------------------
+        
         //Colours scaling
         this.scaleToColours = d3.scale.linear()
             .domain([0,100])
@@ -39,8 +44,6 @@ define(['d3','underscore'],function(d3,_){
         this.oneOf20Colours = function(val){
             return this.colourScale(this.scaleToColours(val));
         };
-
-
         
     };
 
@@ -51,6 +54,15 @@ define(['d3','underscore'],function(d3,_){
     */
     Timeline.prototype.registerData = function(data){
         this.data = data;
+        this.width = this.hub.internalWidth;
+        this.height = this.hub.internalHeight;
+        //updating the scale and axis:
+        this.timeScale.range([0,(this.width-(2 * this.x_offset))]);
+        this.axis.scale(this.timeScale);
+        this.playScale.range([0,this.height * 0.5]);
+        
+        console.log("Width and height:",this.width,this.height);
+        
         var releaseDates = [];
 
         //copy over hours_forever from profile
@@ -141,7 +153,7 @@ define(['d3','underscore'],function(d3,_){
         var indGames = gameData.enter().append("g")
             .classed("indGame",true)
             .attr("transform",function(d){
-                return "translate(" + (10 + tlRef.timeScale(d["_parsedReleaseDate"])) + "," + (tlRef.height * 0.8) + ")";
+                return "translate(" + (tlRef.x_offset + tlRef.timeScale(d["_parsedReleaseDate"])) + "," + (tlRef.height * 0.8) + ")";
             })
             .on("mouseover",function(d){
                 //first line: hours and release date
@@ -200,7 +212,7 @@ define(['d3','underscore'],function(d3,_){
         //Draw the axes:
         d3.select("#mainVisualisation").append("g")
             .attr("id","axis")
-            .attr("transform","translate(10," + (this.height * 0.8) +")")
+            .attr("transform","translate(" + this.x_offset +"," + (this.height * 0.8) +")")
             .call(this.axis);
 
         d3.select("#axis")

@@ -37,15 +37,15 @@ define(['d3','underscore'],function(d3,_){
 
         //All of the current games/categories
         this.currentDataSet = [];
+
+        //THESE ARE SET IN REGISTER DATA:
         //The dimensions the pack must fit into
-        this.packSize = [this.hub.internalWidth,this.hub.svgHeight];
-        
-        //The specific packer
+        this.packSize = [0,0];
+                //The specific packer
         this.bubble = d3.layout.pack()
             .sort(function(f,s){ //sort by names
                 return f.name < s.name;
             })
-            .size(this.packSize)
             .padding(1.5);
 
     };
@@ -59,6 +59,11 @@ define(['d3','underscore'],function(d3,_){
         console.log("CP registering data:",data.installed);
         //Reset the internally stored data
         this.baseData = _.values(data.installed);
+
+        //Setup the sizes of the bubble pack:
+        this.packSize = [this.hub.internalWidth,this.hub.internalHeight];
+        this.bubble.size(this.packSize);
+        
         //Clear the categories
         this.categories = {};
         
@@ -70,11 +75,10 @@ define(['d3','underscore'],function(d3,_){
         };
         
         //for every game
-        for(var i in this.baseData){
-            var game = this.baseData[i];
-	        if(game === null) {
-		        console.log("Game Null:",game,i);
-		        continue;
+        this.baseData.forEach(function(game){
+	        if(game === null || game['__tags'] === undefined) {
+		        //console.log("Game Null:",game.name);
+                return;
 	        }
             //copy the hours_forever as the value
             if(game['hours_forever']) {
@@ -86,9 +90,7 @@ define(['d3','underscore'],function(d3,_){
             this.categories['everything']['games'].push(game);
 
             //for every tag for every game
-            var tags = game['__tags'];
-            for(var i in tags){
-                var tag = tags[i];
+            game['__tags'].forEach(function(tag){
                 //setup a category to store all related games
                 //together
                 if(this.categories[tag] === undefined){
@@ -106,8 +108,8 @@ define(['d3','underscore'],function(d3,_){
                     //todo: this could be better
                     this.categories[tag]['value'] += 1;
                 }
-            }
-        }
+            },this);
+        },this);
 
         //update the everything category to have
         //the right value
@@ -132,7 +134,7 @@ define(['d3','underscore'],function(d3,_){
         this.drawResetButton();
         this.drawDataSwitch();
         
-        //Finished with reset button, draw the vis
+        //the main visualisation to be draw:
         var main = d3.select("#mainVisualisation");
         
         //Use passed in data, or default
@@ -153,20 +155,21 @@ define(['d3','underscore'],function(d3,_){
 
         //pack the data appropriately
         var packed_nodes = this.bubble.nodes({children:dataToUse});
-        
+
         packed_nodes = packed_nodes.filter(function(d,i){
             if(d['children']) return false;
             return true;
         });
 
-        //Get the max of the values:
+        //Get the max of the values of the nodes:
         var maxVal = d3.max(packed_nodes,function(d){
             return d.value;
         });
+        
         //scale the colours appropriately
         this.scaleToColours.domain([0,maxVal]);
         
-        //Bind the data to nodes
+        //Bind the data to nodes,with an adaptive key function
         var node = main.selectAll(".node")
             .data(packed_nodes,
                   function(d){
@@ -183,7 +186,7 @@ define(['d3','underscore'],function(d3,_){
                 return "Node" + d.name.replace(idRegex,'');
             })
             .attr("transform",function(d){
-                return "translate(" + (d.x)  +","+ d.y + ")";
+                return "translate(" + d.x  +","+ d.y + ")";
             })
             .on("mouseover",function(d){
                 cpInstance.highlightName(d);
@@ -192,30 +195,17 @@ define(['d3','underscore'],function(d3,_){
                 cpInstance.unhighlightName(d);
             })
             .on("click",function(d){
-                console.log(d.name);
+                console.log("Clicked: ",d.name);
                 //If there are games stored in the node (ie: its a category)
                 if(d.games && d.games.length > 0){
                     //draw the pack of games for that category
                     cpInstance.cleanUp();
                     cpInstance.draw(d.games);
                 }else{
+                    //no games in node, is a game.
                     console.log("Draw Details:",d.name);
                     cpInstance.cleanUp();
                     cpInstance.drawGame(d);
-                    //If there arent games, it is a game,
-                    //So send a start message  to the server?
-                    // var commandString = "";
-                    // commandString += "&command=startGame";
-                    // commandString += "&appid=";
-                    // commandString += d.appid;
-                    // var request = new XMLHttpRequest();
-                    // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    // request.setRequestHeader('Content-Length', urlEncodedData.length);
-                    // request.open("POST","",true);
-                    // request.send(commandString);
-                    // //or go back to drawing all categories
-                    // console.log("other");
-                    // cpInstance.draw(_.values(cpInstance.categories));
                 }
             });
 
@@ -227,7 +217,6 @@ define(['d3','underscore'],function(d3,_){
                 return cpInstance.oneOf20Colours(d.value);
             });
         //this.colours["lightBlue"]);
-        
 
         //transition all nodes up to their proper size
         node.selectAll("circle").transition()
