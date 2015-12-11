@@ -497,7 +497,7 @@ class MetaSteam:
         except Exception as e:
             logging.error("Exception: startGame: " + str(e))
         finally:
-            return false
+            return False
             
         
 

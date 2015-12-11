@@ -29,7 +29,7 @@ continueRunning = True
 @function close_server
 @purpose changes the global loop condition to stop the servers infinite loop
 '''
-def close_server(self):
+def close_server():
     logging.info( "Triggering Server Shutdown")
     global continueRunning
     continueRunning = False
@@ -39,7 +39,7 @@ def close_server(self):
 @purpose calls metasteam to start a game
 @param appid the game id to start
 '''
-def start_game(self,appid):
+def start_game(appid):
     logging.info( "Triggering Game Start")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.startGame(appid)
@@ -50,7 +50,7 @@ def start_game(self,appid):
 @function save_json
 @purpose calls metasteam to save modified json data about games
 '''
-def save_json(self):
+def save_json():
     logging.info( "Triggering Json Save")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.exportToJson()
@@ -62,7 +62,7 @@ def save_json(self):
 @param username compare the operator of metasteam to the specified user
 @todo
 '''
-def compare_to_user(self,username):
+def compare_to_user(username):
     logging.info( "TODO: allow comparison of user profiles")
     profileScraper = SteamProfileScraper(username)
     extractedInfo = profileScraper.scrape()
