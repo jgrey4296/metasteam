@@ -338,6 +338,7 @@ define(['d3','underscore'],function(d3,_){
        @TODO
      */
     CP.prototype.drawGame = function(game){
+        var cpRef = this;
         var singleGame = d3.select("#singleGame");
         if(!singleGame.empty()){
             singleGame.remove();
@@ -352,7 +353,11 @@ define(['d3','underscore'],function(d3,_){
             .style("fill","red")
             .attr("transform",
                   "translate(" + (this.packSize[0] * 0.5)
-                  + "," + (this.packSize[1] * 0.5) +")");
+                  + "," + (this.packSize[1] * 0.5) +")")
+            .on("click",function(d){
+                console.log(game);
+                cpRef.hub.sendStartMessageToServer(game.appid);
+            });
     };
 
     //--------------------
