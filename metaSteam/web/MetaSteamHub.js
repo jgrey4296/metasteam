@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','GenrePie'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie){
+define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation){
 
     var idRegex = /\W/g;
     
@@ -63,6 +63,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         this.registerButton("timeline",new MetaSteamTimeline(this));
         this.registerButton('UpdatedSincePlayed',new UpdatedSinceLastPlayed(this));
         this.registerButton('GenrePie', new GenrePie(this));
+        this.registerButton('Multiplayer', new MultiplayerVisualisation(this));
         //            {name:"timeline"},
         //          {name:"chord"},
         //        {name:"compare user"},
@@ -103,10 +104,13 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
     };
 
 
-    Hub.prototype.sendHowManyPlayingMessageToServer = function(appid,callback){
+    Hub.prototype.sendHowManyPlayingMessageToServer = function(appidArray,callback){
+        if(appidArray instanceof Array){
+            throw new Error("Checking how many playing takes an array");
+        }
         var commandString = "";
         commandString += "&command=" + "howManyPlaying";
-        commandString += '&value=' + appid;
+        commandString += '&value=' + JSON.stringify(appidArray);
         console.log("Message to send: " + commandString);
 
         this.sendMessageToServer(commandString,callback);

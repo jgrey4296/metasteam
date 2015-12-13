@@ -10,7 +10,7 @@ import urllib
 from bs4 import BeautifulSoup
 from jgUtility import *
 import logging
-
+import time
 
 steamReleaseDateRegex = re.compile(r"(\w{2,4})\s(\d{2,2}),\s(\d{4,4})")
 
@@ -42,16 +42,18 @@ class MultiplayerScaper:
     @purpose scrape the page for the specified game, by appid
     @returns extracted information as a dictionary
     '''
-    def scrape(self,appid):
-        logging.info("Scraping: " + str(appid))
-        gameUrl = self.baseUrl + str(appid)
-        extractedInfo = [[],[]]
-        
+    def scrape(self,appidArray):
+        allExtractions = []
+        logging.info("Scraping: " + str(appidArray))
+        for appid in appidArray:
+            gameUrl = self.baseUrl + str(appid)
             storeHtml = self.webRequest(gameUrl,{})
-            extractedInfo = self.storeExtraction(storeHtml)    
-        
+            numPlaying = self.numberPlayingExtraction(storeHtml)
+            allExtractions.append([appid,numPlaying])
+            time.sleep(20)
+            
         #["tags","releaseDate"]
-        return [appid,extractedInfo]
+        return allExtractions
 
     '''
     @class MultiplayerScraper
@@ -69,11 +71,11 @@ class MultiplayerScaper:
 
     '''
     @class MultiplayerScraper
-    @method storeExtraction
+    @method numberPlayingExtraction
     @purpose extract information from the store page html
     @returns array of tags,releasedate,description,review,dev,publisher
     '''
-    def storeExtraction(self,html):
+    def numberPlayingExtraction(self,html):
         soup = BeautifulSoup(html,"html.parser")
         extractedTags = []
         releaseDate = {}

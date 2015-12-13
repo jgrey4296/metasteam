@@ -70,10 +70,16 @@ def compare_to_user(username):
     return extractedInfo
     
 
-def howManyPlaying(appid):
-    mps = MultiplayerScraper()
-    extractedInfo = mps.scrape(appid)
-    return extractedInfo
+def howManyPlaying(appidArrayString):
+    extractedInfo = []
+    try:
+        appidArray = JSON.parse(appidArrayString)
+        mps = MultiplayerScraper()
+        extractedInfo = mps.scrape(appidArray)
+    except Exception as e:
+        logging.warn("Something went wrong with finding how many playing: " + str(e))
+    finally:
+        return extractedInfo
 
     
 '''
