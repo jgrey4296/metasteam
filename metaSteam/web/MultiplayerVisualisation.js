@@ -37,29 +37,34 @@ define(['d3','underscore'],function(d3,_){
        @method registerdata
     */
     Visualisation.prototype.registerData = function(data){
+        var vRef = this;
         console.log("Template: Registering Data");
         this.data = data;
                 
         var multiplayerGames = _.values(this.data.installed).map(function(game){
-            if(game.__tags && _.keys(game.__tags).join(" ").match(/multi[ -]?player/)){
+            if(game.__tags && game.__tags.join(" ").match(/[mM]ulti[ -]?[Pp]layer/)){
                 return game;
             }
+        }).filter(function(d){
+            if(d) return true;
+            return false;
         });
-
+        console.log("Multiplayer games:",multiplayerGames);
         var mpGameIds = multiplayerGames.map(function(d){
             return d.appid;
         });
-
+        console.log("mpGameIds:",mpGameIds);
+        
         this.resultData = mpGameIds.map(function(d){
             return {
                 "id" : d,
-                "name" : this.data[d].name,
+                "name" : vRef.data.installed[d].name,
                 "value" : 0
             };
-        },this);
+        });
+        console.log("result data:",this.resultData);
 
 
-        var vRef = this;
         this.hub.sendHowManyPlayingMessageToServer(mpGameIds,function(result){
             console.log("Result of how many playing: ",result);
             vRef.resultData = result.map(function(d){
@@ -86,14 +91,15 @@ define(['d3','underscore'],function(d3,_){
        @method draw
      */
     Visualisation.prototype.draw = function(){
-        console.log("Template: Drawing");
+        console.log("Template: Drawing:",this.resultData);
         var mpVis = d3.select("#mainVisualisation").append("g")
             .attr("id","multiplayervisualisation");
         
-        var gs = mpVis.selectAll("g").data(this.resultData)
-            .enter().append("g")
+        var bound = mpVis.selectAll("g").data(this.resultData);
+
+        var gs = bound.enter().append("g")
             .attr("transform",function(d,i){
-                "translate(30," + (i * 30) + ")";
+                return "translate(30," + (i * 30) + ")";
             });
 
         gs.append("rect")

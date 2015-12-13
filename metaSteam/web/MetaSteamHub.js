@@ -105,7 +105,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
 
 
     Hub.prototype.sendHowManyPlayingMessageToServer = function(appidArray,callback){
-        if(appidArray instanceof Array){
+        if(!appidArray instanceof Array){
             throw new Error("Checking how many playing takes an array");
         }
         var commandString = "";
@@ -137,10 +137,15 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         request.onreadystatechange = function(){
             if(request.readyState === 4){
                 var result = request.responseText;
-                var resultJson = JSON.parse(result)
-                console.log("XML Response:",resultJson);
-                if(callback && typeof callback === 'function'){
-                    callback(resultJson);
+                console.log("Unparsed result: ",result);
+                try{
+                    var resultJson = JSON.parse(result)
+                    console.log("XML Response:",resultJson);
+                    if(callback && typeof callback === 'function'){
+                        callback(resultJson);
+                    }
+                }catch(e){
+                    console.error("Skipping result processing: ",e);
                 }
             }
         };
