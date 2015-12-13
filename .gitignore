@@ -6,6 +6,7 @@ latex/
 metaSteam/build
 *.zip
 metaSteam/data
+metaSteam/logs
 *~
 metaSteam/dist
 dist

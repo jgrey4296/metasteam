@@ -30,7 +30,7 @@ continueRunning = True
 @function close_server
 @purpose changes the global loop condition to stop the servers infinite loop
 '''
-def close_server(self):
+def close_server():
     logging.info( "Triggering Server Shutdown")
     global continueRunning
     continueRunning = False
@@ -40,7 +40,7 @@ def close_server(self):
 @purpose calls metasteam to start a game
 @param appid the game id to start
 '''
-def start_game(self,appid):
+def start_game(appid):
     logging.info( "Triggering Game Start")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.startGame(appid)
