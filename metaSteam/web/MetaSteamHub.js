@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation){
+define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation){
 
     var idRegex = /\W/g;
     
@@ -60,10 +60,13 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
          */
         this.registerButton("Hub",this);
         this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
-        this.registerButton("timeline",new MetaSteamTimeline(this));
-        this.registerButton('UpdatedSincePlayed',new UpdatedSinceLastPlayed(this));
+        this.registerButton("Timeline",new MetaSteamTimeline(this));
+        this.registerButton('Updated/Played',new UpdatedSinceLastPlayed(this));
         this.registerButton('GenrePie', new GenrePie(this));
         this.registerButton('Multiplayer', new MultiplayerVisualisation(this));
+        this.registerButton('Calendar',new CalendarVisualisation(this));
+        this.registerButton('Tag Matrix',new CoOccurrenceMatrix(this));
+        this.registerButton('Search', new TemplateVisualisation(this));
         //            {name:"timeline"},
         //          {name:"chord"},
         //        {name:"compare user"},
