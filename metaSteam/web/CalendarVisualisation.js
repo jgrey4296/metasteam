@@ -6,7 +6,7 @@
    @requiredMethod cleanUp
 */
 
-define(['d3','underscore'],function(d3,_){
+define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
 
     /**The main class
        @class CalendarVisualisation
@@ -46,6 +46,20 @@ define(['d3','underscore'],function(d3,_){
         console.log("Template: Registering Data");
         this.data = data;
 
+        //if the data doesnt contain play data, generate it:
+        var gameKeys = data.profile.reduce(function(m,game){
+            _.keys(game).forEach(function(k){
+                if(!m.has(k)) m.add(k);
+            });
+            return m;
+        },new Set());
+
+        //If theres no play history data, make it up for the moment:
+        if(!gameKeys.has('__playHistory')){
+            alert("Generating play data because none exists");
+            this.data.profile = genData(this.data.profile);
+        }
+        
         //group all games in your profile by the dates played
         this.groupedByDate = this.groupByDate(this.data.profile);
         console.log("Grouped By Date: ",this.groupedByDate);
