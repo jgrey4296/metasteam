@@ -91,7 +91,7 @@ postCommands = {
     'startGame': start_game,
     'saveJson':save_json,
     'compare' :compare_to_user,
-    'howmManyPlaying' : howManyPlaying
+    'howManyPlaying' : howManyPlaying
     }
 
 '''

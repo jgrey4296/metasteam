@@ -113,7 +113,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         }
         var commandString = "";
         commandString += "&command=" + "howManyPlaying";
-        commandString += '&value=' + JSON.stringify(appidArray);
+        commandString += "&value=" + JSON.stringify(appidArray);
         console.log("Message to send: " + commandString);
 
         this.sendMessageToServer(commandString,callback);
