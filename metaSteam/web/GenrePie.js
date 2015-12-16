@@ -90,9 +90,11 @@ define(['d3','underscore'],function(d3,_){
             }
         });
 
-        this.data = _.values(genresData).filter(function(d){
+        this.data = _.values(genresData).sort(function(a,b){
+            return b.value - a.value;
+        }).filter(function(d){
             return d.value > 0;
-        });
+        }).slice(0,40);
         console.log("Genres Data:",this.data);
         
         this.pieData = this.pie(this.data);
