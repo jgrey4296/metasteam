@@ -46,7 +46,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         //Storage For buttons:
         this.buttons = {};
         this.buttonHeight = 60;
-        this.button_X_Offset = this.internalWidth * 0.1;
+        this.button_X_Offset = this.internalWidth * 0.05;
         this.button_Y_Offset = 10;
 
         //An additional offset to the main visualisation for clarity purposes
@@ -72,7 +72,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         //        {name:"compare user"},
         
         //Button header details:
-        this.buttonWidth = (this.internalWidth * 0.8) / _.values(this.buttons).length;
+        this.buttonWidth = (this.internalWidth * 0.9) / _.values(this.buttons).length;
         
         //Store for use in circlepack/other vis:
         d3.select("head").append("g")
