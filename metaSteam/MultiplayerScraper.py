@@ -18,7 +18,7 @@ steamReleaseDateRegex = re.compile(r"(\w{2,4})\s(\d{2,2}),\s(\d{4,4})")
 @class MultiplayerScraper
 @purpose Scrapes the steam community page for number of players for a game
 '''
-class MultiplayerScaper:
+class MultiplayerScraper:
 
     html = ""
     
