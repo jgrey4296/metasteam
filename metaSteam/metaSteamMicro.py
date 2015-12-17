@@ -449,7 +449,7 @@ class MetaSteam:
                 scrapedGames.append(game['name'])
                 time.sleep(waitTime)
                 
-            logging.info( "Have scanned all games for this run: " + " ".join(len(scrapedGames)))
+            logging.info( "Have scanned all games for this run: " + str(len(scrapedGames)))
         except Exception as e:
             logging.error("Exception: getInfoForAllGames: " + str(e))
         finally:

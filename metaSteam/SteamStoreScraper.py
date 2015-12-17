@@ -111,6 +111,7 @@ class SteamStoreScraper:
 
         tempTags = []
         for tag in allTags:
+            #todo: re.replace(r"[\\n\\t, ]","",tag.string.strip())
             tempTags.append(get_unicode(tag.string.strip()))
             logging.info( "	Found Tag: " + tag.string.strip())
 
@@ -150,12 +151,11 @@ class SteamStoreScraper:
         developer = ""
         try:
             block = soup.find_all(class_="block_content_inner")[0].findAll(text=True)
-            for x in block:
-                curr = block[x]
-                if curr == u'Publisher:':
-                    publisher = block[x+2]
+            for i,x in enumerate(block):
+                if x == u'Publisher:':
+                    publisher = block[i+2]
                 if curr == u'Developer:':
-                    developer = block[x+2]
+                    developer = block[i+2]
         except Exception:
             logging.warn( "Failure in pub/dev detection")
             
