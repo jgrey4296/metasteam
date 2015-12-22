@@ -454,7 +454,7 @@ define(['d3','underscore'],function(d3,_){
        @callback
      */
     CP.prototype.highlightName = function(d){
-
+        var cpRef = this;
         //Highlight the equivalent name:
         d3.selectAll("#name_"
                   + d.name.replace(idRegex,""))
@@ -474,20 +474,13 @@ define(['d3','underscore'],function(d3,_){
             });
 
         //Colour the circle:
-        var nodeId = "#Node" + d.name.replace(idRegex,"");
-        d3.select(nodeId)
-            .select("circle")
+        d3.selectAll(".node").selectAll("circle")
             .transition()
-            .style("fill","red");
-        //cpInstance.colours["green"]);
-
-        //select all other nodes
-        //and reduce opacity
-        d3.selectAll(".nodes").filter(function(a){
-            if (d.name === a.name) return false;
-            return true;
-        }).transition()
-            .style("opacity",0.3);
+            .style("fill",function(e){
+                if(e.name !== d.name) return "grey";
+                return cpRef.oneOf20Colours(e.value);
+                
+            });
         
     };
 
@@ -497,6 +490,7 @@ define(['d3','underscore'],function(d3,_){
        @purpose removes a highlighted name and its effects
      */
     CP.prototype.unhighlightName = function(d){
+        var cpRef = this;
         //recolour the text
         //ternary
         d3.selectAll("#name_"+d.name.replace(idRegex,""))
@@ -510,17 +504,12 @@ define(['d3','underscore'],function(d3,_){
             .text("");
         
         //Return the colour:
-        var nodeId = "#Node" + d.name.replace(idRegex,"");
-        d3.select(nodeId)
-            .select("circle")
+        d3.selectAll(".node").selectAll("circle")
             .transition()
-            .style("fill",
-                   this.oneOf20Colours(d.value));
-
-        //return the opacity
-        d3.selectAll(".nodes")
-            .transition()
-            .style("opacity",1);
+            .style("fill",function(e){
+                return cpRef.oneOf20Colours(e.value);
+            });
+        
     };
     
     return CP;
