@@ -18,6 +18,11 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         this.height = this.hub.internalHeight;
         this.colours = this.hub.colours;
 
+        this.helpText = [
+            "Calendar visualisation"
+
+        ];
+        
         //Colours scaling
         this.scaleToColours = d3.scale.linear()
             .domain([0,100])

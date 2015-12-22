@@ -14,6 +14,12 @@ define(['d3','underscore'],function(d3,_){
     var Timeline = function(hub){
         this.hub = hub;
         this.colours = this.hub.colours;
+
+        this.helpText = [
+            "Timeline visualisation"
+
+        ];
+        
         //Time format:
         this.timeFormat = d3.time.format("%b %e, %Y");
         //console.log("Time format test:",this.timeFormat.parse("May 12, 2012"));

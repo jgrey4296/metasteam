@@ -18,6 +18,13 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         console.log("Creating MetaSteam Hub");
         var hubReference = this;
 
+        this.helpText = [
+            "MetaSteam:",
+            "A server and web visualisation to provide easier access to unmanageable game libraries."
+
+        ];
+
+        
         //Stored Colours:
         this.colours = {
             grey : d3.rgb(19,21,27),
@@ -50,15 +57,19 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         this.button_Y_Offset = 10;
 
         //An additional offset to the main visualisation for clarity purposes
+        this.padding = 20;
         this.mainVisualisationOffset = 20;
+
+        //the size of the header:
+        this.headerHeight = this.mainVisualisationOffset + this.button_Y_Offset + this.buttonHeight;
         
         //Internal Height:
-        this.internalHeight = this.svgHeight - (this.mainVisualisationOffset + this.button_Y_Offset + this.buttonHeight);
+        this.internalHeight = this.svgHeight - (this.headerHeight + this.padding);
 
         /**
            ADD ADDITIONAL MODES HERE:
          */
-        this.registerButton("Hub",this);
+        this.registerButton("Hub",this,true);
         this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
         this.registerButton("Timeline",new MetaSteamTimeline(this));
         this.registerButton('Updated/Played',new UpdatedSinceLastPlayed(this));
@@ -75,10 +86,10 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         this.buttonWidth = (this.internalWidth * 0.9) / _.values(this.buttons).length;
         
         //Store for use in circlepack/other vis:
-        d3.select("head").append("g")
-            .attr("id","globalVars")
-            .attr("sideBarWidth",this.sideBarWidth)
-            .attr("internalWidth",this.internalWidth);
+        // d3.select("head").append("g")
+        //     .attr("id","globalVars")
+        //     .attr("sideBarWidth",this.sideBarWidth)
+        //     .attr("internalWidth",this.internalWidth);
         
         //Reusable Scale for graph drawing
         this.scale = d3.scale.linear();
@@ -165,8 +176,10 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
        @method registerButton
        @purpose ensure a class has the required methods before adding it to the buttons object
        @note the buttons object is automatically turned into buttons in method:draw.
+       @param selected a boolean to annotate an entry for the initally selected button
      */
-    Hub.prototype.registerButton = function(name,instance){
+    Hub.prototype.registerButton = function(name,instance,selected){
+        if(selected === undefined) selected = false;
         console.log("Registering button: ",name);
         if(! instance.cleanUp){
             throw new Error("Button instance with no cleanUp Method: " + name);
@@ -177,7 +190,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         if(! instance.registerData){
             throw new Error("Button instance with no registerData Method " + name)
         }
-        this.buttons[name] = {"name":name,"value":instance};
+        this.buttons[name] = {"name":name,"value":instance,"selected": selected};
     };
     
     /**
@@ -187,8 +200,12 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
        @note mainly the general stats, and any buttons
      */
     Hub.prototype.cleanUp = function(){
+        //cleanup the hub:
         d3.select("#generalStats").remove();
+
+        //cleanup everything else:
         _.keys(this.buttons).forEach(function(d){
+            //skip hub, as its already been cleaned
             if(d === "Hub") return;
             this.buttons[d].value.cleanUp();
         },this);
@@ -206,13 +223,13 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         //Reference for use in d3 callbacks
         var hubReference = this;
         //Setup the svg
-        var body = d3.select('body').append('svg')
+        var svg = d3.select('body').append('svg')
             .attr('id','mainsvg')
             .attr('height',this.svgHeight)
             .attr('width',this.svgWidth);
 
 
-        body.append("rect")
+        svg.append("rect")
             .attr("width",this.svgWidth)
             .attr("height",this.svgHeight)
             .style("fill",this.colours["grey"]);
@@ -239,6 +256,15 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
             .attr("rx",5)
             .attr("ry",5)
             .style("fill",this.colours["darkBlue"]);
+        
+        
+        d3.select("#mainsvg")
+	        .append("g")
+	        .attr("id","mainVisualisation")
+            .attr("transform",
+                  "translate("
+                  + this.sideBarWidth + "," + (this.button_Y_Offset + this.buttonHeight + this.mainVisualisationOffset) + ")")
+            .attr("width",this.sideBarWidth);
 
         //Draw the Header bar:
         var header = d3.select("#mainsvg").append("g")
@@ -247,10 +273,17 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
                   "translate(" +
                   (this.sideBarWidth + 20) + ",0)");
 
+        header.append("rect")
+            .attr("width",this.internalWidth - 40)
+            .attr("height",this.headerHeight)
+            .attr("rx",5)
+            .attr("ry",5)
+            .style("fill",this.colours.darkerBlue);
+
         var gameTitle = header.append("g")
             .attr("id","gameTitle")
             .attr("transform","translate("
-                  + (this.internalWidth * 0.5) + ",100)");
+                  + (this.internalWidth * 0.5) + "," + (this.headerHeigth + 20) + ")");
 
         gameTitle.append("text")
             .attr("id","gameTitleMainText")
@@ -265,19 +298,6 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
             .style("text-anchor","middle")
             .attr("transform","translate(0,30)");
         
-        header.append("rect")
-            .attr("width",this.internalWidth - 40)
-            .attr("height",80)
-            .attr("rx",5)
-            .attr("ry",5);
-
-        d3.select("#mainsvg")
-	        .append("g")
-	        .attr("id","mainVisualisation")
-            .attr("transform",
-                  "translate("
-                  + this.sideBarWidth + "," + (this.button_Y_Offset + this.buttonHeight + this.mainVisualisationOffset) + ")")
-            .attr("width",this.sideBarWidth);
     };
 
     /**
@@ -297,12 +317,12 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
        @note ie: buttons, sidebars, graphs.
      */
     Hub.prototype.draw = function(){
-
+        var hubRef = this;
         //Draw Button to clear and draw circlepack:
         //Draw Button to clear and draw timeline mockup
         //Draw button for chord diagram
         this.drawButtons(_.values(this.buttons));
-        
+        var sections = ["About","Installed","Played","Scraped"];        
         //If there is data to draw, create
         //the general statistics view
         if(this.data){
@@ -310,92 +330,35 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
             //Create if doesnt exist, otherwise just retrieve
             if(d3.select("svg").select("#generalStats").empty()){
                 //domRoot->svg->genStats->[each child stat]
-                var genStats = d3.select("svg").append("g").attr("id","generalStats")
-                    .attr("transform","translate("+
-                          (this.sideBarWidth + 20) + ",0)");
-
-                genStats.append("g").attr("id","playedGames")
-                    .attr("transform","translate(0,"
-                          + (this.svgHeight * 0.1) + ")");
-                genStats.append("g").attr("id","scraped")
-                    .attr("transform","translate(0," + (this.svgHeight * 0.4) + ")");
-                genStats.append("g").attr("id","installed")
-                    .attr("transform","translate(0," + (this.svgHeight * 0.7) + ")");
+                var genStats = d3.select("#mainVisualisation").append("g").attr("id","generalStats");
 
                 //Aim for this width for the stat bars
-                var aimWidth = this.internalWidth - 40;
-                //Create a rectance to backdrop each stat
-                d3.select("#playedGames").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25)
-                    .attr("rx",5)
-                    .attr("ry",5);
+                var aimWidth = this.internalWidth - (this.padding * 2);
+                var sectionHeight = (this.internalHeight / sections.length) - this.padding;
+                
+                var bound = genStats.selectAll(".section").data(sections);
+                var enterSelection = bound.enter().append("g").classed("section",true)
+                    .attr("id",function(d){ return d; })
+                    .attr("transform",function(d,i){
+                        return "translate(" + hubRef.padding + "," + (hubRef.padding + ((hubRef.internalHeight / sections.length) * i)) + ")";
+                    });
 
-                d3.select("#scraped").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25)
+                enterSelection.append("rect")
+                    .attr("width",aimWidth)
+                    .attr("height",sectionHeight)
                     .attr("rx",5)
-                    .attr("ry",5);
-
-                d3.select("#installed").append("rect").attr("width",aimWidth).attr("height",this.svgHeight * 0.25)
-                    .attr("rx",5)
-                    .attr("ry",5);
-            }else{
-                var genStats = d3.select("#generalStats");
+                    .attr("ry",5)
+                    .style("fill",this.colours.darkerBlue);
             }
 
-            //Draw graphs for each of the three sections
-            var playedData = [{
-                    name:"played",
-                    games:{},
-                },{
-                    name:"not played",
-                    games: {},
-                }];
-            //Draw Games Installed
-            var scannedData = [{
-                    name: "Scanned",
-                    games: {},
-                },{
-                    name: "Not Scanned",
-                    games : {},
-                }];
-
-            //Create the data:
-            var installedData = [{
-                name: "Installed",
-                games: {},
-            },{
-                name: "UnInstalled",
-                games: {},
-            }];
-            
-            //Get All installed Games
-            _.values(this.data.installed).forEach(function(game){
-                if(game.__Installed){
-                    installedData[0].games[game.appid] = game;
-                }else{
-                    installedData[1].games[game.appid] = game;
-                }
-                if(game.__scraped){
-                    scannedData[0].games[game.appid] = game;
-                }else{
-                    scannedData[1].games[game.appid] = game;
-                }
-            });
-            //Get All Not installed games:
-            this.data.profile.forEach(function(game){
-                if(installedData[0].games[game.appid] === undefined){
-                    installedData[1].games[game.appid] = game;
-                }
-                if(game.last_played === undefined
-                   || game.hours_forever < 2.0){
-                    playedData[1].games[game.appid] = game;
-                }else{
-                    playedData[0].games[game.appid] = game;
-                }
-            });
-            
             //Draw the installed/not installed bar chart
-            this.drawGraph("InstalledGames",d3.select("#installed"),installedData);
-            this.drawGraph("ScrapedGames",d3.select("#scraped"),scannedData);
-            this.drawGraph("PlayedGames",d3.select("#playedGames"),playedData);
+            var statData = this.getStats();
+            console.log("Stat Data:",statData);
+            this.drawGraph("InstalledGames",d3.select("#Installed"),statData.installed);
+            this.drawGraph("ScrapedGames",d3.select("#Scraped"),statData.scraped);
+            this.drawGraph("PlayedGames",d3.select("#Played"),statData.played);
+
+            this.drawText(this.helpText,d3.select("#About"),sectionHeight);
         }
     };
 
@@ -494,6 +457,19 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
             .on("click",function(d){
                 console.log("Clicked on:",d.name,d.id);
                 if(hubRef.buttons[d.name]){
+                    //set the selected state:
+                    _.values(hubRef.buttons).forEach(function(e){
+                        e.selected = false;
+                    });
+                    d.selected = true;
+                    
+                    d3.selectAll(".button").selectAll("rect").style("fill",function(e){
+                        if(e.selected){
+                            return hubRef.colours.green;
+                        }
+                        return hubRef.colours.lightBlue;
+                    });
+
                     //Clean up
                     hubRef.cleanUp();
                     //register data
@@ -508,18 +484,54 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
                 //console.log("mouseover button: ",d.name);
                 d3.select(("#button_" + d.id)).select("rect").transition()
                     .style("fill",hubRef.colours["green"]);
+
+                //todo:
+                //draw a help window, explaining what the visualisation for the button does
+                var help = d3.select("#help");
+                if(help.empty()){
+                    help = d3.select("#headerBar").append("g").attr("id","help")
+                    .attr("transform","translate(0,100)");
+                          
+                    help.append("rect")
+                        .attr("height",200)
+                        .style("fill","grey")
+                        .attr("width",hubRef.internalWidth - (hubRef.padding * 2));
+
+                    var bound = help.selectAll("text").data(d.value.helpText);
+                    bound.enter().append("text")
+                        .style("text-anchor","middle")
+                        .style("fill","black")
+                        .text(function(e) { return e; })
+                        .attr("transform",function(e,i){
+                            return "translate(" + ((hubRef.internalWidth - (hubRef.padding * 2)) * 0.5) + "," + (20 + (i * 20))+ ")";
+                        });
+                    
+                }
+                
             })
             .on("mouseout",function(d){
                 //on mouseout, return the button to orig colour
                 d3.select(("#button_" + d.id)).select("rect").transition()
-                    .style("fill",hubRef.colours["lightBlue"]);
+                    .style("fill",function(e){
+                        if(e.selected) return  hubRef.colours.green;
+                        return hubRef.colours.lightBlue;
+                    });
+
+                var help = d3.select("#help");
+                if(!help.empty()){
+                    help.remove();
+                }
+                
             });
 
         //draw the button 
         newGroups.append("rect")
             .attr("width",buttonWidth - 5)
             .attr("height",hubRef.buttonHeight)
-            .style("fill",this.colours["lightBlue"]);
+            .style("fill",function(e){
+                if(e.selected) return hubRef.colours.green;
+                return hubRef.colours.lightBlue;
+            });
         
         newGroups.append("text")
             .text(function(d){
@@ -530,5 +542,55 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
             .style("fill",this.colours["textBlue"]);
         
     };
+
+    Hub.prototype.getStats = function(){
+        //Draw graphs for each of the three sections
+        var returnData = {
+            "installed" : [{name:"Installed", games: {}},{name:"Not Installed",games:{}}],
+            "scraped" : [{name:"Scraped",games:{}},{name:"Not Scraped",games:{}}],
+            "played" : [{name:"Played",games:{}},{name:"Not Played",games:{}}]
+        };
+
+        _.values(this.data.installed).forEach(function(game){
+            if(game.__Installed) { this.installed[0].games[game.appid] = game;}
+            else { this.installed[1].games[game.appid] = game; }
+
+            if(game.__scraped){ this.scraped[0].games[game.appid] = game; }
+            else { this.scraped[1].games[game.appid] = game; }
+        },returnData);
+        
+        this.data.profile.forEach(function(game){
+            if(this.installed[0].games[game.appid] === undefined
+              && this.installed[1].games[game.appid] === undefined){
+                this.installed[1].games[game.appid] = game;
+            }
+            if(game.last_played === undefined
+               || game.hours_forever < 2.0){
+                this.played[1].games[game.appid] = game;
+            }else{
+                this.played[0].games[game.appid] = game;
+            }
+        },returnData);
+
+        return returnData;
+    };
+
+    Hub.prototype.drawText = function(text,domGroup,height){
+        var hubRef = this;
+        //preprocess text:
+        
+        var bound = domGroup.selectAll("text").data(text);
+        bound.enter().append("text")
+            .text(function(d){ return d; })
+            .style("text-anchor","middle")
+            .attr("transform",function(d,i){
+                return "translate(" + (hubRef.internalWidth * 0.5) + ","
+                    + (20 + (i * 20))  + ")"
+            })
+            .style("fill","white");
+
+    };
+
+    
     return Hub;
 });

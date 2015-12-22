@@ -18,9 +18,13 @@ define(['d3','underscore'],function(d3,_){
         this.width = this.hub.internalWidth;
         this.height = this.hub.internalHeight;
         this.radius = Math.min(this.width,this.height)/2;
-        
         this.colours = this.hub.colours;
 
+        this.helpText = [
+            "Pie chart of Tags"
+
+        ];
+        
         //Colours scaling
         this.scaleToColours = d3.scale.linear()
             .domain([0,100])

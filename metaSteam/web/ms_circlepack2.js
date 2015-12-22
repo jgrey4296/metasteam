@@ -16,6 +16,12 @@ define(['d3','underscore'],function(d3,_){
         //save the passed in colour dictionary
         this.colours = this.hub.colours;;
 
+        //help text array:
+        this.helpText = [
+            "Circle pack of tags visualisation"
+        ];
+
+        
         //Colours scales:
         //from the domain to the range of 20,
         //for converting to colour

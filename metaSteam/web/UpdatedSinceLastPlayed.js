@@ -16,6 +16,11 @@ define(['d3','underscore'],function(d3,_){
         this.height = this.hub.internalHeight;
         this.colours = this.hub.colours;
 
+        this.helpText = [
+            "Updated since last played visualisation"
+
+        ];
+        
         //Colours scaling
         this.scaleToColours = d3.scale.linear()
             .domain([0,100])
