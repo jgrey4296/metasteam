@@ -19,7 +19,10 @@ define(['d3','underscore'],function(d3,_){
         this.colours = this.hub.colours;
 
         this.helpText = [
-            "Cooccurrence matrix of tags"
+            "Cooccurrence matrix of tags",
+            "WILL LAG THE WEB PAGE",
+            "Displays a co-occurrence matrix of ALL tags for INSTALLED games",
+            "This gets big"
 
         ];
         

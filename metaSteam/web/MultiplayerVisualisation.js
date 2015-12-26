@@ -19,7 +19,11 @@ define(['d3','underscore'],function(d3,_){
         this.colours = this.hub.colours;
 
         this.helpText = [
-            "Multiplayer visualisation"
+            "Multiplayer visualisation",
+            "Calls a query on the MetaSteam Server",
+            "requesting the number of players Steam says are playing each multiplayer tagged INSTALLED game",
+            "Sorts the games from highest number of players to lowest",
+            "The request may take some time",
 
         ];
         
@@ -104,7 +108,7 @@ define(['d3','underscore'],function(d3,_){
 
         var gs = bound.enter().append("g")
             .attr("transform",function(d,i){
-                return "translate(30," + (i * 30) + ")";
+                return "translate(30," + (20 + (i * 30)) + ")";
             });
 
         gs.append("rect")

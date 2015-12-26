@@ -19,7 +19,9 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         this.colours = this.hub.colours;
 
         this.helpText = [
-            "Calendar visualisation"
+            "Calendar visualisation",
+            "Uses MADE UP DATA (because steam doesnt track it)",
+            "Draws a year at a time, showing when each game was played"
 
         ];
         

@@ -21,7 +21,8 @@ define(['d3','underscore'],function(d3,_){
         this.colours = this.hub.colours;
 
         this.helpText = [
-            "Pie chart of Tags"
+            "Pie chart of Tags",
+            "Displays the top 40 tags, by cumulative hours played of games that have that tag"
 
         ];
         

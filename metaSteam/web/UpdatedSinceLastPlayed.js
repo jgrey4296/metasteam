@@ -17,7 +17,11 @@ define(['d3','underscore'],function(d3,_){
         this.colours = this.hub.colours;
 
         this.helpText = [
-            "Updated since last played visualisation"
+            "Updated since last played visualisation",
+            "Shows INSTALLED games that have a more recent update date",
+            "than last played date",
+            "Games are sorted from most to least played"
+            
 
         ];
         
@@ -86,6 +90,8 @@ define(['d3','underscore'],function(d3,_){
     Visualisation.prototype.draw = function(){
         console.log("Template: Drawing");
 
+        //todo: split into columns
+        
         var list = d3.select("#mainVisualisation").append("g")
             .attr("id","updatedSinceLastPlayedList");
 
@@ -94,7 +100,7 @@ define(['d3','underscore'],function(d3,_){
         var indGame = boundList.enter().append("g")
             .classed("game",true)
             .attr("transform",function(d,i){
-                return "translate( " + 100 + "," + (i * 35)  + ")";
+                return "translate( " + 100 + "," + (20 + (i * 35))  + ")";
             });
 
         indGame.append("rect")

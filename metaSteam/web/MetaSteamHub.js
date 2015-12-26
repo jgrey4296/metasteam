@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation'],function(d3,_,MetaSteamCirclePack,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation){
+define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation','CirclePack3'],function(d3,_,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation,CirclePack3){
 
     var idRegex = /\W/g;
     
@@ -20,8 +20,13 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
 
         this.helpText = [
             "MetaSteam:",
-            "A server and web visualisation to provide easier access to unmanageable game libraries."
-
+            "A server and web visualisation to provide easier access to unmanageable game libraries.",
+            "Buttons at the top of the screen provide different visualisations of your steam library.",
+            "",
+            "The hub displays proportions of:",
+            "Installed vs Not Installed games",
+            "Played (hours played > 1) vs Not Played games",
+            "Scraped (web information retrieved) vs Not Scraped games"
         ];
 
         
@@ -70,7 +75,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
            ADD ADDITIONAL MODES HERE:
          */
         this.registerButton("Hub",this,true);
-        this.registerButton("Circle Pack",new MetaSteamCirclePack(this));
+        this.registerButton('Circle Pack',new CirclePack3(this));
         this.registerButton("Timeline",new MetaSteamTimeline(this));
         this.registerButton('Updated/Played',new UpdatedSinceLastPlayed(this));
         this.registerButton('GenrePie', new GenrePie(this));
@@ -78,6 +83,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         this.registerButton('Calendar',new CalendarVisualisation(this));
         this.registerButton('Tag Matrix',new CoOccurrenceMatrix(this));
         this.registerButton('Search', new TemplateVisualisation(this));
+
         //            {name:"timeline"},
         //          {name:"chord"},
         //        {name:"compare user"},
@@ -283,7 +289,7 @@ define(['d3','underscore','msCirclePack','msTimeline','UpdatedSinceLastPlayed','
         var gameTitle = header.append("g")
             .attr("id","gameTitle")
             .attr("transform","translate("
-                  + (this.internalWidth * 0.5) + "," + (this.headerHeigth + 20) + ")");
+                  + (this.internalWidth * 0.5) + "," + (this.headerHeight + 20) + ")");
 
         gameTitle.append("text")
             .attr("id","gameTitleMainText")

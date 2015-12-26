@@ -10,7 +10,6 @@ require.config({
         baseUrl : 'web',
         underscore:"libs/underscore",
         d3:"libs/d3.min",
-        msCirclePack:'ms_circlepack2',
         msTimeline:'MetaSteamTimeline',
         
     },

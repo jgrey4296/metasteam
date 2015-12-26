@@ -16,8 +16,9 @@ define(['d3','underscore'],function(d3,_){
         this.colours = this.hub.colours;
 
         this.helpText = [
-            "Timeline visualisation"
-
+            "Timeline visualisation",
+            "Displays INSTALLED games on a timeline of when they were released",
+            "Height of bars shows how much each game has been played"
         ];
         
         //Time format:
