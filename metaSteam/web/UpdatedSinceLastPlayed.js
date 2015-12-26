@@ -95,7 +95,7 @@ define(['d3','underscore'],function(d3,_){
         var list = d3.select("#mainVisualisation").append("g")
             .attr("id","updatedSinceLastPlayedList");
 
-        var boundList = list.selectAll("g").data(this.data);
+        var boundList = list.selectAll("g").data(this.data.slice(0,20));
         
         var indGame = boundList.enter().append("g")
             .classed("game",true)

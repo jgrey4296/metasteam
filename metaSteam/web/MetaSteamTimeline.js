@@ -25,11 +25,9 @@ define(['d3','underscore'],function(d3,_){
         this.timeFormat = d3.time.format("%b %e, %Y");
         //console.log("Time format test:",this.timeFormat.parse("May 12, 2012"));
         this.x_offset = 20;
-        /**
-           @IMPORTANT UPDATE ALL OF THESE IN REGISTER DATA FOR LATEST VALUES:
-        */
-        this.width = 1; 
-        this.height = 1;
+
+        this.width = this.hub.internalWidth;
+        this.height = this.hub.internalHeight;
         //Time scale:
         this.timeScale = d3.time.scale();//.range([0,this.width]);
         //console.log(this.timeScale(this.timeFormat.parse("May 12,2012")));
@@ -39,6 +37,12 @@ define(['d3','underscore'],function(d3,_){
         this.playScale = d3.scale.log()
             //.range([0,this.height * 0.5]);
 
+        //updating the scale and axis:
+        this.timeScale.range([0,(this.width-(2 * this.x_offset))]);
+        this.axis.scale(this.timeScale);
+        this.playScale.range([0,this.height * 0.5]);
+
+        
         //--------------------
         
         //Colours scaling
@@ -61,15 +65,6 @@ define(['d3','underscore'],function(d3,_){
     */
     Timeline.prototype.registerData = function(data){
         this.data = data;
-        this.width = this.hub.internalWidth;
-        this.height = this.hub.internalHeight;
-        //updating the scale and axis:
-        this.timeScale.range([0,(this.width-(2 * this.x_offset))]);
-        this.axis.scale(this.timeScale);
-        this.playScale.range([0,this.height * 0.5]);
-        
-        console.log("Width and height:",this.width,this.height);
-        
         var releaseDates = [];
 
         //copy over hours_forever from profile
@@ -107,10 +102,13 @@ define(['d3','underscore'],function(d3,_){
         //Setup scaleToColours for size on disk
         var sizeExtent = d3.extent(
             _.values(data.installed),function(d){
-                return Number(d.SizeOnDisk);
+                if(Number(d.SizeOnDisk) > 0){
+                    return Number(d.SizeOnDisk);
+                }
             });
-        
-        this.scaleToColours.domain(sizeExtent);
+
+        console.log("size extent",sizeExtent);
+        //this.scaleToColours.domain(sizeExtent);
 
         //get the date last played for each game, and the extent:
         var tlRef = this;
@@ -144,24 +142,21 @@ define(['d3','underscore'],function(d3,_){
         tlRef = this;
         this.drawAxes();
 
-        //Bind the data
         var games = _.values(this.data.installed).filter(function(d){
             if(d["_parsedReleaseDate"]) return true;
             return false;
         });
 
-        var gameData = d3.select("#mainVisualisation").append("g")
+        //Bind the data
+        var bound = d3.select("#mainVisualisation").append("g")
             .attr("id","gameData").selectAll(".indGame")
             .data(games,function(d){return d.appid;});
 
-        gameData.exit().remove();
+        bound.exit().remove();
 
         //Draw the individual games
-        var indGames = gameData.enter().append("g")
+        var enter = bound.enter().append("g")
             .classed("indGame",true)
-            .attr("transform",function(d){
-                return "translate(" + (tlRef.x_offset + tlRef.timeScale(d["_parsedReleaseDate"])) + "," + (tlRef.height * 0.8) + ")";
-            })
             .on("mouseover",function(d){
                 //first line: hours and release date
                 var outString = d.name;
@@ -184,7 +179,15 @@ define(['d3','underscore'],function(d3,_){
                     .text("");
             });
 
-        indGames.append("rect")
+        d3.select("#mainVisualisation").selectAll(".indGame")
+            .attr("transform",function(d){
+                return "translate(" + (tlRef.x_offset + tlRef.timeScale(d["_parsedReleaseDate"])) + "," + (tlRef.height * 0.8) + ")";
+            })
+
+        
+        enter.append("rect");
+
+        d3.select("#mainVisualisation").selectAll("rect")
             .attr("height",function(d){
                 if(d.hours_forever){
                     return tlRef.playScale(Number(d.hours_forever));
@@ -200,8 +203,8 @@ define(['d3','underscore'],function(d3,_){
                 }
                 return "translate(0," + -(a) + ")";
             })
-            .style("fill",function(d){
-                return tlRef.oneOf20Colours(d.sizeOnDisk);
+            .style("fill",function(d,i){
+                return tlRef.oneOf20Colours(i%20);
             });
         
     };
