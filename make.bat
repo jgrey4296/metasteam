@@ -13,7 +13,7 @@ CD ..
 
 
 REM copy data in
-COPY data dist\data
+COPY data\settings.json dist\data\settings.json
 XCOPY web dist\web /s
 
 REM CLEANUP

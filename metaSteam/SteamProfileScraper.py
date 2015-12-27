@@ -30,7 +30,7 @@ class SteamProfileScraper:
     def __init__(self,profileName):
         logging.info("Initialising SteamProfileScraper")
         self.profileName = profileName
-        self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
+        self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/?tab=all"
         logging.info("Profile Url:" + self.profileUrl)
         
         cj = CookieJar()
