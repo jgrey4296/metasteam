@@ -28,9 +28,9 @@ class SteamProfileScraper:
     @param profileName the profile name to be used in the url
     '''
     def __init__(self,profileName):
-        logging.info("Initialising SteamProfileScraper")
+        logging.info("Initialising SteamProfileScraper: " + profileName)
         self.profileName = profileName
-        self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/?tab=all"
+        self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
         logging.info("Profile Url:" + self.profileUrl)
         
         cj = CookieJar()
@@ -47,6 +47,7 @@ class SteamProfileScraper:
         extractedInfo = []
         
         profileHtml = self.webRequest(url,{'tab' : 'all'})
+
         extractedInfo = self.profileExtraction(profileHtml)
 
         logging.info( "Extracted Profile Info")#,extractedInfo

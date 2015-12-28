@@ -44,7 +44,7 @@ class MultiplayerScraper:
     '''
     def scrape(self,appidArray):
         allExtractions = []
-        logging.info("Scraping: " + str(appidArray))
+        logging.info("MP Scraping: " + str(appidArray))
         for appid in appidArray:
             gameUrl = self.baseUrl + str(appid)
             storeHtml = self.webRequest(gameUrl,{})
@@ -53,6 +53,7 @@ class MultiplayerScraper:
             time.sleep(20)
             
         #["tags","releaseDate"]
+        logging.info("MP SCRAPER result: "+ str(allExtractions))
         return allExtractions
 
     '''

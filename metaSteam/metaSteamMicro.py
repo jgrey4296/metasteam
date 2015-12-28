@@ -102,16 +102,16 @@ class MetaSteam:
         self.installedGames = {} #key = appid 
         self.profileGames = {} #key = appid
         
-        
-        #Web Scrapers:
-        self.scraper = SteamStoreScraper()
-        self.profileScraper = SteamProfileScraper(self.userName)
-        
         #initialisation:
         self.loadSettingsFromJson()
         self.findLibraries()
         self.findSteam()
 
+        #Web Scrapers:
+        self.scraper = SteamStoreScraper()
+        self.profileScraper = SteamProfileScraper(self.userName)
+
+        
         #TODO: verify locations
         self.verifyLocations()
         
@@ -334,7 +334,7 @@ class MetaSteam:
     '''                
     def parseManifest(self,manifest):
         try:
-            logging.info("Parsing a manifest")
+            #logging.info("Parsing a manifest")
             f = open(manifest,'r')
             regex = re.compile('"(.+?)"\s+"(.+?)"')
             data = {}
@@ -345,8 +345,8 @@ class MetaSteam:
                 if match:
                     data[match.group(1)] = match.group(2)
             gameid = data['appid']
-            logging.info("Found: " + data['name'])
-            logging.info("TYPE: " + str(type(gameid)))
+            #logging.info("Found: " + data['name'])
+            #logging.info("TYPE: " + str(type(gameid)))
             data['__Installed'] = True
             #if it doesnt exist yet:
             if not gameid in self.installedGames.keys():
@@ -389,10 +389,9 @@ class MetaSteam:
             extractedInfo = self.profileScraper.scrape()
             self.internalDataLock.acquire()
             self.profileGames = extractedInfo
+            self.internalDataLock.release()
         except Exception as e:
             logging.error("Exception: getProfileGames: " + str(e))
-        finally:
-            self.internalDataLock.release()
         
 
     '''

@@ -73,7 +73,7 @@ def compare_to_user(username):
 def howManyPlaying(appidArrayString):
     extractedInfo = []
     try:
-        appidArray = json.parse(appidArrayString)
+        appidArray = json.loads(appidArrayString)
         mps = MultiplayerScraper()
         extractedInfo = mps.scrape(appidArray)
     except Exception as e:

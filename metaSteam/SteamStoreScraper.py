@@ -57,7 +57,7 @@ class SteamStoreScraper:
         while len(extractedInfo[0]) == 0 or len(extractedInfo[1]) == 1:
             storeHtml = self.webRequest(gameUrl,{})
             if(self.avoidAgeCheck(storeHtml)):
-                logging.info("Avoiding Age Check")
+                #logging.info("Avoiding Age Check")
                 ageCheckUrl = self.ageUrl + appid + "/"
                 storeHtml = self.webRequest(ageCheckUrl,self.ageCheckValues)
             extractedInfo = self.storeExtraction(storeHtml)    
@@ -71,7 +71,7 @@ class SteamStoreScraper:
     @purpose request the html
     '''
     def webRequest(self,url,inValues):
-        logging.info("sending a web request")
+        #logging.info("sending a web request")
         data = urllib.urlencode(inValues)
         request = urllib2.Request(url,data)
         self.response = self.opener.open(request)
@@ -113,7 +113,7 @@ class SteamStoreScraper:
         for tag in allTags:
             #todo: re.replace(r"[\\n\\t, ]","",tag.string.strip())
             tempTags.append(get_unicode(tag.string.strip()))
-            logging.info( "	Found Tag: " + tag.string.strip())
+            #logging.info( "	Found Tag: " + tag.string.strip())
 
         extractedTags = list(set([tag for tag in tempTags]))
             
@@ -156,8 +156,8 @@ class SteamStoreScraper:
                     publisher = block[i+2]
                 if curr == u'Developer:':
                     developer = block[i+2]
-        except Exception:
-            logging.warn( "Failure in pub/dev detection")
+        except Exception as e:
+            logging.warn( "Failure in pub/dev detection: " + str(e))
             
             
         return [extractedTags,releaseDate,description,review,developer,publisher]
