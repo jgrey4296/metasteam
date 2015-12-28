@@ -85,9 +85,9 @@ class MultiplayerScraper:
         
         #General Tags
         numInAppSpan = soup.find('span',class_="apphub_NumInApp")
-
+        
         if numInAppSpan is None:
-            return []
+            return -1
         
         number = numInAppSpan.get_text().split(" ")[0]
 

@@ -150,12 +150,12 @@ class SteamStoreScraper:
         publisher = ""
         developer = ""
         try:
-            block = soup.find_all(class_="block_content_inner")[0].findAll(text=True)
-            for i,x in enumerate(block):
+            tags = soup.find('div',class_="details_block").find_all('b')
+            for x in tags:
                 if x == u'Publisher:':
-                    publisher = block[i+2]
+                    publisher = x.next_sibling.next_sibling.get_text()
                 if curr == u'Developer:':
-                    developer = block[i+2]
+                    developer = x.next_sibling.next_sibling.get_text()
         except Exception as e:
             logger.warn( "Failure in pub/dev detection: " + str(e))
             
