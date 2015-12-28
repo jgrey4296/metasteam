@@ -506,8 +506,8 @@ class MetaSteam:
 '''
 if __name__ == "__main__":
     #setup the logging to a file
-    time = datetime.datetime.now()
-    logName = "metaSteam_" + str(time.year) + "_"+str(time.month)+"_"+str(time.day)+"_"+str(time.hour)+"_"+str(time.minute)+ ".log"
+    now = datetime.datetime.now()
+    logName = "metaSteam_" + str(now.year) + "_"+str(now.month)+"_"+str(now.day)+"_"+str(now.hour)+"_"+str(now.minute)+ ".log"
     logger = logging.getLogger('MetaSteam')
     logger.setLevel(logging.DEBUG)
     fh = logging.FileHandler(os.path.join("logs",logName))
