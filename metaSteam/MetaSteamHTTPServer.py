@@ -24,6 +24,7 @@ ServerClass  = BaseHTTPServer.HTTPServer
 Protocol     = "HTTP/1.0"
 allowedFiles = {}
 continueRunning = True
+logger = logging.getLogger('MetaSteam.MetaSteamHTTPServer')
 #note: turn off with 'global continueRunning, continueRunning = False'
 
 '''
@@ -31,7 +32,7 @@ continueRunning = True
 @purpose changes the global loop condition to stop the servers infinite loop
 '''
 def close_server():
-    logging.info( "Triggering Server Shutdown")
+    logger.info( "Triggering Server Shutdown")
     global continueRunning
     continueRunning = False
 
@@ -41,22 +42,22 @@ def close_server():
 @param appid the game id to start
 '''
 def start_game(appid):
-    logging.info( "Triggering Game Start")
+    logger.info( "Triggering Game Start")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.startGame(appid)
     else:
-        logging.info("Instanceless call: StartGame: " + str(appid))
+        logger.info("Instanceless call: StartGame: " + str(appid))
     return []
 '''
 @function save_json
 @purpose calls metasteam to save modified json data about games
 '''
 def save_json():
-    logging.info( "Triggering Json Save")
+    logger.info( "Triggering Json Save")
     if MetaSteamHandler.cmsi():
         MetaSteamHandler.metaSteamInstance.exportToJson()
     else:
-        logging.info("Instanceless call: save_json")
+        logger.info("Instanceless call: save_json")
     return []
 '''
 @function compare_to_user
@@ -64,7 +65,7 @@ def save_json():
 @todo
 '''
 def compare_to_user(username):
-    logging.info( "TODO: allow comparison of user profiles")
+    logger.info( "TODO: allow comparison of user profiles")
     profileScraper = SteamProfileScraper(username)
     extractedInfo = profileScraper.scrape()
     return extractedInfo
@@ -77,7 +78,7 @@ def howManyPlaying(appidArrayString):
         mps = MultiplayerScraper()
         extractedInfo = mps.scrape(appidArray)
     except Exception as e:
-        logging.warn("Something went wrong with finding how many playing: " + str(e))
+        logger.warn("Something went wrong with finding how many playing: " + str(e))
     finally:
         return extractedInfo
 
@@ -110,7 +111,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
     '''
     @staticmethod
     def registerInstance(metaSteam):
-        logging.info( "Registering MetaSteam Instance")
+        logger.info( "Registering MetaSteam Instance")
         MetaSteamHandler.metaSteamInstance = metaSteam
 
     '''
@@ -134,7 +135,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
     @threadSafe
     '''
     def do_GET(self):
-        logging.info( "Getting path: " + self.path)
+        logger.info( "Getting path: " + self.path)
         #if file is the json:
         #acquire  the lock
         if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
@@ -143,7 +144,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         try:
             SimpleHTTPRequestHandler.do_GET(self)
         except Exception as e:
-            logging.error("Exception: do_GET: " + str(e))
+            logger.error("Exception: do_GET: " + str(e))
         finally:
             #Release the lock
             if self.path[-3:] == ".js" and MetaSteamHandler.cmsi():
@@ -164,10 +165,10 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
             })
 
         for key in form:
-            logging.info(key + ": " + form[key].value)
+            logger.info(key + ": " + form[key].value)
 
         if 'command' not in form:
-            logging.warn("POST request recieved with no command")
+            logger.warn("POST request recieved with no command")
             return
             
         #switch on command:
@@ -181,7 +182,7 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
         elif command in postCommands:
             returnedData = postCommands[command]()
         else:
-            logging.warn("no suitable command found for: " + command)
+            logger.warn("no suitable command found for: " + command)
 
         #send the response (as json):
         self.send_response(200)
@@ -200,9 +201,9 @@ class MetaSteamHandler(SimpleHTTPRequestHandler):#BaseHTTPServer.BaseHTTPRequest
 def runLocalServer(metaSteamInstance,port=8000):
     try:
         if(metaSteamInstance):
-            logging.info( "Run Local Server recieved: " + str(metaSteamInstance))
+            logger.info( "Run Local Server recieved: " + str(metaSteamInstance))
         else:
-            logging.info("Running local server without MetaSteam Instance")
+            logger.info("Running local server without MetaSteam Instance")
         #server_address = ('127.0.0.1', port)
         server_address = ('localhost',port)
         MetaSteamHandler.protocol_version = Protocol
@@ -214,24 +215,28 @@ def runLocalServer(metaSteamInstance,port=8000):
     
         sa = server.socket.getsockname()
         print "Serving HTTP on", sa[0], "port", sa[1], "..."
-        logging.info("Serving HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
+        logger.info("Serving HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
 
         while continueRunning:
             server.handle_request()
     except Exception as e:
-        logging.error("Exception: runLocalServer: " + str(e))
+        logger.error("Exception: runLocalServer: " + str(e))
     finally:
         server.socket.close()
         print "Shutting Down Server"
-        logging.info("Shutting Down Server")
+        logger.info("Shutting Down Server")
 
 '''
 @main
 @purpose run the server without an accompanying meta steam instance
 '''
 if __name__ == "__main__":
-    logName = "metaSteamHTTPServer_" + str(datetime.date.today()) + ".log"
-    logging.basicConfig(filename=os.path.join("logs",logName),level=logging.DEBUG)
-    logging.info("------------------------------")
-    logging.info("Starting Separate HTTPServer")
+    time = datetime.datetime.now()
+    logName = "metaSteamHTTPServer_" + str(time.year) + "_"+str(time.month)+"_"+str(time.day)+"_"+str(time.hour)+"_"+str(time.minute)+ ".log"
+    fh = logging.FileHandler(os.path.join("logs",logName))
+    formatter = logging.Formatter("%(levelname)s - %(name)s ---- %(message)s")
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    logger.info("------------------------------")
+    logger.info("Starting Separate HTTPServer")
     runLocalServer(None,port=8888)    

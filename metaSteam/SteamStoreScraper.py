@@ -13,7 +13,7 @@ import logging
 
 
 steamReleaseDateRegex = re.compile(r"(\w{2,4})\s(\d{2,2}),\s(\d{4,4})")
-
+logger = logging.getLogger('MetaSteam.SteamStoreScraper')
 '''
 @class SteamStoreScraper
 @purpose Scrape a page from the steam store for information about a game
@@ -27,11 +27,11 @@ class SteamStoreScraper:
     @method __init__
     '''
     def __init__(self):
-        logging.info("Creating SteamStoreScraper")
+        logger.info("Creating SteamStoreScraper")
         self.storeUrl = "http://store.steampowered.com/app/"
-        logging.info("StoreUrl: " + self.storeUrl)
+        logger.info("StoreUrl: " + self.storeUrl)
         self.ageUrl = "http://store.steampowered.com/agecheck/app/"
-        logging.info("AgeUrl: " + self.ageUrl)
+        logger.info("AgeUrl: " + self.ageUrl)
         cj = CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 
@@ -50,14 +50,14 @@ class SteamStoreScraper:
     @returns extracted information as a dictionary
     '''
     def scrape(self,appid):
-        logging.info("Scraping: " + str(appid))
+        logger.info("Scraping: " + str(appid))
         gameUrl = self.storeUrl + str(appid)
         extractedInfo = [[],[]]
         
         while len(extractedInfo[0]) == 0 or len(extractedInfo[1]) == 1:
             storeHtml = self.webRequest(gameUrl,{})
             if(self.avoidAgeCheck(storeHtml)):
-                #logging.info("Avoiding Age Check")
+                #logger.info("Avoiding Age Check")
                 ageCheckUrl = self.ageUrl + appid + "/"
                 storeHtml = self.webRequest(ageCheckUrl,self.ageCheckValues)
             extractedInfo = self.storeExtraction(storeHtml)    
@@ -71,7 +71,7 @@ class SteamStoreScraper:
     @purpose request the html
     '''
     def webRequest(self,url,inValues):
-        #logging.info("sending a web request")
+        #logger.info("sending a web request")
         data = urllib.urlencode(inValues)
         request = urllib2.Request(url,data)
         self.response = self.opener.open(request)
@@ -83,7 +83,7 @@ class SteamStoreScraper:
     @method avoidAgeCheck
     '''
     def avoidAgeCheck(self,html):
-        logging.info("avoiding Age Check")
+        logger.info("avoiding Age Check")
         soup = BeautifulSoup(html,"html.parser")
         agecheckform = soup.find_all(id="agecheck_form")
         if agecheckform:
@@ -113,7 +113,7 @@ class SteamStoreScraper:
         for tag in allTags:
             #todo: re.replace(r"[\\n\\t, ]","",tag.string.strip())
             tempTags.append(get_unicode(tag.string.strip()))
-            #logging.info( "	Found Tag: " + tag.string.strip())
+            #logger.info( "	Found Tag: " + tag.string.strip())
 
         extractedTags = list(set([tag for tag in tempTags]))
             
@@ -157,7 +157,7 @@ class SteamStoreScraper:
                 if curr == u'Developer:':
                     developer = block[i+2]
         except Exception as e:
-            logging.warn( "Failure in pub/dev detection: " + str(e))
+            logger.warn( "Failure in pub/dev detection: " + str(e))
             
             
         return [extractedTags,releaseDate,description,review,developer,publisher]

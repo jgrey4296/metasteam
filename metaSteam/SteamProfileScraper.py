@@ -12,6 +12,7 @@ import json
 import logging
 
 gamePattern = re.compile(r"^\s*var rgGames\s=(.*);")
+logger = logging.getLogger('MetaSteam.SteamProfileScraper')
 
 '''
 @class SteamProfileScraper
@@ -28,10 +29,10 @@ class SteamProfileScraper:
     @param profileName the profile name to be used in the url
     '''
     def __init__(self,profileName):
-        logging.info("Initialising SteamProfileScraper: " + profileName)
+        logger.info("Initialising SteamProfileScraper: " + profileName)
         self.profileName = profileName
         self.profileUrl = "http://steamcommunity.com/id/" + profileName + "/games/"
-        logging.info("Profile Url:" + self.profileUrl)
+        logger.info("Profile Url:" + self.profileUrl)
         
         cj = CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
@@ -50,7 +51,7 @@ class SteamProfileScraper:
 
         extractedInfo = self.profileExtraction(profileHtml)
 
-        logging.info( "Extracted Profile Info")#,extractedInfo
+        logger.info( "Extracted Profile Info")#,extractedInfo
         return extractedInfo
 
     '''
@@ -75,7 +76,7 @@ class SteamProfileScraper:
     @purpose extracts json information from the html provided
     '''
     def profileExtraction(self,html):
-        logging.info("Extracting from Profile")
+        logger.info("Extracting from Profile")
         soup = BeautifulSoup(html, "html.parser")
         extractedTags = []
         releaseDate = {}
@@ -89,13 +90,13 @@ class SteamProfileScraper:
                     matched =  re.search(gamePattern,script.string)
                     if matched:
                         foundSuitable = True
-                        logging.info( "found profile information")
+                        logger.info( "found profile information")
                         jsonline = get_unicode(matched.group(1))
                         gameDict = json.loads(jsonline)
                         return gameDict
                 except Exception as e:
-                    logging.warn( e)
+                    logger.warn( e)
                     return {}
 
         if not foundSuitable:
-            logging.warn("No suitable javascript found for profile extraction")
+            logger.warn("No suitable javascript found for profile extraction")

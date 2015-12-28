@@ -13,7 +13,7 @@ import logging
 import time
 
 steamReleaseDateRegex = re.compile(r"(\w{2,4})\s(\d{2,2}),\s(\d{4,4})")
-
+logger = logging.getLogger('MetaSteam.MultiplayerScraper')
 '''
 @class MultiplayerScraper
 @purpose Scrapes the steam community page for number of players for a game
@@ -27,9 +27,9 @@ class MultiplayerScraper:
     @method __init__
     '''
     def __init__(self):
-        logging.info("Creating MultiplayerScraper")
+        logger.info("Creating MultiplayerScraper")
         self.baseUrl = "http://steamcommunity.com/app/"
-        logging.info("Base Url: " + self.baseUrl)
+        logger.info("Base Url: " + self.baseUrl)
         cj = CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 
@@ -44,7 +44,7 @@ class MultiplayerScraper:
     '''
     def scrape(self,appidArray):
         allExtractions = []
-        logging.info("MP Scraping: " + str(appidArray))
+        logger.info("MP Scraping: " + str(appidArray))
         for appid in appidArray:
             gameUrl = self.baseUrl + str(appid)
             storeHtml = self.webRequest(gameUrl,{})
@@ -53,7 +53,7 @@ class MultiplayerScraper:
             time.sleep(20)
             
         #["tags","releaseDate"]
-        logging.info("MP SCRAPER result: "+ str(allExtractions))
+        logger.info("MP SCRAPER result: "+ str(allExtractions))
         return allExtractions
 
     '''
@@ -62,7 +62,7 @@ class MultiplayerScraper:
     @purpose request the html
     '''
     def webRequest(self,url,inValues):
-        logging.info("sending a web request")
+        logger.info("sending a web request")
         data = urllib.urlencode(inValues)
         request = urllib2.Request(url,data)
         self.response = self.opener.open(request)
