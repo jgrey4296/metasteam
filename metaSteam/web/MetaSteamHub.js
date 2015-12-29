@@ -320,7 +320,7 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
         //copy over hours forever to installed games
         this.data.profile.forEach(function(game){
             if(this.data.installed[game.appid] !== undefined){
-                this.data.installed[game.appid].hours_forever = game.hours_forever;
+                this.data.installed[game.appid].hours_forever = game.hours_forever | 0;
             }
         },this);
         

@@ -171,6 +171,8 @@ define(['d3','underscore'],function(d3,_){
         d3.select("#rightBar").selectAll(".nameGroup").remove();
         d3.select("#mainVisualisation").selectAll(".game").remove();
         d3.select("#mainVisualisation").selectAll(".alphaGroup").remove();
+        d3.select("#startButton").remove();
+        
     };
 
     //Methods to do:
@@ -312,53 +314,84 @@ define(['d3','underscore'],function(d3,_){
     };
 
     Visualisation.prototype.drawGame = function(game){
+        var vRef = this;
         this.cleanUp();
+        var date = new Date(0);
+        date.setSeconds(game.LastUpdated);
+        var gameData = [
+            "Name: " + game.name,
+            "Last Updated: " + date.toString(),
+            "Amount Played: " + game.hours_forever + " hours",
+            "Developer: " + game.__developer,
+            "Publisher: " + game.__publisher,
+            "Released: " + game.releaseDate.original,
+            "Size: " + formatBytes(game.SizeOnDisk,2),
+            game.__description,
+        ];
+        console.log("Game Data:",gameData);
         var main = d3.select("#mainVisualisation").append("g").classed("game",true);
-
+                
         //display:
         //name
         d3.select("gameTitleMainText")
-            .text(game.name);
+            .text("");
+
+        var bound = main.selectAll(".info").data(gameData);
+        var enter = bound.enter().append("g").classed("info",true);
+
+        enter.append("rect")
+            .attr("width",this.hub.internalWidth - (this.hub.padding * 4))
+            .attr("height",60)
+            .style("fill",this.hub.colours.lightBlue)
+            .attr("rx",10)
+            .attr("ry",10);
         
-        //description
-        var desc = main.append("g").classed("description",true)
-            .attr("transform","translate(" + this.hub.padding + "," + (this.hub.mainVisualisationOffset * 2) + ")");
+        enter.append("text").text(function(d){
+            return d;
+        })
+            .attr("transform","translate(20,20)")
+            .attr("dy","1.4em");
 
-        desc.append("rect")
-            .attr("width",this.hub.internalWidth - (this.hub.padding * 2))
-            .attr("height",100)
-            .style("fill",this.hub.colours.lightBlue);
 
-        desc.append("text").text(game.__description)
-            .style("fill","white")
-            .attr("y","1.4em")
-            .attr("dy","1.4em")
-            .call(wrapText,(this.hub.internalWidth - (this.hub.padding * 5)));
-        
-        //review status
-        var reviewStatus = main.append("g").classed("review",true)
-            .attr("transform","translate("+ (this.hub.internalWidth * 0.5) + "," + (this.hub.mainVisualisationOffset * 2 + 150) + ")");
+        main.selectAll(".info")
+            .attr("transform",function(d,i){
+                return "translate(" + vRef.hub.padding + "," + (vRef.hub.headerHeight + (i * 80)) + ")";
+            });
 
-        reviewStatus.append("rect")
-            .attr("width",200)
+        main.selectAll("text")
+            .call(wrapText, (this.hub.internalWidth - this.hub.padding * 8));
+
+
+        var startButton = d3.select("#leftBar")
+            .append("g").classed("startButton",true)
+            .attr("id","startButton")
+            .attr("transform","translate(" + (this.hub.sideBarWidth * 0.1)+","+ (this.hub.internalHeight * 0.5) +")")
+            .on("mouseover",function(){
+                d3.select(this).select("rect")
+                    .transition()
+                    .style("fill","green");
+            })
+            .on("mouseout",function(){
+                d3.select(this).select("rect")
+                    .transition()
+                    .style("fill","red");
+            })
+            .on("click",function(){
+                vRef.hub.sendStartMessageToServer(game.appid);
+            });
+
+        startButton.append("rect")
             .attr("height",50)
-            .attr("transform","translate(-100,0)")
-            .style("fill",this.hub.colours.lightBlue);
+            .attr("width",this.hub.sideBarWidth * 0.8)
+            .style("fill","red")
+            .attr("rx",10)
+            .attr("ry",10);
 
-        reviewStatus.append("text").text(game.__review)
-            .style("fill","white")
-            .attr("y","1.4em")
-            .style("text-anchor","middle");
+        startButton.append("text")
+            .attr("transform","translate("+10+","+20+")")
+            .text("START GAME");
         
-        //publisher
 
-        //developer
-
-        //last played
-
-        //last updated
-
-        //tags
         
     };
 
@@ -406,6 +439,18 @@ define(['d3','underscore'],function(d3,_){
             }
         });
     };    
+
+    //from http://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
+    var formatBytes = function(bytes,decimals){
+        if(bytes == 0) return '0 Byte';
+        var k = 1000;
+        var dm = decimals + 1 || 3;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
+    };
+
+
     
     return Visualisation;
     
