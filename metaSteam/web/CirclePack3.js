@@ -21,6 +21,7 @@ define(['d3','underscore'],function(d3,_){
         this.helpText =[
             "Tag Circle Pag Visualisation",
             "Displays a circle pack of all tags (from the steam store) of INSTALLED games",
+            "Tags are grouped alphabetically",
             "Size of circle is dependent on number of games that utilize that tag",
             "On click: Circle pack games by playtime",
             "When you navigate to a game, you can start it through the metasteam server",
@@ -42,8 +43,9 @@ define(['d3','underscore'],function(d3,_){
             .size([this.width - 20, this.height - 40])
             .padding(1.5)
             .value(function(d){
-                if(d.games === undefined) return Math.random();
-                return _.values(d.games).length;
+                return d.hours_forever | _.values(d.games).length;
+                //if(d. === undefined) return 1;
+                //return _.values(d.games).length;
             })
             .sort(function(a,b){
                 return a.name < b.name;
@@ -69,9 +71,20 @@ define(['d3','underscore'],function(d3,_){
             return m;
         },{});
 
-        this.packed = this.pack({"children":_.values(categories)}).filter(function(d){
-            if(d.children) return false;
-            return true;
+        //group alphabetically:
+        this.alphaGroup = _.values(categories).reduce(function(m,v){
+            if(m[v.name[0]] === undefined){
+                m[v.name[0]] = { "name" : v.name[0], children: []};
+            }
+            m[v.name[0]].children.push(v);
+            return m;
+        },{});
+
+        console.log("Alphagroup:",this.alphaGroup);
+        
+        this.packed = this.pack({"name" : "everything","children":_.values(this.alphaGroup)}).filter(function(d){
+            if(d.name !== 'everything') return true;
+            return false;
         });
         console.log("Packed:",this.packed);
         
@@ -81,30 +94,45 @@ define(['d3','underscore'],function(d3,_){
        @method draw
      */
     Visualisation.prototype.draw = function(data){
-        console.log("Circle Pack: Drawing");
+
         var vRef = this;
         var dataToUse;
         if(data !== undefined && data instanceof Array){
-            dataToUse = this.pack({"children":data}).filter(function(d){
-                if(d.children) return false;
-                return true;
+            //alphabetise
+            var alphaGroup = data.reduce(function(m,v){
+                if(m[v.name[0]] === undefined){
+                    m[v.name[0]] = { "name" : v.name[0], children:[]};
+                }
+                m[v.name[0]].children.push(v);
+                return m;
+            },{})
+
+            dataToUse = this.pack({"name" : "everything","children":_.values(alphaGroup)}).filter(function(d){
+                if(d.name !== "everything") return true;
+                return false;
             });
         }else{
             dataToUse = this.packed;
         }
-
+        console.log("Circle Pack: Drawing:",dataToUse);
         this.drawBarOfNames(d3.select("#leftBar"),dataToUse.slice(0,40));
         this.drawBarOfNames(d3.select("#rightBar"),dataToUse.slice(-40));
 
         var main = d3.select("#mainVisualisation");
-        var bound = main.selectAll(".node").data(dataToUse,function(d,i){
+        main.selectAll(".alphaGroup").remove();
+        var bound = main.selectAll(".node,.alphaGroup").data(dataToUse,function(d,i){
             return d.name;
         });
 
         bound.exit().remove();
 
         //create the groups and register functions on them
-        var enter = bound.enter().append("g").classed("node",true)
+        var enter = bound.enter().append("g")
+            .attr("class",function(d){
+                return d.children ? "alphaGroup" : "node";
+            });
+
+        main.selectAll(".node")
             .on("click",function(d,i){
                 vRef.clickFunction(d,i);
             })
@@ -117,7 +145,7 @@ define(['d3','underscore'],function(d3,_){
 
         enter.append("circle");
 
-        main.selectAll(".node")
+        main.selectAll(".node,.alphaGroup")
             .attr("transform",function(d,i){
                 return "translate(" + d.x +"," + (20 + d.y) + ")";
             });
@@ -142,6 +170,7 @@ define(['d3','underscore'],function(d3,_){
         d3.select("#leftBar").selectAll(".nameGroup").remove();
         d3.select("#rightBar").selectAll(".nameGroup").remove();
         d3.select("#mainVisualisation").selectAll(".game").remove();
+        d3.select("#mainVisualisation").selectAll(".alphaGroup").remove();
     };
 
     //Methods to do:
@@ -206,22 +235,27 @@ define(['d3','underscore'],function(d3,_){
                 if(d.games){
                     return d.name + " : " + _.values(d.games).length + " games";
                 }else if(d.appid){
-                    return d.name;
+                    return d.name + " : " + d.hours_forever + " hours played";
                 }
                 
             });
 
-        d3.selectAll(".node")
-            .selectAll("circle")
-            .transition()
-            .style("fill",function(e){
-                if(e.name === d.name) return vRef.oneOf20Colours(e.value);
-                return "grey";
-            })
-            .attr("r",function(e){
-                if(e.name === d.name) return e.r + 5;
-                return 2;
-            });
+        var greyCircle = function(selection){
+            selection
+                .selectAll("circle")
+                .transition()
+                .style("fill",function(e){
+                    if(e.name === d.name) return vRef.oneOf20Colours(e.value);
+                    return "grey";
+                })
+                .attr("r",function(e){
+                    if(e.name === d.name) return e.r + 5;
+                    return e.r - 5;
+                });
+        };
+
+        d3.selectAll(".node,.alphaGroup").call(greyCircle);
+        //d3.selectAll(".alphaGroup").call(greyCircle);
     };
     
     //unhighlight
@@ -238,25 +272,38 @@ define(['d3','underscore'],function(d3,_){
             })
             .style("opacity",1);
 
-        d3.select("#gameTitle")
-            .select("#gametitleMainText")
-            .text("");
+        if(!this.currentCategory){
+            d3.select("#gameTitle")
+                .select("#gameTitleMainText")
+                .text("");
+        }else{
+            d3.select("#gameTitle")
+                .select("#gameTitleMainText")
+                .text(this.currentCategory);
+        }
 
-        d3.selectAll(".node").selectAll("circle")
-            .transition()
-            .style("fill",function(e){
-                return vRef.oneOf20Colours(e.value);
-            })
-            .attr("r",function(e){
-                return e.r;
-            });
-        
+        var ungreyCircle = function(selection){
+            selection
+                .selectAll("circle")
+                .transition()
+                .style("fill",function(e){
+                    return vRef.oneOf20Colours(e.value);
+                })
+                .attr("r",function(e){
+                    return e.r;
+                });
+        };
+
+
+        d3.selectAll(".node,.alphaGroup").call(ungreyCircle);
+        //d3.selectAll(".alphaGroup").call(ungreyCircle);
     };
 
     //click
     Visualisation.prototype.clickFunction = function(d,i){
         //if a category of games:
         if(d.games !== undefined){
+            this.currentCategory = d.name;
             this.draw(_.values(d.games));
         }else if(d.appid){
             this.drawGame(d);
@@ -270,11 +317,39 @@ define(['d3','underscore'],function(d3,_){
 
         //display:
         //name
-
+        d3.select("gameTitleMainText")
+            .text(game.name);
+        
         //description
+        var desc = main.append("g").classed("description",true)
+            .attr("transform","translate(" + this.hub.padding + "," + (this.hub.mainVisualisationOffset * 2) + ")");
 
+        desc.append("rect")
+            .attr("width",this.hub.internalWidth - (this.hub.padding * 2))
+            .attr("height",100)
+            .style("fill",this.hub.colours.lightBlue);
+
+        desc.append("text").text(game.__description)
+            .style("fill","white")
+            .attr("y","1.4em")
+            .attr("dy","1.4em")
+            .call(wrapText,(this.hub.internalWidth - (this.hub.padding * 5)));
+        
         //review status
+        var reviewStatus = main.append("g").classed("review",true)
+            .attr("transform","translate("+ (this.hub.internalWidth * 0.5) + "," + (this.hub.mainVisualisationOffset * 2 + 150) + ")");
 
+        reviewStatus.append("rect")
+            .attr("width",200)
+            .attr("height",50)
+            .attr("transform","translate(-100,0)")
+            .style("fill",this.hub.colours.lightBlue);
+
+        reviewStatus.append("text").text(game.__review)
+            .style("fill","white")
+            .attr("y","1.4em")
+            .style("text-anchor","middle");
+        
         //publisher
 
         //developer
@@ -290,6 +365,9 @@ define(['d3','underscore'],function(d3,_){
     
     //Utility trim text function:
     var trimText = function(d){
+        if(d.name === undefined){
+            console.error("No name:",d);
+        }
         //Detect bounding box and "..." names too long
         var bbox = this.getBBox();
         var maxLength = d.name.length-4;
@@ -301,7 +379,33 @@ define(['d3','underscore'],function(d3,_){
             maxLength -= 2;
         }
     };
-    
+
+    //from bl.ocks.org/mbostock/7555321
+    var wrapText = function(textSelection,width){
+        textSelection.each(function(){
+            var text = d3.select(this),
+                words = text.text().split(/\s+/),
+                word,//current word
+                line = [],//current line
+                y = text.attr("y"),
+                dy = parseFloat(text.attr("dy")),
+                tspan = text.text(null).append("tspan")
+                .attr("x",20)
+                .attr("y",y)
+                .attr("dy",dy);
+            while(word = words.shift()){
+                line.push(word);
+                tspan.text(line.join(" "));
+                if(tspan.node().getComputedTextLength() > width){
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan").attr("x",20)
+                        .attr("dy",dy +"em").text(word);
+                }
+            }
+        });
+    };    
     
     return Visualisation;
     

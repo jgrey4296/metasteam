@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation','CirclePack3'],function(d3,_,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation,CirclePack3){
+define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation','CirclePack3','pubDevVis','SearchVis'],function(d3,_,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation,CirclePack3,PubDevVis,SearchVis){
 
     var idRegex = /\W/g;
     
@@ -82,7 +82,9 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
         this.registerButton('Multiplayer', new MultiplayerVisualisation(this));
         this.registerButton('Calendar',new CalendarVisualisation(this));
         this.registerButton('Tag Matrix',new CoOccurrenceMatrix(this));
-        this.registerButton('Search', new TemplateVisualisation(this));
+        this.registerButton('Pubs/Devs',new PubDevVis(this));
+        this.registerButton('Search', new SearchVis(this));
+        
 
         //            {name:"timeline"},
         //          {name:"chord"},
@@ -314,6 +316,14 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
     Hub.prototype.registerData = function(data){
         console.log("Registering Data",data);
         this.data = data;
+
+        //copy over hours forever to installed games
+        this.data.profile.forEach(function(game){
+            if(this.data.installed[game.appid] !== undefined){
+                this.data.installed[game.appid].hours_forever = game.hours_forever;
+            }
+        },this);
+        
     };
 
     /**
