@@ -46,6 +46,7 @@ class MultiplayerScraper:
         allExtractions = []
         logger.info("MP Scraping: " + str(appidArray))
         for appid in appidArray:
+            logger.info("MP Scraping Game: " + str(appid))
             gameUrl = self.baseUrl + str(appid)
             storeHtml = self.webRequest(gameUrl,{})
             numPlaying = self.numberPlayingExtraction(storeHtml)

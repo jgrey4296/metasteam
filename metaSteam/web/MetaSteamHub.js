@@ -319,11 +319,18 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
         this.data = data;
 
         //copy over hours forever to installed games
-        this.data.profile.forEach(function(game){
+        _.values(this.data.profile).forEach(function(game){
             if(this.data.installed[game.appid] !== undefined){
                 this.data.installed[game.appid].hours_forever = game.hours_forever | 0;
             }
         },this);
+
+	//register the data with each registered button vis
+	_.values(this.buttons).forEach(function(button){
+	    if(button.name === "Hub") return;
+	    button.value.registerData(this.data);
+	},this);
+	
         
     };
 
@@ -489,9 +496,6 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
 
                     //Clean up
                     hubRef.cleanUp();
-                    //register data
-                    //ess. 'no-op' for 'hub'
-                    hubRef.buttons[d.name].value.registerData(hubRef.data);
                     //draw
                     hubRef.buttons[d.name].value.draw();
                 }

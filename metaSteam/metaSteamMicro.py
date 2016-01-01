@@ -510,10 +510,13 @@ if __name__ == "__main__":
     logName = "metaSteam_" + str(now.year) + "_"+str(now.month)+"_"+str(now.day)+"_"+str(now.hour)+"_"+str(now.minute)+ ".log"
     logger = logging.getLogger('MetaSteam')
     logger.setLevel(logging.DEBUG)
-    fh = logging.FileHandler(os.path.join("logs",logName))
+    fileHandler = logging.FileHandler(os.path.join("logs",logName))
+    streamHandler = logging.StreamHandler()
     formatter = logging.Formatter("%(levelname)s - %(name)s ---- %(message)s")
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
+    fileHandler.setFormatter(formatter)
+    streamHandler.setFormatter(formatter)
+    logger.addHandler(fileHandler)
+    logger.addHandler(streamHandler)
     
     #number of games to scrape in a session
     maxGamesToScrape = 10000

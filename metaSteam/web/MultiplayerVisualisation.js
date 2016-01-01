@@ -73,13 +73,12 @@ define(['d3','underscore'],function(d3,_){
         }).slice(0,20);
         console.log("result data:",this.resultData);
 
-
         this.hub.sendHowManyPlayingMessageToServer(mpGameIds,function(result){
             console.log("Result of how many playing: ",result);
             vRef.resultData = result.map(function(d){
                 return {
                     "id" : d[0],
-                    "name" : vRef.data.installed[d[0]],
+                    "name" : vRef.data.installed[d[0]].name,
                     "value" : d[1]
                 };
             });
@@ -90,8 +89,8 @@ define(['d3','underscore'],function(d3,_){
                 return 0;
             });
             
-            vRef.cleanUp();
-            vRef.draw();
+            //vRef.cleanUp();
+            //vRef.draw();
         });
         
     };

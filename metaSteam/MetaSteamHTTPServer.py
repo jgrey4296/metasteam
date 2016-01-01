@@ -214,7 +214,6 @@ def runLocalServer(metaSteamInstance,port=8000):
         server = ServerClass(server_address, MetaSteamHandler)
     
         sa = server.socket.getsockname()
-        print "Serving HTTP on", sa[0], "port", sa[1], "..."
         logger.info("Serving HTTP On: " + str(sa[0]) + " port: " + str(sa[1]) + "...")
 
         while continueRunning:
@@ -223,7 +222,6 @@ def runLocalServer(metaSteamInstance,port=8000):
         logger.error("Exception: runLocalServer: " + str(e))
     finally:
         server.socket.close()
-        print "Shutting Down Server"
         logger.info("Shutting Down Server")
 
 '''
