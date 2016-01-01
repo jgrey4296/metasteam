@@ -181,7 +181,7 @@ class MetaSteam:
             logger.info("Finding Steam")
             #if a steam location was loaded from settings:
             if self.steamLocation and os.path.exists(self.steamLocation):
-                self.libraryLocations.append(os.path.join(self.steamLocation,"steamapps"))
+                self.libraryLocations.append(os.path.join(self.steamLocation.replace('Steam.exe',''),"steamapps"))
                 return
             else:
                 logger.warn("Steam Location unknown: " + self.steamLocation)
