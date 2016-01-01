@@ -43,7 +43,7 @@ define(['d3','underscore'],function(d3,_){
        @method registerdata
     */
     Visualisation.prototype.registerData = function(data){
-        console.log("Template: Registering Data");
+        console.log("Matrix: Registering Data");
         this.data = data;
 
         //get all the tags
@@ -143,7 +143,7 @@ define(['d3','underscore'],function(d3,_){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("Matrix: cleanUp");
         d3.select("#coMatrix").remove();
     };
 

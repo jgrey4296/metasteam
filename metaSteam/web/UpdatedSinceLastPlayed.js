@@ -44,7 +44,7 @@ define(['d3','underscore'],function(d3,_){
        @method registerdata
     */
     Visualisation.prototype.registerData = function(data){
-        console.log("Template: Registering Data");
+        console.log("UpdatedSincePlayed: Registering Data");
         this.data = data;
         this.updatedSincePlayed = [];
         
@@ -57,7 +57,6 @@ define(['d3','underscore'],function(d3,_){
                 last_updated.setUTCSeconds(this.data.installed[game.appid].LastUpdated);
                 var hoursPlayed = Number(game.hours_forever);
                 if(hoursPlayed === NaN) hoursPlayed = 0;
-
                 
                 return {
                     "name" : game.name,
@@ -77,7 +76,7 @@ define(['d3','underscore'],function(d3,_){
 
         //Date set to a list of games that have been updated since they were last played
         //sorted by how many hours the user has played of them
-        this.data = updatedSinceLastPlayed.filter(function(game){
+        this.usedata = updatedSinceLastPlayed.filter(function(game){
             if(game.hours_played) return true;
         }).sort(function(a,b){ return a.hours_played < b.hours_played; });
 
@@ -88,19 +87,23 @@ define(['d3','underscore'],function(d3,_){
        @method draw
      */
     Visualisation.prototype.draw = function(){
-        console.log("Template: Drawing");
+        var vRef = this;
+        console.log("UpdatedSincePlayed: Drawing");
 
         //todo: split into columns
         
         var list = d3.select("#mainVisualisation").append("g")
             .attr("id","updatedSinceLastPlayedList");
 
-        var boundList = list.selectAll("g").data(this.data.slice(0,20));
+        var boundList = list.selectAll("g").data(this.usedata.slice(0,20));
         
         var indGame = boundList.enter().append("g")
             .classed("game",true)
             .attr("transform",function(d,i){
                 return "translate( " + 100 + "," + (20 + (i * 35))  + ")";
+            })
+            .on("click",function(d){
+                vRef.hub.drawGame(vRef.data.installed[d.appid]);
             });
 
         indGame.append("rect")
@@ -122,7 +125,7 @@ define(['d3','underscore'],function(d3,_){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("UpdatedSincePlayed: cleanUp");
         d3.select("#updatedSinceLastPlayedList").remove();
     };
 

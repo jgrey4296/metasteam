@@ -19,7 +19,7 @@ define(['d3','underscore'],function(d3,_){
         this.colours = this.hub.colours;
 
         this.helpText =[
-            "Template visualisation"
+            "Publisher/Developer visualisation"
 
         ];
         
@@ -49,7 +49,7 @@ define(['d3','underscore'],function(d3,_){
        @method registerdata
     */
     Visualisation.prototype.registerData = function(data){
-        console.log("Template: Registering Data");
+        console.log("Pub/Dev: Registering Data");
         this.data = data;
 
         //if there isnt a '__developer' or '__publisher' value, add it in:
@@ -121,7 +121,7 @@ define(['d3','underscore'],function(d3,_){
      */
     Visualisation.prototype.draw = function(){
         var vRef = this;
-        console.log("Template: Drawing");
+        console.log("Pub/Dev: Drawing");
 
         //draw bubble pack of pubs/devs
         var bound = d3.select("#mainVisualisation").selectAll(".node")
@@ -170,7 +170,7 @@ define(['d3','underscore'],function(d3,_){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("Pub/Dev: cleanUp");
         d3.select("#mainVisualisation").selectAll(".node").remove();
         d3.select("#mainVisualisation").selectAll(".leaf").remove();
     };

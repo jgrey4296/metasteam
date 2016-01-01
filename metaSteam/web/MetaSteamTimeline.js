@@ -139,7 +139,7 @@ define(['d3','underscore'],function(d3,_){
        @purpose draws the visualisation
      */
     Timeline.prototype.draw = function(){
-        tlRef = this;
+        var tlRef = this;
         this.drawAxes();
 
         var games = _.values(this.data.installed).filter(function(d){
@@ -177,12 +177,16 @@ define(['d3','underscore'],function(d3,_){
             .on("mouseout",function(d){
                 d3.select("#gameTitle").selectAll("text")
                     .text("");
+            })
+            .on("click",function(d){
+                tlRef.hub.drawGame(d);
             });
 
         d3.select("#mainVisualisation").selectAll(".indGame")
             .attr("transform",function(d){
                 return "translate(" + (tlRef.x_offset + tlRef.timeScale(d["_parsedReleaseDate"])) + "," + (tlRef.height * 0.8) + ")";
-            })
+            });
+
 
         
         enter.append("rect");
@@ -240,6 +244,7 @@ define(['d3','underscore'],function(d3,_){
        @purpose cleans up any display elements added by the visualisation's draw method
      */
     Timeline.prototype.cleanUp = function(){
+        console.log("Timeline cleanup");
         d3.select("#axis").remove();
         d3.selectAll(".indGame").remove();
         d3.select("#gameTitle").selectAll("text").text("");

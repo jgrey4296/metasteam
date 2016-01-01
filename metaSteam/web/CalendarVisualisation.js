@@ -154,7 +154,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
                         if(curDate.getDay() === 6 || curDate.getDay() === 0){
                             colour = vRef.colours.lightBlue;
                         }                        
-                        if(e.length > 0){
+                        if(e && e.length > 0){
                             colour = vRef.colours.green;
                         }
                         return colour;
@@ -175,7 +175,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("Calendar: cleanUp");
         d3.select("#calendar").remove();
         d3.select("#availableYears").remove();
     };

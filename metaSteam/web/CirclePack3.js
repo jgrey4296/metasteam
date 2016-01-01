@@ -57,7 +57,7 @@ define(['d3','underscore'],function(d3,_){
        @method registerdata
     */
     Visualisation.prototype.registerData = function(data){
-        console.log("Template: Registering Data");
+        console.log("CirclePack3: Registering Data");
         this.data = data;
 
         var categories =  _.values(this.data.installed).reduce(function(m,game){
@@ -165,7 +165,7 @@ define(['d3','underscore'],function(d3,_){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("CirclePack3: cleanUp");
         d3.select("#mainVisualisation").selectAll(".node").remove();
         d3.select("#leftBar").selectAll(".nameGroup").remove();
         d3.select("#rightBar").selectAll(".nameGroup").remove();
@@ -308,91 +308,9 @@ define(['d3','underscore'],function(d3,_){
             this.currentCategory = d.name;
             this.draw(_.values(d.games));
         }else if(d.appid){
-            this.drawGame(d);
+            this.hub.drawGame(d);
         }
 
-    };
-
-    Visualisation.prototype.drawGame = function(game){
-        var vRef = this;
-        this.cleanUp();
-        var date = new Date(0);
-        date.setSeconds(game.LastUpdated);
-        var gameData = [
-            "Name: " + game.name,
-            "Last Updated: " + date.toString(),
-            "Amount Played: " + game.hours_forever + " hours",
-            "Developer: " + game.__developer,
-            "Publisher: " + game.__publisher,
-            "Released: " + game.releaseDate.original,
-            "Size: " + formatBytes(game.SizeOnDisk,2),
-            game.__description,
-        ];
-        console.log("Game Data:",gameData);
-        var main = d3.select("#mainVisualisation").append("g").classed("game",true);
-                
-        //display:
-        //name
-        d3.select("gameTitleMainText")
-            .text("");
-
-        var bound = main.selectAll(".info").data(gameData);
-        var enter = bound.enter().append("g").classed("info",true);
-
-        enter.append("rect")
-            .attr("width",this.hub.internalWidth - (this.hub.padding * 4))
-            .attr("height",60)
-            .style("fill",this.hub.colours.lightBlue)
-            .attr("rx",10)
-            .attr("ry",10);
-        
-        enter.append("text").text(function(d){
-            return d;
-        })
-            .attr("transform","translate(20,20)")
-            .attr("dy","1.4em");
-
-
-        main.selectAll(".info")
-            .attr("transform",function(d,i){
-                return "translate(" + vRef.hub.padding + "," + (vRef.hub.headerHeight + (i * 80)) + ")";
-            });
-
-        main.selectAll("text")
-            .call(wrapText, (this.hub.internalWidth - this.hub.padding * 8));
-
-
-        var startButton = d3.select("#leftBar")
-            .append("g").classed("startButton",true)
-            .attr("id","startButton")
-            .attr("transform","translate(" + (this.hub.sideBarWidth * 0.1)+","+ (this.hub.internalHeight * 0.5) +")")
-            .on("mouseover",function(){
-                d3.select(this).select("rect")
-                    .transition()
-                    .style("fill","green");
-            })
-            .on("mouseout",function(){
-                d3.select(this).select("rect")
-                    .transition()
-                    .style("fill","red");
-            })
-            .on("click",function(){
-                vRef.hub.sendStartMessageToServer(game.appid);
-            });
-
-        startButton.append("rect")
-            .attr("height",50)
-            .attr("width",this.hub.sideBarWidth * 0.8)
-            .style("fill","red")
-            .attr("rx",10)
-            .attr("ry",10);
-
-        startButton.append("text")
-            .attr("transform","translate("+10+","+20+")")
-            .text("START GAME");
-        
-
-        
     };
 
     
@@ -412,45 +330,6 @@ define(['d3','underscore'],function(d3,_){
             maxLength -= 2;
         }
     };
-
-    //from bl.ocks.org/mbostock/7555321
-    var wrapText = function(textSelection,width){
-        textSelection.each(function(){
-            var text = d3.select(this),
-                words = text.text().split(/\s+/),
-                word,//current word
-                line = [],//current line
-                y = text.attr("y"),
-                dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan")
-                .attr("x",20)
-                .attr("y",y)
-                .attr("dy",dy);
-            while(word = words.shift()){
-                line.push(word);
-                tspan.text(line.join(" "));
-                if(tspan.node().getComputedTextLength() > width){
-                    line.pop();
-                    tspan.text(line.join(" "));
-                    line = [word];
-                    tspan = text.append("tspan").attr("x",20)
-                        .attr("dy",dy +"em").text(word);
-                }
-            }
-        });
-    };    
-
-    //from http://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
-    var formatBytes = function(bytes,decimals){
-        if(bytes == 0) return '0 Byte';
-        var k = 1000;
-        var dm = decimals + 1 || 3;
-        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        var i = Math.floor(Math.log(bytes) / Math.log(k));
-        return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
-    };
-
-
     
     return Visualisation;
     
