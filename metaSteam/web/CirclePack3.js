@@ -21,6 +21,7 @@ define(['d3','underscore'],function(d3,_){
         this.helpText =[
             "Tag Circle Pag Visualisation",
             "Displays a circle pack of all tags (from the steam store) of INSTALLED games",
+            "Tags are grouped alphabetically",
             "Size of circle is dependent on number of games that utilize that tag",
             "On click: Circle pack games by playtime",
             "When you navigate to a game, you can start it through the metasteam server",
@@ -42,8 +43,9 @@ define(['d3','underscore'],function(d3,_){
             .size([this.width - 20, this.height - 40])
             .padding(1.5)
             .value(function(d){
-                if(d.games === undefined) return Math.random();
-                return _.values(d.games).length;
+                return d.hours_forever | _.values(d.games).length;
+                //if(d. === undefined) return 1;
+                //return _.values(d.games).length;
             })
             .sort(function(a,b){
                 return a.name < b.name;
@@ -55,7 +57,7 @@ define(['d3','underscore'],function(d3,_){
        @method registerdata
     */
     Visualisation.prototype.registerData = function(data){
-        console.log("Template: Registering Data");
+        console.log("CirclePack3: Registering Data");
         this.data = data;
 
         var categories =  _.values(this.data.installed).reduce(function(m,game){
@@ -69,9 +71,20 @@ define(['d3','underscore'],function(d3,_){
             return m;
         },{});
 
-        this.packed = this.pack({"children":_.values(categories)}).filter(function(d){
-            if(d.children) return false;
-            return true;
+        //group alphabetically:
+        this.alphaGroup = _.values(categories).reduce(function(m,v){
+            if(m[v.name[0]] === undefined){
+                m[v.name[0]] = { "name" : v.name[0], children: []};
+            }
+            m[v.name[0]].children.push(v);
+            return m;
+        },{});
+
+        console.log("Alphagroup:",this.alphaGroup);
+        
+        this.packed = this.pack({"name" : "everything","children":_.values(this.alphaGroup)}).filter(function(d){
+            if(d.name !== 'everything') return true;
+            return false;
         });
         console.log("Packed:",this.packed);
         
@@ -81,30 +94,45 @@ define(['d3','underscore'],function(d3,_){
        @method draw
      */
     Visualisation.prototype.draw = function(data){
-        console.log("Circle Pack: Drawing");
+
         var vRef = this;
         var dataToUse;
         if(data !== undefined && data instanceof Array){
-            dataToUse = this.pack({"children":data}).filter(function(d){
-                if(d.children) return false;
-                return true;
+            //alphabetise
+            var alphaGroup = data.reduce(function(m,v){
+                if(m[v.name[0]] === undefined){
+                    m[v.name[0]] = { "name" : v.name[0], children:[]};
+                }
+                m[v.name[0]].children.push(v);
+                return m;
+            },{})
+
+            dataToUse = this.pack({"name" : "everything","children":_.values(alphaGroup)}).filter(function(d){
+                if(d.name !== "everything") return true;
+                return false;
             });
         }else{
             dataToUse = this.packed;
         }
-
+        console.log("Circle Pack: Drawing:",dataToUse);
         this.drawBarOfNames(d3.select("#leftBar"),dataToUse.slice(0,40));
         this.drawBarOfNames(d3.select("#rightBar"),dataToUse.slice(-40));
 
         var main = d3.select("#mainVisualisation");
-        var bound = main.selectAll(".node").data(dataToUse,function(d,i){
+        main.selectAll(".alphaGroup").remove();
+        var bound = main.selectAll(".node,.alphaGroup").data(dataToUse,function(d,i){
             return d.name;
         });
 
         bound.exit().remove();
 
         //create the groups and register functions on them
-        var enter = bound.enter().append("g").classed("node",true)
+        var enter = bound.enter().append("g")
+            .attr("class",function(d){
+                return d.children ? "alphaGroup" : "node";
+            });
+
+        main.selectAll(".node")
             .on("click",function(d,i){
                 vRef.clickFunction(d,i);
             })
@@ -117,7 +145,7 @@ define(['d3','underscore'],function(d3,_){
 
         enter.append("circle");
 
-        main.selectAll(".node")
+        main.selectAll(".node,.alphaGroup")
             .attr("transform",function(d,i){
                 return "translate(" + d.x +"," + (20 + d.y) + ")";
             });
@@ -137,11 +165,14 @@ define(['d3','underscore'],function(d3,_){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("CirclePack3: cleanUp");
         d3.select("#mainVisualisation").selectAll(".node").remove();
         d3.select("#leftBar").selectAll(".nameGroup").remove();
         d3.select("#rightBar").selectAll(".nameGroup").remove();
         d3.select("#mainVisualisation").selectAll(".game").remove();
+        d3.select("#mainVisualisation").selectAll(".alphaGroup").remove();
+        d3.select("#startButton").remove();
+        
     };
 
     //Methods to do:
@@ -206,22 +237,27 @@ define(['d3','underscore'],function(d3,_){
                 if(d.games){
                     return d.name + " : " + _.values(d.games).length + " games";
                 }else if(d.appid){
-                    return d.name;
+                    return d.name + " : " + d.hours_forever + " hours played";
                 }
                 
             });
 
-        d3.selectAll(".node")
-            .selectAll("circle")
-            .transition()
-            .style("fill",function(e){
-                if(e.name === d.name) return vRef.oneOf20Colours(e.value);
-                return "grey";
-            })
-            .attr("r",function(e){
-                if(e.name === d.name) return e.r + 5;
-                return 2;
-            });
+        var greyCircle = function(selection){
+            selection
+                .selectAll("circle")
+                .transition()
+                .style("fill",function(e){
+                    if(e.name === d.name) return vRef.oneOf20Colours(e.value);
+                    return "grey";
+                })
+                .attr("r",function(e){
+                    if(e.name === d.name) return e.r + 5;
+                    return e.r - 5;
+                });
+        };
+
+        d3.selectAll(".node,.alphaGroup").call(greyCircle);
+        //d3.selectAll(".alphaGroup").call(greyCircle);
     };
     
     //unhighlight
@@ -238,58 +274,51 @@ define(['d3','underscore'],function(d3,_){
             })
             .style("opacity",1);
 
-        d3.select("#gameTitle")
-            .select("#gametitleMainText")
-            .text("");
+        if(!this.currentCategory){
+            d3.select("#gameTitle")
+                .select("#gameTitleMainText")
+                .text("");
+        }else{
+            d3.select("#gameTitle")
+                .select("#gameTitleMainText")
+                .text(this.currentCategory);
+        }
 
-        d3.selectAll(".node").selectAll("circle")
-            .transition()
-            .style("fill",function(e){
-                return vRef.oneOf20Colours(e.value);
-            })
-            .attr("r",function(e){
-                return e.r;
-            });
-        
+        var ungreyCircle = function(selection){
+            selection
+                .selectAll("circle")
+                .transition()
+                .style("fill",function(e){
+                    return vRef.oneOf20Colours(e.value);
+                })
+                .attr("r",function(e){
+                    return e.r;
+                });
+        };
+
+
+        d3.selectAll(".node,.alphaGroup").call(ungreyCircle);
+        //d3.selectAll(".alphaGroup").call(ungreyCircle);
     };
 
     //click
     Visualisation.prototype.clickFunction = function(d,i){
         //if a category of games:
         if(d.games !== undefined){
+            this.currentCategory = d.name;
             this.draw(_.values(d.games));
         }else if(d.appid){
-            this.drawGame(d);
+            this.hub.drawGame(d);
         }
 
-    };
-
-    Visualisation.prototype.drawGame = function(game){
-        this.cleanUp();
-        var main = d3.select("#mainVisualisation").append("g").classed("game",true);
-
-        //display:
-        //name
-
-        //description
-
-        //review status
-
-        //publisher
-
-        //developer
-
-        //last played
-
-        //last updated
-
-        //tags
-        
     };
 
     
     //Utility trim text function:
     var trimText = function(d){
+        if(d.name === undefined){
+            console.error("No name:",d);
+        }
         //Detect bounding box and "..." names too long
         var bbox = this.getBBox();
         var maxLength = d.name.length-4;
@@ -301,7 +330,6 @@ define(['d3','underscore'],function(d3,_){
             maxLength -= 2;
         }
     };
-    
     
     return Visualisation;
     

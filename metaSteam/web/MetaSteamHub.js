@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation','CirclePack3'],function(d3,_,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation,CirclePack3){
+define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation','CirclePack3','pubDevVis','SearchVis','RandomGame'],function(d3,_,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation,CirclePack3,PubDevVis,SearchVis,RandomGame){
 
     var idRegex = /\W/g;
     
@@ -82,7 +82,10 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
         this.registerButton('Multiplayer', new MultiplayerVisualisation(this));
         this.registerButton('Calendar',new CalendarVisualisation(this));
         this.registerButton('Tag Matrix',new CoOccurrenceMatrix(this));
-        this.registerButton('Search', new TemplateVisualisation(this));
+        this.registerButton('Pubs/Devs',new PubDevVis(this));
+        this.registerButton('Search', new SearchVis(this));
+        this.registerButton('Random', new RandomGame(this));
+        
 
         //            {name:"timeline"},
         //          {name:"chord"},
@@ -314,6 +317,14 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
     Hub.prototype.registerData = function(data){
         console.log("Registering Data",data);
         this.data = data;
+
+        //copy over hours forever to installed games
+        this.data.profile.forEach(function(game){
+            if(this.data.installed[game.appid] !== undefined){
+                this.data.installed[game.appid].hours_forever = game.hours_forever | 0;
+            }
+        },this);
+        
     };
 
     /**
@@ -596,6 +607,139 @@ define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','Mult
             .style("fill","white");
 
     };
+
+
+    /**
+       @class Hub
+       @method drawGame
+       @purpose clear the screen and draw information related to a specific game
+     */
+    Hub.prototype.drawGame = function(game){
+        console.log("Hub Method: DrawGame: ",game);
+        var vRef = this;
+        //cleanup
+        this.cleanUp();
+        //setup data
+        var dateString;
+        if(game && game.LastUpdated){
+            var date = new Date(0);
+            date.setSeconds(game.LastUpdated);
+            dateString = date.toString();
+        }
+        var gameData = [
+            "Name: " + game.name,
+            "Last Updated: " + (dateString || "unkown"),
+            "Amount Played: " + (game.hours_forever || "unknown") + " hours",
+            "Developer: " + (game.__developer || "unknown"),
+            "Publisher: " + (game.__publisher || "unknown"),
+            "Released: " + (game.releaseDate ? game.releaseDate.original : "unknown"),
+            "Size: " + formatBytes(game.SizeOnDisk,2),
+            game.__description,
+        ];
+        console.log("Game Data:",gameData);
+        var main = d3.select("#mainVisualisation").append("g").classed("game",true);
+                
+        //display:
+        //name
+        d3.select("gameTitleMainText")
+            .text("");
+
+        //bind data
+        var bound = main.selectAll(".info").data(gameData);
+        var enter = bound.enter().append("g").classed("info",true);
+
+        enter.append("rect")
+            .attr("width",this.internalWidth - (this.padding * 4))
+            .attr("height",60)
+            .style("fill",this.colours.lightBlue)
+            .attr("rx",10)
+            .attr("ry",10);
+        
+        enter.append("text").text(function(d){
+            return d;
+        })
+            .attr("transform","translate(20,20)")
+            .attr("dy","1.4em");
+
+
+        main.selectAll(".info")
+            .attr("transform",function(d,i){
+                return "translate(" + vRef.padding + "," + (vRef.headerHeight + (i * 80)) + ")";
+            });
+
+        main.selectAll("text")
+            .call(wrapText, (this.internalWidth - this.padding * 8));
+
+
+        var startButton = d3.select("#leftBar")
+            .append("g").classed("startButton",true)
+            .attr("id","startButton")
+            .attr("transform","translate(" + (this.sideBarWidth * 0.1)+","+ (this.internalHeight * 0.5) +")")
+            .on("mouseover",function(){
+                d3.select(this).select("rect")
+                    .transition()
+                    .style("fill","green");
+            })
+            .on("mouseout",function(){
+                d3.select(this).select("rect")
+                    .transition()
+                    .style("fill","red");
+            })
+            .on("click",function(){
+                vRef.sendStartMessageToServer(game.appid);
+            });
+
+        startButton.append("rect")
+            .attr("height",50)
+            .attr("width",this.sideBarWidth * 0.8)
+            .style("fill","red")
+            .attr("rx",10)
+            .attr("ry",10);
+
+        startButton.append("text")
+            .attr("transform","translate("+10+","+20+")")
+            .text("START GAME");
+    };
+
+
+    //from http://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
+    var formatBytes = function(bytes,decimals){
+        if(bytes == 0) return '0 Byte';
+        var k = 1000;
+        var dm = decimals + 1 || 3;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
+    };
+
+    //from bl.ocks.org/mbostock/7555321
+    var wrapText = function(textSelection,width){
+        textSelection.each(function(){
+            var text = d3.select(this),
+                words = text.text().split(/\s+/),
+                word,//current word
+                line = [],//current line
+                y = text.attr("y"),
+                dy = parseFloat(text.attr("dy")),
+                tspan = text.text(null).append("tspan")
+                .attr("x",20)
+                .attr("y",y)
+                .attr("dy",dy);
+            while(word = words.shift()){
+                line.push(word);
+                tspan.text(line.join(" "));
+                if(tspan.node().getComputedTextLength() > width){
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan").attr("x",20)
+                        .attr("dy",dy +"em").text(word);
+                }
+            }
+        });
+    };    
+
+
 
     
     return Hub;

@@ -116,7 +116,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         console.log("Template: Drawing");
         //create the main element:
         var calendar = d3.select("#mainVisualisation").append("g")
-            .attr("id","calendar");
+            .attr("id","calendar").attr("transform","translate(10,20)");
         //bind the month data for specified year:
         //console.log("Binding:",this.dateArray[yearNum]);
         var months = calendar.selectAll('.month').data(this.dateArray[yearNum],function(d,i){ return i;});
@@ -125,36 +125,41 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
             .classed("month",true)
             .attr("transform",function(d,i){
                 return "translate(" + 10 + "," + (i * 30) + ")";
-            });
+            }).each(function(d,i){
+                var curMonth = d3.select(this);
+                var days = curMonth.selectAll(".days").data(function(e,j){
+                    return e;
+                });
 
-        //bind day data to groups
-        var days = months.selectAll(".days").data(function(d,i){
-            return d; });
-        //add each day
-        days.enter().append("g")
-            .classed("days",true)
-            .attr("transform",function(d,i){
-                return "translate(" + (i * vRef.dayWidth) + ",0)";
-            })
-            .on("mouseover",function(d,i){
-                console.log("Moused over:",d);
-            });
-
-
-        
-        //draw each day
-        days.append("rect")
-            .attr("width",(vRef.dayWidth - 5))
-            .attr("height",25)
-            .style("fill",function(d,i){
-                var colour = vRef.colours.darkBlue;
-                if((i+1)%7 === 0 || (i+1)%7 === 1){
-                    colour = vRef.colours.lightBlue;
-                }                
-                if(d.length > 0){
-                    colour = vRef.colours.green;
-                }
-                return colour;
+                //add each day
+                days.enter().append("g")
+                    .classed("days",true)
+                    .attr("transform",function(e,j){
+                        return "translate(" + (j * vRef.dayWidth) + ",0)";
+                    })
+                    .on("mouseover",function(e,j){
+                        console.log(e);
+                        var curDate = new Date(yearNum,i,j);
+                        //todo: draw game information, with details of how long played
+                        
+                    });
+                                
+                //draw each day
+                days.append("rect")
+                    .attr("width",(vRef.dayWidth - 5))
+                    .attr("height",25)
+                    .style("fill",function(e,j){
+                        var colour = vRef.colours.darkBlue;
+                        var curDate = new Date(yearNum,i,j);
+                        if(curDate.getDay() === 6 || curDate.getDay() === 0){
+                            colour = vRef.colours.lightBlue;
+                        }                        
+                        if(e && e.length > 0){
+                            colour = vRef.colours.green;
+                        }
+                        return colour;
+                    });
+                
             });
 
     };
@@ -170,7 +175,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("Calendar: cleanUp");
         d3.select("#calendar").remove();
         d3.select("#availableYears").remove();
     };
@@ -262,14 +267,29 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
             .style("fill","white");
 
         years.on("click",function(d,i){
+            availableYearGroup.selectAll("rect").transition()
+                .style("fill",function(e,i){
+                    if(d === e) return "green";
+                    return "black";
+                });
             vRef.draw(i);
         })
             .on("mouseover",function(d,i){
+                availableYearGroup.selectAll("rect").transition()
+                    .style("fill",function(e,i){
+                        if(d === e) return "green";
+                        return "black";
+                    })
                 var temp = vRef.priorDrawn;
                 vRef.draw(i);
                 vRef.priorDrawn = temp;
             })
             .on("mouseout",function(d,i){
+                availableYearGroup.selectAll("rect").transition()
+                    .style("fill",function(e,i){
+                        if(i === vRef.priorDrawn) return "green";
+                        return "black";
+                    });
                 vRef.draw(vRef.priorDrawn);
             });
         

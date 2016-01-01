@@ -66,7 +66,7 @@ define(['d3','underscore'],function(d3,_){
        @method registerdata
     */
     Visualisation.prototype.registerData = function(data){
-        console.log("Template: Registering Data");
+        console.log("Genre Pie Chart: Registering Data");
         this.data = data;
         
         var genresData = {};
@@ -155,7 +155,7 @@ define(['d3','underscore'],function(d3,_){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("Template: cleanUp");
+        console.log("Genre Pie Chart: cleanUp");
         d3.select("#pieChart").remove();
     };
 

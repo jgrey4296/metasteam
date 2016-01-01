@@ -47,7 +47,7 @@ define(['d3','underscore'],function(d3,_){
     */
     Visualisation.prototype.registerData = function(data){
         var vRef = this;
-        console.log("Template: Registering Data");
+        console.log("Multiplayer Vis: Registering Data");
         this.data = data;
                 
         var multiplayerGames = _.values(this.data.installed).map(function(game){
@@ -70,7 +70,7 @@ define(['d3','underscore'],function(d3,_){
                 "name" : vRef.data.installed[d].name,
                 "value" : 0
             };
-        });
+        }).slice(0,20);
         console.log("result data:",this.resultData);
 
 
@@ -100,7 +100,8 @@ define(['d3','underscore'],function(d3,_){
        @method draw
      */
     Visualisation.prototype.draw = function(){
-        console.log("Template: Drawing:",this.resultData);
+        var vRef = this;
+        console.log("Multiplayer Vis: Drawing:",this.resultData);
         var mpVis = d3.select("#mainVisualisation").append("g")
             .attr("id","multiplayervisualisation");
         
@@ -109,6 +110,13 @@ define(['d3','underscore'],function(d3,_){
         var gs = bound.enter().append("g")
             .attr("transform",function(d,i){
                 return "translate(30," + (20 + (i * 30)) + ")";
+            })
+            .classed("indGame",true)
+            .on("click",function(d){
+                var game = vRef.data.installed[d.id];
+                if(game){
+                    vRef.hub.drawGame(game);
+                }
             });
 
         gs.append("rect")
@@ -131,7 +139,7 @@ define(['d3','underscore'],function(d3,_){
        @method cleanUp
      */
     Visualisation.prototype.cleanUp = function(){
-        console.log("cleaning up");
+        console.log("Multiplayer Vis: cleaning up");
         d3.select("#multiplayervisualisation").remove();
     };
 
