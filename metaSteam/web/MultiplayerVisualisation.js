@@ -49,7 +49,8 @@ define(['d3','underscore'],function(d3,_){
         var vRef = this;
         console.log("Multiplayer Vis: Registering Data");
         this.data = data;
-                
+
+        //get games with multiplayer tags
         var multiplayerGames = _.values(this.data.installed).map(function(game){
             if(game.__tags && game.__tags.join(" ").match(/[mM]ulti[ -]?[Pp]layer/)){
                 return game;
@@ -59,11 +60,13 @@ define(['d3','underscore'],function(d3,_){
             return false;
         });
         console.log("Multiplayer games:",multiplayerGames);
+        //Get the appids
         var mpGameIds = multiplayerGames.map(function(d){
             return d.appid;
         });
         console.log("mpGameIds:",mpGameIds);
-        
+
+        //create empty data
         this.resultData = mpGameIds.map(function(d){
             return {
                 "id" : d,
@@ -73,6 +76,7 @@ define(['d3','underscore'],function(d3,_){
         }).slice(0,20);
         console.log("result data:",this.resultData);
 
+        //start the query, with a callback to store the returning data
         this.hub.sendHowManyPlayingMessageToServer(mpGameIds,function(result){
             console.log("Result of how many playing: ",result);
             vRef.resultData = result.map(function(d){
@@ -88,9 +92,6 @@ define(['d3','underscore'],function(d3,_){
                 if(b.value > a.value) return 1;
                 return 0;
             });
-            
-            //vRef.cleanUp();
-            //vRef.draw();
         });
         
     };

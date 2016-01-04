@@ -220,6 +220,7 @@ define(['d3','underscore'],function(d3,_){
        @purpose draw the axes of the visualisation
      */
     Timeline.prototype.drawAxes = function(){
+        var vRef = this;
         if(!d3.select("#mainVisualisation").select("#axis").empty()){
             return;
         }
@@ -236,6 +237,18 @@ define(['d3','underscore'],function(d3,_){
         d3.select("#axis")
             .select(".domain")
             .style("fill","white");
+
+        if(d3.select("#axis").select(".axisTitle").empty()){
+            var axisTitle = d3.select("#axis").append("g")
+                .classed("axisTitle",true)
+                .attr("transform","translate(" + (vRef.hub.internalWidth * 0.5) + ",40)");
+
+            axisTitle.append("text")
+                .text("X axis: Release Date, Y Axis: Play Time")
+                .style("text-anchor","middle")
+                .style("fill","white");
+            
+        }
     };
 
     /**

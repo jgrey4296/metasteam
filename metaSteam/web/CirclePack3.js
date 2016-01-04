@@ -39,13 +39,14 @@ define(['d3','underscore'],function(d3,_){
             return this.colourScale(this.scaleToColours(val));
         };
 
+        //The pack layout
         this.pack = d3.layout.pack()
             .size([this.width - 20, this.height - 40])
             .padding(1.5)
             .value(function(d){
-                return d.hours_forever | _.values(d.games).length;
-                //if(d. === undefined) return 1;
-                //return _.values(d.games).length;
+                var value = d.hours_forever | _.values(d.games).length;
+                if(value > 0) return value;
+                return 1;
             })
             .sort(function(a,b){
                 return a.name < b.name;
@@ -74,7 +75,7 @@ define(['d3','underscore'],function(d3,_){
         //group alphabetically:
         this.alphaGroup = _.values(categories).reduce(function(m,v){
             if(m[v.name[0]] === undefined){
-                m[v.name[0]] = { "name" : v.name[0], children: []};
+                m[v.name[0]] = { "name" : v.name[0], children: [], alpha: 1};//alpha to designate alpha groups
             }
             m[v.name[0]].children.push(v);
             return m;
@@ -155,7 +156,11 @@ define(['d3','underscore'],function(d3,_){
                 return d.r;
             })
             .style("fill",function(d){
-                return vRef.oneOf20Colours(d.value);
+                if(d.alpha){
+                    return vRef.colours.darkBlue;
+                }else{
+                    return vRef.oneOf20Colours(d.value);
+                }
             });
     };
 
@@ -267,7 +272,7 @@ define(['d3','underscore'],function(d3,_){
             .selectAll("text")
             .transition()
             .style("fill",function(e,i){
-                return vRef.oneOf20Colours(e.value);
+                    return vRef.oneOf20Colours(e.value);
             })
             .text(function(e,i){
                 return e.shortName ? e.shortName : e.name;
@@ -289,7 +294,11 @@ define(['d3','underscore'],function(d3,_){
                 .selectAll("circle")
                 .transition()
                 .style("fill",function(e){
-                    return vRef.oneOf20Colours(e.value);
+                    if(e.alpha){
+                        return vRef.colours.darkBlue;
+                    }else{
+                        return vRef.oneOf20Colours(e.value);
+                    }
                 })
                 .attr("r",function(e){
                     return e.r;

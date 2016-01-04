@@ -8,9 +8,10 @@
 
 define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
 
-    /**The main class
+    /**
        @class CalendarVisualisation
        @constructor
+       @purpose The main class
      */
     var Visualisation = function(hub){
         this.hub = hub;
@@ -48,6 +49,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
 
     /**
        @method registerdata
+       @purpose groups games by dates for visualisation
     */
     Visualisation.prototype.registerData = function(data){
         console.log("Template: Registering Data");
@@ -100,18 +102,33 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         this.monthWidth = this.width - 20;
         this.dayWidth = this.monthWidth / 32;
 
-        this.drawAvailableYears();
+
         
     };
 
     /**
        @method draw
+       @purpose Draws available years in the left bar, draws a month/day matrix of a year, showing when games were played
      */
     Visualisation.prototype.draw = function(yearNum){
         this.cleanupDrawn();
-        if(yearNum === undefined) yearNum = this.dateArray.length-1;
+        
+
+        if(yearNum === undefined) {
+            yearNum = this.dateArray.length-1;
+            this.drawAvailableYears();
+        }
         this.priorDrawn = yearNum;
         var vRef = this;
+
+        //calculate height:
+        var monthHeight = ((this.hub.internalHeight - 40) * 0.5) / 12,
+            monthPad = 5,
+            xPad = 10,
+            infoY = (this.hub.internalHeight * 0.5) + (12 * monthPad),
+            infoWidth = (this.hub.internalWidth - (xPad * 4)),
+            infoHeight = ((this.hub.internalHeight - (monthPad * 12)) - 400);
+        
         
         console.log("Template: Drawing");
         //create the main element:
@@ -124,7 +141,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         months.enter().append("g")
             .classed("month",true)
             .attr("transform",function(d,i){
-                return "translate(" + 10 + "," + (i * 30) + ")";
+                return "translate(" + xPad + "," + (i * (monthHeight + monthPad) ) + ")";
             }).each(function(d,i){
                 var curMonth = d3.select(this);
                 var days = curMonth.selectAll(".days").data(function(e,j){
@@ -138,16 +155,22 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
                         return "translate(" + (j * vRef.dayWidth) + ",0)";
                     })
                     .on("mouseover",function(e,j){
-                        console.log(e);
-                        var curDate = new Date(yearNum,i,j);
+                        var curDate = new Date(vRef.earliest.getFullYear() + yearNum,i,j+1);
+                        console.log("Making date:",vRef.earliest.getFullYear() +yearNum,i,j+1);
                         //todo: draw game information, with details of how long played
-                        
+                        if(e.length > 0){
+                            drawDayInfo(vRef,curDate,e);
+                        }
+                    })
+                    .on("mouseout",function(e,j){
+                        //d3.select("#dayInfo").remove();
+                        d3.select("#dayInfo").attr("visibility","hidden");
                     });
                                 
                 //draw each day
                 days.append("rect")
                     .attr("width",(vRef.dayWidth - 5))
-                    .attr("height",25)
+                    .attr("height",monthHeight)
                     .style("fill",function(e,j){
                         var colour = vRef.colours.darkBlue;
                         var curDate = new Date(yearNum,i,j);
@@ -169,6 +192,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
     */
     Visualisation.prototype.cleanupDrawn = function(){
         d3.select("#calendar").remove();
+        d3.select("#dayInfo").remove();
     };
     
     /**
@@ -178,6 +202,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         console.log("Calendar: cleanUp");
         d3.select("#calendar").remove();
         d3.select("#availableYears").remove();
+        d3.select("#dayInfo").remove();
     };
 
     /**
@@ -208,7 +233,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         var date = new Date(dateString);
         var yearIndex = (date.getYear() - this.earliest.getYear());
         var monthIndex = date.getMonth();
-        return [yearIndex,monthIndex,date.getDate()];
+        return [yearIndex,monthIndex,date.getDate() - 1];
     };
 
     /**
@@ -226,7 +251,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
             for(var j=0; j<12; j++){
                 d.push([]);
                 //generate the days:
-                for(var k=0; k<this.monthLengths[j][1]; k++){
+                for(var k=1; k<=this.monthLengths[j][1]; k++){
                     d[j].push([]);
                 }
             }
@@ -275,6 +300,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
             vRef.draw(i);
         })
             .on("mouseover",function(d,i){
+                console.log("Mouseover:",i);
                 availableYearGroup.selectAll("rect").transition()
                     .style("fill",function(e,i){
                         if(d === e) return "green";
@@ -295,6 +321,74 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
         
         
     };
+
+    var drawDayInfo = function(vRef,date,gameArray){
+        //calculations
+        var monthPad = 5,
+            xPad = 10,
+            infoY = (vRef.hub.internalHeight * 0.5) + (12 * monthPad),
+            infoWidth = (vRef.hub.internalWidth - (xPad * 4)),
+            infoHeight = ((vRef.hub.internalHeight - (monthPad * 12)) - 400),
+            midPoint = infoWidth * 0.5,
+            nodeHeight = (infoHeight - 40) / gameArray.length;
+        
+
+        console.log("Date:",date.toString());
+        console.log("Games:",gameArray);
+        //setup the info group
+        var dayInfo = d3.select("#dayInfo");
+        if(dayInfo.empty()){
+            dayInfo = d3.select("#mainVisualisation").append("g")
+                .attr("id","dayInfo")
+                .attr("transform","translate(" + (xPad * 2) + "," + infoY + ")");
+            
+            dayInfo.append("rect")
+                .attr("height",infoHeight)
+                .attr("width",infoWidth)
+                .style("fill",vRef.colours.lightBlue);
+
+            dayInfo.append("text").attr("id","dayInfoDateText")
+                .attr("transform","translate(" + midPoint + ",30)")
+                .text("default")
+                .style("text-anchor","middle");
+
+            dayInfo.append("g").attr("id","gamesPlayed")
+                .attr("transform","translate(" + xPad + ",40)");
+        }
+
+        dayInfo.attr("visibility","visible");
+        //update the info group
+        
+        //update the date text
+        d3.select("#dayInfoDateText").text(date.toDateString());
+        //draw the games
+        var gamesPlayed = d3.select("#gamesPlayed");
+        var bound = gamesPlayed.selectAll("g").data(gameArray,function(d){ return d.appid; });
+        bound.exit().remove();
+        
+        var enter = bound.enter().append("g");
+        enter.append("rect")
+            .attr("width",infoWidth * 0.5)
+            .attr("height",nodeHeight * 0.9);
+        enter.append("text")
+            .style("fill","white")
+            .attr("transform","translate(" + (xPad * 2) + "," + (nodeHeight * 0.5) + ")");
+
+        gamesPlayed.selectAll("g")
+            .attr("transform",function(d,i){
+                return "translate(" + xPad +"," + (i * nodeHeight) + ")";
+            });
+
+        gamesPlayed.selectAll("text")
+            .text(function(d){
+                return d.name;
+            });
+
+    };
+
+
+    var
+    
     
     
     return Visualisation;

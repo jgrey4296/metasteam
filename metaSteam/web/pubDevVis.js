@@ -42,6 +42,13 @@ define(['d3','underscore'],function(d3,_){
                 return 1;
             });
 
+        this.treepack = d3.layout.treemap()
+            .size([this.width - 10, this.height - 40])
+            .padding(1.5)
+            .value(function(d){
+                if(d.children) return d.children.length;
+                return 1;
+            });
         
     };
 
@@ -51,18 +58,14 @@ define(['d3','underscore'],function(d3,_){
     Visualisation.prototype.registerData = function(data){
         console.log("Pub/Dev: Registering Data");
         this.data = data;
-
+        
         //if there isnt a '__developer' or '__publisher' value, add it in:
         _.values(this.data.installed).forEach(function(game,i){
             if(game.__publisher === undefined){
                 game.__publisher = String(i%30);
-            }else if(game.__publisher.length === 0){
-                game.__publisher = "default";
             }
             if(game.__developer === undefined){
                 game.__developer = String(i%30);
-            }else if(game.__developer.length === 0){
-                game.__developer = "default";
             }
         });
 
@@ -82,22 +85,29 @@ define(['d3','underscore'],function(d3,_){
 
         console.log("Extracted pub/devs:",this.groupedData);
 
+        var id = 0;
+        //create the 'tree' of data
         this.useData = {
+            "id"   : id++,
             "name" : "everything",
             "children" : [
                 {
+                    "id"   : id++,
                     "name" : "publishers",
                     "children" : _.pairs(this.groupedData.publishers).map(function(pubPair){
-                            return {
-                                "name" : pubPair[0],
-                                "children" : pubPair[1]
-                            };
+                        return {
+                            "id" : id++,
+                            "name" : pubPair[0],
+                            "children" : pubPair[1]
+                        };
                     })
                 },
                 {
+                    "id"   : id++,
                     "name" : "developers",
                     "children" : _.pairs(this.groupedData.developers).map(function(devPair){
                         return {
+                            "id"   : id++,
                             "name" : devPair[0],
                             "children" : devPair[1]
                         }
@@ -108,59 +118,71 @@ define(['d3','underscore'],function(d3,_){
 
         console.log("Use Data:",this.useData);
 
-        this.packedData = this.pack(this.useData).filter(function(d){
-            if(d.name !== "everything") return true;
-            return false;
-        });
-
         console.log("Packed Data:",this.packedData);
     };
 
     /**
        @method draw
      */
-    Visualisation.prototype.draw = function(){
+    Visualisation.prototype.draw = function(data){
         var vRef = this;
-        console.log("Pub/Dev: Drawing");
+        var currentData;
+        if(data){
+            console.log("Pub/Dev: Drawing:",data);
+            currentData = this.treepack(data);
+        }else{
+            console.log("Pub/Dev: Drawing:",this.useData);
+            currentData = this.treepack(this.useData).filter(function(d){
+                if(d.name === "everything") return false;
+                if(d.children === undefined) return false;
+                return true;
+            });
+        }
 
+        console.log("Drawing:",currentData);
         //draw bubble pack of pubs/devs
         var bound = d3.select("#mainVisualisation").selectAll(".node")
-            .data(this.packedData);
+            .data(currentData,function(d){ return d.id || d.appid; });
         bound.exit().remove();
+        
         var enter = bound.enter().append("g")
-            .attr("class",function(d){ return d.children ? "node" : "leaf";});
+            .attr("class","node");
 
-        enter
-            .on("click",function(d){
-                console.log("Clicked:",d);
-            })
+        enter.on("click",function(d){
+            console.log("Clicked:",d);
+            //todo: transition the view to display the pub/dev clicked on
+            if(d.children){
+                vRef.draw(d);
+            }else{
+                vRef.hub.drawGame(d);
+            }            
+        })
             .on("mouseover",function(d){
                 d3.select("#gameTitle")
                     .select("#gameTitleMainText")
                     .text(d.name);
+                console.log(d);
             })
             .on("mouseout",function(d){
                 d3.select("#gameTitle")
                     .select("#gameTitleMainText")
                     .text("");
             });
+        enter.append("rect");
 
-        
-        enter.append("circle").attr("r",function(d){ return d.r; })
+        //update
+                //.attr("r",function(d){ return d.r; })
+        d3.select("#mainVisualisation").selectAll("rect")
+            .attr("width",function(d){ return d.dx;})
+            .attr("height",function(d){ return d.dy; })
             .style("fill",function(d,i){
-                return vRef.oneOf20Colours(i);
+                    return vRef.oneOf20Colours(i);
             });
         
-        var nodes = d3.selectAll(".node")
+        d3.selectAll(".node")
             .attr("transform",function(d){
-                return "translate("+d.x + "," + d.y + ")";
+                return "translate("+d.x + "," + (30 + d.y) + ")";
             });
-
-        var leaves = d3.selectAll(".leaf")
-            .attr("transform",function(d){
-                return "translate("+d.x + "," + d.y +")";
-            });
-        
         
     };
 
