@@ -333,7 +333,7 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
             nodeHeight = (infoHeight - 40) / gameArray.length;
         
 
-        console.log("Date:",date.toString());
+        console.log("Date:",date);
         console.log("Games:",gameArray);
         //setup the info group
         var dayInfo = d3.select("#dayInfo");
@@ -386,10 +386,34 @@ define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
 
     };
 
+    var calculateLengthOfPlay = function(date,game){
+        //get the play pair
+        var playPair,dateOne,dateTwo,
+            matchYears = game.__playHistory.filter(function(d){
+                return d[0].getYear() === date.getYear();
+            }),
+            matchMonth = matchYears.filter(function(d){
+                return d[0].getMonth() === date.getMonth();
+            }),
+            matchDay = matchMonth = filter(function(d){
+                return d[0].getDay() === date.getDay();
+            });
 
-    var
-    
-    
+        if(matchDay.length === 0) return -1;
+
+        playPair = matchDay[0];
+        dateOne = new Date(playPair[0]);
+        dateTwo = new Date(playPair[1]);
+                
+        //subtract larger from smaller
+        var milliseconds = dateOne - dateTwo,
+            seconds = milliseconds / 1000,
+            minutes = seconds /60,
+            hours = minutes / 60;
+        
+        return hours;
+    };
+
     
     return Visualisation;
     
