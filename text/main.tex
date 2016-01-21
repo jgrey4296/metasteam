@@ -65,21 +65,32 @@ The web interface provides a variety of visualisations for the gameData json fil
 The visualisations currently written and being refined are the following: Two Circle Pack views, a Timeline view, a Multiplayer population view, Genre based Pie chart view, Update versus played view, Calendar View, Random view, and a Cooccurrence Matrix View of Tags.
 
 \subsubsection*{Circle Pack Visualisations}
+There are two circle pack visualisations. The first groups games into tags ('FPS','RPG' etc, which have been scraped from each game's Steam Store Page), which a user can select to then view games visualised by the number of hours played for each game (scraped from the user's Steam Profile Page).
+
+The second circle pack visualisation groups games by Developer and Publisher, both extracted from the Steam Store page for each game.
 
 \subsubsection*{Timeline visualisation}
+The timeline visualisation presents a simple bar chart, with the X axis displaying release date of a game, Y Axis displaying number of hours played for each game, and highlighting over a game displaying when the game was last played.
 
 \subsubsection*{Multiplayer population visualisation}
+The Multiplayer population visualisation lists all games that have a tag passing the regex ``/[Mm]ulti[- ]?[Pp]layer/ ``. This list is passed back to the python server as a list of appids, which scrapes each game's Steam Community Page for the number of players in game currently, which is passed back to the web page for display. Games are sorted by the size of the population.
 
 \subsubsection*{Genre Pie Chart visualisation}
+The Genre/Tag pie chart visualisation aggregates the number of hours played of all games in each tag category, displaying the top tag/hours played as a Pie/Donut chart.
 
 \subsubsection*{Update Versus Played visualisation}
+The update Versus Played visualisation uses the 'last updated' field and 'last played' fields from parsed manifest files of installed games to display games that have been updated more recently than played, as a list. This is useful for early access games where updates add non-trivial changes which users may be waiting for.
 
 \subsubsection*{Calendar Visualisation}
+The Calendar visualisation currently generates sample play history data, inventing x<6 hour play sessions from the release date of the game to the current date, to be able to visualise a calendar from 2004 (Steam's release date) to the current date, as an example of how a more detailed play history view could work. Each year is displayable, with each day separately viewable, which displays any game that has been marked as having a play session on that date.
+
+This view is currently using made up data, as Steam does not record or track more than 'last played' and 'total hours played' data. MetaSteam however has the potential, if the user starts and stops games through the MetaSteam Web Interface. 
 
 \subsubsection*{Random Game View}
+This view is a simple button that will display the information for a random installed game. The view itself is accessible from all visualisations if a user clicks on a specific game. It is from this specific game view that a user can start a game.
 
-\subsubsection*{Tag CoOccurrent Matrix visualisation}
-
+\subsubsection*{Tag Co-Occurrence Matrix visualisation}
+The Tag co-occurrence matrix shows a very large matrix of all scraped tags, marking which tags occur together on at least one game. This is currently very large and slow to draw, but can show interesting patterns.
 
 
 \section*{ENDNOTES}
