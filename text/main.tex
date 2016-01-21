@@ -1,0 +1,79 @@
+
+\documentclass[11pt]{article}
+\usepackage{digra}
+ 
+\usepackage[authordate,minnames=1,maxnames=2,maxbibnames=10,minbibnames=7]{biblatex-chicago}
+\AtEveryBibitem{\clearfield{doi}\clearfield{urlyear}\clearfield{urlmonth}\clearfield{urlday}}
+\DeclareFieldFormat[game]{title}{\mkbibemph{#1}}
+\DefineBibliographyStrings{english}{%
+  references = {},
+}
+
+
+\addbibresource{bibliography.bib}
+\title{\addvspace{-2\baselineskip}Your Title goes Here: It May Carry \\
+Over onto a Second Line}
+\author{First Anonymous Author}
+\affil{Institutional Affiliation \\
+Address line 1 \\
+Address line 2 \\
+telephone \\
+firstauthor@institution.com }
+
+\author{Second Anonymous Author, Third Anonymous Author}
+\affil{Institutional Affiliation \\
+Address line 1 \\
+Address line 2 \\
+telephone \\
+secondauthor@institution.com, thirdauthor@institution.com}
+\date{\vspace{-60pt}}
+
+\begin{document}
+\pagenumbering{gobble} 
+\newpage
+\pagenumbering{arabic}  
+\addvspace{-1\baselineskip}
+   \maketitle
+   \addvspace{-1\baselineskip}
+    \copyrightnotice
+ 
+\subsection*{MetaSteam System Overview}
+
+MetaSteam is separated into two parts: A Python component, and a D3 javascript based web interface. The Python part of MetaSteam serves four functions: Local Scanning, Web Scraping, Interface Hosting, and Game starting. The Web interface for MetaSteam independently visualises information about the user's games.
+
+
+\subsubsection*{Local Scanning:}
+MetaSteam loads a settings json file that provides the steam username, location of the steam executable, and locations of steam libraries on hard drives. It then reads all manifest files in those locations, building up a data structure of what games are installed. This is saved to MetaSteam's own gameData json file.
+
+\subsubsection*{Web Scraping:}
+Once MetaSteam has a list of the games that are installed on the system, it starts a separately threaded Scraper that, for all installed games, parses through the Steam Store page of a game, extracting tags, developer, publisher, release date, review status, and other meta data available on the Steam Store (but not in the actual Steam Library). Such extracted data is saved into the gameData json file as well.
+
+MetaSteam also starts a Profile Scraping thread, which downloads the user's Steam Community page that lists all their owned games. This page stores such data as json internally, so it is parsed and added to the gameData json file.
+
+There is also a Scraper class to lookup a game's Steam Community page, and extract the number of players Steam registers as playing the game currently. This is used for assessing multiplayer activity for games in one of the web visualisations.
+
+
+\subsubsection*{Interface Hosting:}
+Separately from the scraping threads, MetaSteam has a simple HTTP server thread that opens the user's web browser to a localhost page, and serves up the web interface. The gameData json is one of the files served, allowing the web interface access to all of the scraped information on installed, and profile, games.
+
+\subsubsection*{Game Starting:}
+The HTTP server is able to respond to particular PUSH messages from the web interface, which calls the command line interface of steam, allowing the web interface to start games directly instead of the user needing to switch to Steam.
+
+\subsubsection*{Web Interface:}
+The web interface provides a variety of visualisations for the gameData json file that the python component creates and updates. The web page is comprised of a main MetaSteamHub javascript object that maintains overall state, and draws buttons to access each registered visualisation. Each visualisation meanwhile is an object that implements three methods: A registerData method (for transforming the gameData object to a useable representation for the visualisation), a draw method, and a cleanup method (to remove anything drawn when a different visualisation is selected.
+
+The visualisations currently written and being refined are the following: Two Circle Pack views, a Timeline view, a Multiplayer population view, Genre based Pie chart view, Update versus played view, Calendar View, Random view, and a Cooccurrence Matrix View of Tags.
+
+\subsubsection*{
+
+
+
+
+
+\section*{ENDNOTES}
+\addvspace{-1\baselineskip} %%I can't find another way to reduce the size of the gap for the end notes
+\theendnotes
+
+\section*{BIBLIOGRAPHY}
+\printbibliography
+\end{document}

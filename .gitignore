@@ -11,3 +11,4 @@ metaSteam/logs
 metaSteam/dist
 dist
 util/node_modules
+.DS_Store
