@@ -33,14 +33,31 @@ secondauthor@institution.com, thirdauthor@institution.com}
 \newpage
 \pagenumbering{arabic}  
 \addvspace{-1\baselineskip}
-   \maketitle
-   \addvspace{-1\baselineskip}
-    \copyrightnotice
- 
-\subsection*{MetaSteam System Overview}
+\maketitle
+\addvspace{-1\baselineskip}
+\copyrightnotice
 
-MetaSteam is separated into two parts: A Python component, and a D3 javascript based web interface. The Python part of MetaSteam serves four functions: Local Scanning, Web Scraping, Interface Hosting, and Game starting. The Web interface for MetaSteam independently visualises information about the user's games.
+\section{Introduction}
+MetaSteam grew from the rapid growth of Steam game libraries. Steam Sales have become a regular occurrence, as have Humble Bundles. Both drastically reduce the cost for buying numerous games in small time periods.
+There are no physical limitations to game ownership on Steam. Prior to digital distribution, an owner would need physical space for game disks, manuals and so on. There is no similar requirement for digital distribution, even hard drive space is not a limitation as only a subset of owned games need to be installed at a time, the rest residing in the cloud.
 
+Such a situation is obviously not what the Steam Library was designed for. It's design assumes relatively modest numbers of high quality games, as the case was when Steam was originally released in 2004. The purpose of Steam has grown since then. Libraries of multiple hundreds, and even thousands, of games, are becoming more prevalent.
+
+When confronted with a list of a thousand different names, and possibly an undescriptive image, is it realistic to expect users to remember and know what each game is, where they are in it, and what it is similar to?
+
+\section{Related Work}
+The problem is starting to be recognised, with blog posts like LifeHacker's ``How to keep your overflowing steam library neatly organised'' (http://lifehacker.com/how-to-keep-your-overflowing-steam-library-neatly-organ-1352077149),
+and Depressurizer (https://github.com/rallion/depressurizer), but they are only stopgaps, only assisting in use of the existing user interface. There have been design concepts (http://rendom.net/steam3/ and https://imgur.com/gallery/4dY9C/) but there have not been many attempts to actually create a valid, working alternative interface.
+
+Something about d3 should be mentioned. 
+
+    
+ \section*{MetaSteam System Overview}
+
+MetaSteam is separated into two parts: A Python component, and a D3 javascript based web interface. The Python part of MetaSteam serves four functions: Local Scanning, Web Scraping, Interface Hosting, and Game starting. The Web interface for MetaSteam independently visualises information about the user's games. Both components are designed to be minimal, extensible, and understandable, and available (see https://github.com/jgrey4296/metasteam).
+
+\subsection{Python Component}
+The Python component of MetaSteam is made of 5 classes: The main program (metaSteamMicro.py), server (MetaSteamHTTPServer.py), three classes to scrape information (MetaSteamProfileScraper.py, MetaSteamStoreScraper.py, and MetaSteamMultiplayerSraper.py).
 
 \subsubsection*{Local Scanning:}
 MetaSteam loads a settings json file that provides the steam username, location of the steam executable, and locations of steam libraries on hard drives. It then reads all manifest files in those locations, building up a data structure of what games are installed. This is saved to MetaSteam's own gameData json file.
@@ -58,6 +75,9 @@ Separately from the scraping threads, MetaSteam has a simple HTTP server thread 
 
 \subsubsection*{Game Starting:}
 The HTTP server is able to respond to particular PUSH messages from the web interface, which calls the command line interface of steam, allowing the web interface to start games directly instead of the user needing to switch to Steam.
+
+\subsection{Web Interface and Javascript Component}
+The Web component of MetaSteam is a simple webpage that uses the d3 library. It consists of the MetaSteamHub.js file, where visualisations are imported and registered to a button (two lines are edited for a new visualisation to be added), and then individual modules for each visualisation (CirclePack.js etc), where three methods need to be implmented: draw, registerData, and cleanup.
 
 \subsubsection*{Web Interface:}
 The web interface provides a variety of visualisations for the gameData json file that the python component creates and updates. The web page is comprised of a main MetaSteamHub javascript object that maintains overall state, and draws buttons to access each registered visualisation. Each visualisation meanwhile is an object that implements three methods: A registerData method (for transforming the gameData object to a useable representation for the visualisation), a draw method, and a cleanup method (to remove anything drawn when a different visualisation is selected.
@@ -91,6 +111,13 @@ This view is a simple button that will display the information for a random inst
 
 \subsubsection*{Tag Co-Occurrence Matrix visualisation}
 The Tag co-occurrence matrix shows a very large matrix of all scraped tags, marking which tags occur together on at least one game. This is currently very large and slow to draw, but can show interesting patterns.
+
+
+\section{Questionnaire and user study} 
+A Questionnaire was posted to Reddit in the r/pcgaming and r/steam subreddits, to collect initial data on user views of their experience with Steam. This resulted in 300+ responses, which were filtered by Operating System, and number of games owned, to determine potential users to test MetaSteam. In total, around 25 users were contacted to try the MetaSteam prototype, of which 5 or 6 have responded and are currently using the system.
+
+\section{Interview}
+
 
 
 \section*{ENDNOTES}
