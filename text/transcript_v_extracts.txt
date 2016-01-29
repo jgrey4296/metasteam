@@ -1,0 +1,132 @@
+
+John Grey (jgrey@soe.ucsc.edu): I think by your questionnaire response, you have a bit over 200 games right?
+
+Raz (raz@mail): 224 as of late. A bundle happened ^^"
+
+--------------------
+
+John Grey (jgrey@soe.ucsc.edu): Do you find the library management features of Steam works well for you?
+
+John Grey (jgrey@soe.ucsc.edu): Do you have issues with it, or have you found yourself overwhelmed by the number of games you have ever?
+
+Raz (raz@mail): They are 'good enough' for some very basic level of managing the games, but the fact they aren't fleshed out at all is very problematic. I could come with a ton of small things that would make it better.
+
+John Grey (jgrey@soe.ucsc.edu): What do you mean by 'good enough', can you give examples?
+
+Raz (raz@mail): As for being overwhelmed - not often, no, Aside from the 'what to pick next' syndrome. I have a tendency of grabbing a game and playing till completion (with some exceptions) so I can make the basic 'category' tool of steam work enough that I know where I am in getting through the things. Chopping it into ones finished, currently going on, replayable and such
+
+John Grey (jgrey@soe.ucsc.edu): 'what to pick next' syndrome?
+
+Raz (raz@mail): Which game to pick after you finished last big one, that took 20/30/40/etc hours.
+
+Raz (raz@mail): I am usually very caught up in the world and narrative, so it might be hard to break away from the previous one
+
+--------------------
+
+
+Raz (raz@mail): As for good enough - there are categories, which, underneath it all, are pretty much my private tags. However, not only are they very roughly implemented (basically just separators on scrolling list) but also I can't even rename them normally. It includes opening specific files with notepad and doing 'find and replace all' to rename a category.
+
+--------------------
+
+
+John Grey (jgrey@soe.ucsc.edu): Do you find yourself using particular strategies to pick a next game, or is it essentially random?
+
+Raz (raz@mail): It is partially dependant on the mood, but the three strategies are usually: I want to do more of this genre; I need a break from this genre; I have the mood for a specific type of experience/narrative
+
+Raz (raz@mail): Sometimes I play based n recommendations/feeling like trying a recent purchase, but that is rarer
+
+Raz (raz@mail): (Also picking a game because the hype around it finally died)
+
+--------------------
+
+
+Raz (raz@mail): Well, here's where Steam fails short - I don't really remember or am aware of a way to browse owned games of a specific genre/tag, which means that, during the search for a new game, all I can do is scour the list in search of something that would grab my attention.
+n the genres but the 'state' of the game. They can be Evergreen, which means I can just drop in for a session anytime. They can be Completed or warranting/needing a Replay, and they can be Current - so I started, but didn't get to the end.
+
+Raz (raz@mail): Plus, I keep slots for Multiplayer and Local Multiplayer categories for quick decisions when I want to experience something with friends
+
+--------------------
+
+
+John Grey (jgrey@soe.ucsc.edu): So you are able to recollect what a game is about fairly easily from its name?
+
+Raz (raz@mail): They were the best I could come up with without spending obscene amount of time making sure the library is kept in check/ Since most of the time, I can recall the notable games either way.
+
+Raz (raz@mail): Not exactly, but I keep Icons up and the default view I use is the Details I believe
+
+Raz (raz@mail): List on the side, click to see a summary page on the right. That one is invaluable in recalling specifics
+
+John Grey (jgrey@soe.ucsc.edu): Do you find the details view provides anything useful? I've always found it sort of useless. It shows me who plays the game, achievements and dlc, but if i don't know what the game is actually about to begin with....
+
+John Grey (jgrey@soe.ucsc.edu): Especially with games where it goes 'Game info: to install this game, click the install button', and nothing else
+
+Raz (raz@mail): I actually like the big screenshot in the background, that's where I get most of my information when I try to recall what the game was. The rest is... sometimes useful. Patch notes are much easier accessible from there than by doing digging into Community. Honestly, that part of steam has the worst navigation of them all
+
+
+--------------------
+
+
+Raz (raz@mail): I honestly found myself in only one of those. For Hand of Fate. Because they have a dead reddit, unlike other game I discussed in the past, being the Binding of Isaac
+
+John Grey (jgrey@soe.ucsc.edu): Can you expand on that a bit? You mean you went to the discussion page for Hand of Fate, but preferred reddit for BoI?
+
+Raz (raz@mail): I mean, Hand of Fate has a reddit but it is nearly devoid of life. Not entirely sure what is the cause for it, but the discussions and dev interactions for HoF are hosted in the community part
+
+Raz (raz@mail): Binding of Isaac has a lively steam community, but nowhere near the level of Reddit; plus, Reddit is infinitely easier to navigate than steam Discussions
+
+John Grey (jgrey@soe.ucsc.edu): Do you find yourself going to reddit for game related stuff alot? do you find yourself wishing steam had shortcuts to related subreddits?
+
+Raz (raz@mail): I frequent the pcgaming subreddit, so I think we can say I do so a lot, yes. At least one or two checks a day.
+
+Raz (raz@mail): And no, I think it would be better if Steam re-modelled their community part to be better. I like the idea of integrated experience, but it needs serious UI work
+
+--------------------
+
+Raz (raz@mail): That's a good question. But the point is, the server scrapped 33 games from among the ones I have. They are the installed games. Now, if I want it to grab another one, I would have to switch to Steam for the installation process
+
+John Grey (jgrey@soe.ucsc.edu): ah right
+
+John Grey (jgrey@soe.ucsc.edu): that  would be a fairly minor change, to allow installation of games, its the same underlying instruction to steam, 'play', as steam understands a game needs to be installed to play it
+
+Raz (raz@mail): Yes, just felt the need to mention given the goal of 'no switching required'
+
+--------------------
+
+
+Raz (raz@mail): Actually getting to a game that you want to is unnecessarily complicated. Consider the Circle Pack - it is quite a neat idea in and of itself, but it restricts you heavily in picking the games. You need to locate a specific tag either as a circle or the position on a list, enter that, then find an appropriate game from the second list. That is good for searching for a game fitting a specific criteria, but not the best when you have a game you often play
+
+Raz (raz@mail): If anything, I think it would work better if I imagined it like this:
+
+Raz (raz@mail): Take Steam Library's Details view - instead of having the detailed section, put the circular visualisation. On the left, there is the list f games, possibly with categories as you can do on steam. On the right, there are the tags. Circles shown inside, for data visualisation aspect
+
+Raz (raz@mail): *in the middle
+
+Raz (raz@mail): With that, you preserve the way to access frequently-played games, but also have the impressive filtering options
+
+--------------------
+
+Raz (raz@mail): A question I have is - how do you pick a pre-known game? MetaSteam currently lacks this very basic way of accessing, while keeping up quite a few data-visualisations
+
+John Grey (jgrey@soe.ucsc.edu): At the moment, admittedly with difficult. I have a  'search' button, but haven't written the functionality yet, as searching in steam works already
+
+
+--------------------
+
+Raz (raz@mail): Yes, I think there is a potential - especially the support for tag-filtering. A lot of work that can be done is essentially transferring what Steam has for its Store but not for the library. Tag filtering, recommendation of games based on tags of the recently played. Showcasing recent updates (which you did as well)
+
+--------------------
+
+
+Raz (raz@mail): I took some peeks at it, but the amount of time to process was a bit discouraging. In m case it does little given my focus on co-operative gameplay. I got burned on MP games back in the days of LoL x)
+
+
+--------------------
+
+Raz (raz@mail): Let's believe in the dream (: Is about time they get to invest some work into the parts other than the Store, which is a good showcase they can do quality work that just brings all you want from it on the plate
+
+--------------------
+
+Raz (raz@mail): Circles are nice to show the scope, but the histograms are better for patterns. I don't think I need a histogram of tags I have, but of hours played/prices of what I play? That is interesting to see as a distribution
+
+--------------------
+
