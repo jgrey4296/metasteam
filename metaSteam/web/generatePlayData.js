@@ -1,4 +1,4 @@
-define(['underscore'],function(_){
+define(['lodash'],function(_){
 
     var randomInRange = function(min,max){
         return Math.random() * (max - min) + min;

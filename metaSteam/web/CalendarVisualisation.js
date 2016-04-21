@@ -6,7 +6,7 @@
    @requiredMethod cleanUp
 */
 
-define(['d3','underscore','./generatePlayData'],function(d3,_,genData){
+define(['d3','lodash','./generatePlayData'],function(d3,_,genData){
 
     /**
        @class CalendarVisualisation

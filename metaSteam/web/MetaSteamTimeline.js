@@ -5,7 +5,7 @@
    @module metasteamtimeline
 */
 
-define(['d3','underscore'],function(d3,_){
+define(['d3','lodash'],function(d3,_){
 
     /**
        @class Timeline

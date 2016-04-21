@@ -8,7 +8,7 @@
 require.config({
     paths:{
         baseUrl : 'web',
-        underscore:"libs/underscore",
+        lodash : "libs/lodash",
         d3:"libs/d3.min",
         msTimeline:'MetaSteamTimeline',
         
@@ -21,7 +21,7 @@ require.config({
 });
 
 
-require(['d3','underscore','MetaSteamHub'],function(d3,_,Hub){
+require(['d3','lodash','MetaSteamHub'],function(d3,_,Hub){
     //Main:
     //Load the json data
     var metaSteamHub = new Hub();

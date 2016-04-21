@@ -3,7 +3,7 @@
    and access to different visualisations
 */
 
-define(['d3','underscore','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation','CirclePack3','pubDevVis','SearchVis','RandomGame'],function(d3,_,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation,CirclePack3,PubDevVis,SearchVis,RandomGame){
+define(['d3','lodash','msTimeline','UpdatedSinceLastPlayed','GenrePie','MultiplayerVisualisation','CalendarVisualisation','CoOccurrenceMatrix','TemplateVisualisation','CirclePack3','pubDevVis','SearchVis','RandomGame'],function(d3,_,MetaSteamTimeline,UpdatedSinceLastPlayed,GenrePie,MultiplayerVisualisation,CalendarVisualisation,CoOccurrenceMatrix,TemplateVisualisation,CirclePack3,PubDevVis,SearchVis,RandomGame){
 
     var idRegex = /\W/g;
     
